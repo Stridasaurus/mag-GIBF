@@ -1,0 +1,9 @@
+[submodule "mhd-ibf-reconstruction"]
+	path = mhd-ibf-reconstruction
+	url = https://github.com/Stridasaurus/mhd-ibf-reconstruction
+[submodule "magnetometer-time-series-simulator"]
+	path = magnetometer-time-series-simulator
+	url = https://github.com/Stridasaurus/magnetometer-time-series-simulator
+[submodule "secsy"]
+	path = secsy
+	url = https://github.com/klaundal/secsy

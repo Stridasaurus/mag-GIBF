@@ -1,0 +1,39 @@
+{
+  "seed": 20260706,
+  "numpy": "2.4.6",
+  "git_commit": "28c1de4cb0d18e0654b2dadeaf8f881ead6e9ac1",
+  "scenario": {
+    "M": 8,
+    "steering": "real orthonormal, seeded QR",
+    "sensor_noise": 0.0,
+    "phi_grid_deg": [
+      0,
+      180,
+      5
+    ],
+    "rhos": [
+      0.95,
+      0.85,
+      0.7
+    ],
+    "n_snapshots": [
+      64,
+      1024
+    ],
+    "n_mc": {
+      "64": 400,
+      "1024": 100
+    }
+  },
+  "preregistration": "ROADMAP.md \u00a78-iv (2026-07-06, floor amendment)",
+  "pins": {
+    "0.1": {
+      "phi_eff_deg": 11.458131461977224,
+      "imfrac_threshold": 0.13690232058036927
+    },
+    "0.3": {
+      "phi_eff_deg": 34.889265379707034,
+      "imfrac_threshold": 0.39411308712632537
+    }
+  }
+}

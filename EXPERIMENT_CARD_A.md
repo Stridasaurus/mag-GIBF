@@ -10,7 +10,9 @@
 >
 > **Before running (pre‑registration §8‑iv):** confirm the κ_ground bands (0.30 / 0.10) and the co‑primary pinning procedure below. Do not look at a single number first.
 >
-> **✔ SIGNED OFF 2026‑07‑06, with the floor amendment** (see `ROADMAP.md` §8, 2026‑07‑06 entry): snapshot count pre‑registered at **N=64** (N=1024 asymptotic secondary); Tier‑1 calibration must include incoherent and φ=0 **floor controls at N=64 for both statistics**; the fail arm of §A.4 is **floor‑referenced**. Tier 1 is now unblocked.
+> **✔ SIGNED OFF 2026‑07‑06, with the floor amendment** (see `ROADMAP.md` §8, 2026‑07‑06 entry): snapshot count pre‑registered at **N=64** (N=1024 asymptotic secondary); Tier‑1 calibration must include incoherent and φ=0 **floor controls at N=64 for both statistics**; the fail arm of §A.4 is **floor‑referenced**.
+>
+> **✔ TIER 1 RUN same day** — `viability-test/tier1_flr_coherence.py`, results in `results/A_flr_coherence/`, full result entry in `ROADMAP.md` §8 (2026‑07‑06). Co‑primary thresholds pinned: **0.394** (holds) / **0.137** (fails). Floor finding: the incoherent κ floor is degeneracy‑dominated (≈0.28, N‑independent — λ₁≈λ₂), the φ=0 coherent floor is clean (0.012), so the §A.4 fail arm is adjudicated **gap‑conditioned** (rank‑1‑like CSM → φ=0 coherent floor; near‑degenerate → co‑primary decides alone). Tier 2 remains blocked on Gate V.
 
 ---
 

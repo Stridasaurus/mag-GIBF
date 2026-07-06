@@ -9,6 +9,8 @@
 > **Provenance:** motivated by the 2026‑06‑30 desk‑checks (residual eigenvector complexity is null at φ=0/180, peaks ~0.65 at φ=90) and the FLR cross‑phase literature (Waters 1991; Chi & Russell 1998; Vellante 2004). Uses the roadmap glossary verbatim.
 >
 > **Before running (pre‑registration §8‑iv):** confirm the κ_ground bands (0.30 / 0.10) and the co‑primary pinning procedure below. Do not look at a single number first.
+>
+> **✔ SIGNED OFF 2026‑07‑06, with the floor amendment** (see `ROADMAP.md` §8, 2026‑07‑06 entry): snapshot count pre‑registered at **N=64** (N=1024 asymptotic secondary); Tier‑1 calibration must include incoherent and φ=0 **floor controls at N=64 for both statistics**; the fail arm of §A.4 is **floor‑referenced**. Tier 1 is now unblocked.
 
 ---
 
@@ -50,6 +52,8 @@ The inter‑source phase between poles at `x_i, x_j` is `φ_ij = arg R(x_i) − 
 
 **Tier 1 additionally produces the calibration curves (new, 2026‑07‑01):** on the desk‑check two‑source scenario, map **both** statistics — `κ` (residual eigenvector complexity) **and** `‖Im S‖/‖S‖` (rotation‑invariant CSM imaginary fraction) — against φ over the full arc. The κ curve must reproduce the desk‑check anchors (≈0 / 0.22 / 0.44 / 0.65 at 0/30/60/90°; ≈0 at 180°). The co‑primary `‖Im S‖/‖S‖` threshold for §A.4 is then **pinned by procedure** (pre‑registration §8‑iv): read it off this curve at the same effective φ values where κ crosses its 0.10 and 0.30 bands — *before* Tier 2 runs.
 
+**Floor controls (amendment, §8‑iv sign‑off 2026‑07‑06):** the calibration runs at the pre‑registered **N=64** and must additionally produce, for *both* statistics at that N, two floor controls — (i) the **incoherent** two‑source case (desk‑check anchor: κ ≈ 0.14 at N=64 — note this sits *above* the 0.10 fail band, which is the reason this amendment exists) and (ii) the **φ=0 coherent** case. These empirical floors are what the §A.4 fail arm is referenced against. Report the same curves at N=1024 as the asymptotic secondary.
+
 ### A.3.2 Snapshot / coherence model
 
 Across `N` snapshots, the whole FLR pattern oscillates under one shared complex driver `d_t`, plus an incoherent per‑pole background `n_t` that sets the realistic coherence magnitude:
@@ -68,14 +72,14 @@ Reuse the real transfer matrix `A` (from `transfer.py`, **DF‑only — CF exclu
 
 **Ionospheric spatial integration** enters automatically through `A` (each station sees a distance‑weighted sum of grid poles at the 110 km layer). To probe the washout risk explicitly, optionally add a source‑layer smoothing kernel (finite FLR azimuthal/latitudinal width) and report residual complexity **at the source** (`κ_source`, from `R_s`) versus **at the ground** (`κ_ground`, from `S`): the gap is the washout.
 
-## A.4 Pre‑registered decision rule (pinned; confirm §8‑iv BEFORE running)
+## A.4 Pre‑registered decision rule (pinned; §8‑iv signed off 2026‑07‑06 with the floor amendment — N=64, floor‑referenced fail arm)
 
 **Primary statistic:** ground‑level residual eigenvector complexity `κ_ground` of the top‑2 CSM eigenmodes, at realistic `Q` (5–20), realistic `|ρ|` (0.7–0.95), and station/pole spacing matched to a real array (e.g. IMAGE ~100–250 km meridional spacing), maximised over the pole‑pair placement relative to the resonance (i.e. the *best case* a real array could sample). MC‑averaged; reported with the eigenvalue gap.
 
 **Co‑primary statistic:** `‖Im S_ground‖/‖S_ground‖`, at the threshold pinned from the Tier‑1 calibration curve (§A.3.1, §8‑iv), evaluated above its finite‑N floor (~`1/√N`; 0.060 at N=64).
 
 - `κ_ground ≥ 0.30` (co‑primary concurring) → **H‑A holds.** The realistic FLR regime is exploitable at the ground; B2's realistic operating point is the phase‑offset band; framing: exploitable structure exists in the physically dominant regime. Set B2's headline φ near the modelled realistic value.
-- `κ_ground < 0.10` (co‑primary concurring) → **H‑A fails.** Either the source is near‑real or (report which) ground integration washes the phase out. The complex eigenstructure is inert on real FLRs from ground arrays — a **headline result in its own right**; the paper's framing pivots to "phase structure does not survive to the ground CSM," with the source‑vs‑ground gap as the mechanistic figure. (Per `ROADMAP.md` node A: B2 still runs the full arc; this card never routes stubs.)
+- `κ_ground < 0.10` **or statistically indistinguishable from the same‑N floor controls** (co‑primary concurring in the same floor‑referenced sense; amendment 2026‑07‑06) → **H‑A fails.** Either the source is near‑real or (report which) ground integration washes the phase out. The complex eigenstructure is inert on real FLRs from ground arrays — a **headline result in its own right**; the paper's framing pivots to "phase structure does not survive to the ground CSM," with the source‑vs‑ground gap as the mechanistic figure. (Per `ROADMAP.md` node A: B2 still runs the full arc; this card never routes stubs.)
 - `0.10 ≤ κ_ground < 0.30`, or the two statistics disagree → **marginal.** Report `κ_ground` vs `Q`, `|ρ|`, and spacing; feed the curve into B2 as a weighting rather than a single operating point; if the statistics disagree, report both and treat the rotation‑invariant one as the tiebreaker for the *weighting*, while flagging the disagreement explicitly.
 
 **Secondary statistics:** (a) the source‑vs‑ground residual gap `κ_source − κ_ground` (quantifies washout, and separates the two H‑A failure modes); (b) the distribution of `φ_ij` over pole pairs vs spacing/`Q` (Tier 1); (c) `κ_ground` vs `Q` and vs `|ρ|` (robustness of the verdict); (d) the realistic `|ρ|` range (handed to B2).

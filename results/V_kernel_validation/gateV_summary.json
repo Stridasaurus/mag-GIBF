@@ -1,0 +1,127 @@
+{
+  "gate": "V",
+  "checks": {
+    "V1_keywords": {
+      "divergence_free": "accepted",
+      "curl_free": "accepted",
+      "divfree": "rejected (UnboundLocalError)",
+      "curlfree": "rejected (UnboundLocalError)",
+      "potential": "rejected (UnboundLocalError)",
+      "scalar": "rejected (UnboundLocalError)"
+    },
+    "V1_under_pole_nan": {
+      "Ge_Gn_nan": true,
+      "Gr_finite": true,
+      "note": "theta clipped to ~0.026 deg by dpclip; horizontal components NaN when a pole shares a station's lat/lon (0/0 tangent normalization). The NaN also poisons the CF below-sheet zero (0 * NaN = NaN), so the hard-coded Fukushima zero is NOT immune. ADAPTER CONTRACT: transfer.py must guarantee no SECS pole shares a station's (lat, lon); assert np.isfinite(A).all() after every build."
+    },
+    "V1_return_order": {
+      "B_enu_near_pole": [
+        0.0,
+        1.997349620258321e-13,
+        8.082068952428814e-13
+      ],
+      "radial_dominates": true,
+      "reading": "(Ge, Gn, Gr) per docstring; order and units independently pinned by V4's analytic under-pole radial match"
+    },
+    "V1_pass": true,
+    "V2_pass": true,
+    "V2_detail": {
+      "real_float64": true,
+      "shapes_ok": true
+    },
+    "V3_cf_ground_block": {
+      "high": {
+        "sing0": {
+          "max_abs_T_per_A": 0.0,
+          "exactly_zero": true
+        },
+        "sing50km": {
+          "max_abs_T_per_A": 0.0,
+          "exactly_zero": true
+        },
+        "above_sheet_max_abs": 1.8939678460010416e-12
+      },
+      "mid": {
+        "sing0": {
+          "max_abs_T_per_A": 0.0,
+          "exactly_zero": true
+        },
+        "sing50km": {
+          "max_abs_T_per_A": 0.0,
+          "exactly_zero": true
+        },
+        "above_sheet_max_abs": 1.2446466048718826e-12
+      },
+      "low": {
+        "sing0": {
+          "max_abs_T_per_A": 0.0,
+          "exactly_zero": true
+        },
+        "sing50km": {
+          "max_abs_T_per_A": 0.0,
+          "exactly_zero": true
+        },
+        "above_sheet_max_abs": 1.122803416034711e-12
+      }
+    },
+    "V3_pass": true,
+    "V3_provenance": "analytic by construction: secsy utils.py curl_free branch zeroes the below-sheet field (Ge_[below] *= 0) per Amm & Viljanen 1999 / Vanhamaki & Juusola 2020 eqs 2.13-2.14 - the full Fukushima pair's field. The library asserts the theorem; V5 confirms it independently.",
+    "V4_line_formula_selftest_relerr": 1.754990973976425e-06,
+    "V4_df_quadrature": {
+      "stations": [
+        [
+          58.0,
+          0.0
+        ],
+        [
+          60.0,
+          3.0
+        ],
+        [
+          63.0,
+          -2.0
+        ],
+        [
+          60.5,
+          0.5
+        ],
+        [
+          40.0,
+          10.0
+        ]
+      ],
+      "rel_err_per_station": [
+        2.611511450449284e-05,
+        4.556597078348206e-05,
+        1.022772669874069e-05,
+        0.00016405755339169806,
+        2.306048885621475e-07
+      ],
+      "df_sign_convention": "+1 amplitude = eastward (counterclockwise around pole seen from above)",
+      "half_resolution_shift": 7.829774470635547e-05,
+      "underpole_Br_analytic_rel_err": 0.00034697903250943793,
+      "Br_underpole_T_per_A": 9.087754736068111e-13
+    },
+    "V4_pass": true,
+    "V5_fukushima_pair": {
+      "ground_residual_over_largest_term": [
+        4.52720272019185e-05,
+        9.33830169902217e-05,
+        1.2574550017700219e-05,
+        0.0004516285400725271,
+        1.2610520280866531e-07
+      ],
+      "term_norms_station0_T": {
+        "sheet": 2.447333058159675e-13,
+        "pole_line_fac": 2.447222611904646e-13,
+        "return_facs": 3.494737517742055e-20,
+        "sum": 1.1079572878115921e-17
+      },
+      "above_sheet_vs_library_rel_err": 3.2651092426044712e-06,
+      "cf_sign_convention": "+1 amplitude = sheet current AWAY from pole, line FAC INTO the shell at the pole"
+    },
+    "V5_pass": true
+  },
+  "GATE_V": "PASS",
+  "runtime_s": 11.9
+}

@@ -1,0 +1,15 @@
+{
+  "gate": "V",
+  "date": "2026-07-07",
+  "secsy_version": "1.0.1.dev38+g6f699cbdd",
+  "secsy_sha": "6f699cbdd4a0ebec8e9f6a97315ab80ede34a439",
+  "repo_commit": "1ca6817fb4aa13e07e897e5229b241d9c593c8f2",
+  "numpy": "2.4.6",
+  "python": "3.13.13",
+  "RI_m": 6481200.0,
+  "quadrature": {
+    "n_theta": 2400,
+    "n_phi": 4800
+  },
+  "preregistration": "ROADMAP.md Gate V (2026-07-01 restructure)"
+}

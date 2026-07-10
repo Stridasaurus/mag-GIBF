@@ -59,10 +59,13 @@ before duplicating it.
 | `viability-test/` | The actual build — validation/experiment scripts and their frozen specs |
 | `viability-test/gateV_kernel_validation.py` | Gate V: runs the `secsy` CF-pair probe + realness/DF checks |
 | `viability-test/tier1_flr_coherence.py` | Card A Tier 1: κ/φ calibration curves, threshold pinning |
+| `viability-test/floor_distributions.py` | Audit A2: per-trial floor-control distributions (bit-exact Tier-1 replay) |
+| `tests/` | Semantic pytest gate (audit A4): artifacts recompute, gate consistency, doc-path existence |
 | `viability-test/SPEC_experiment_B.md` | Frozen Experiment B design (B1–B4, B6) |
 | `results/` | Committed output artifacts (figures, summaries) from the scripts above — reproducible, not hand-edited |
 | `secsy/`, `mhd-ibf-reconstruction/`, `magnetometer-time-series-simulator/` | Git submodules. Only `secsy` is currently load-bearing (editable-installed into the conda env, pinned to a specific commit); the other two are still scaffolding |
 | `GIBF_viability_BUILD_BRIEF.md` | Older build brief — **known stale**, pending a revision pass; don't treat as current |
+| `legacy_mhd_notebook.ipynb` | Legacy MHD notebook (pre-restructure) — the prior-practice MDL-13 cutoff cited by ROADMAP §8-viii lives here; renamed 2026-07-10 from `mhd_notebook (1).ipynb` |
 
 ## Environment setup
 

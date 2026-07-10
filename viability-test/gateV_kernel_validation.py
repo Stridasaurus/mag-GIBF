@@ -239,9 +239,14 @@ def main():
     v1_ok = v1_ok and v1_order
     summary["checks"]["V1_pass"] = bool(v1_ok)
 
-    # ---- V2: realness / dtype / shape -----------------------------------
-    lats = np.array([68.0, 69.0, 70.0, 71.0, 72.0])
-    lons = np.array([-8.0, -4.0, 0.0, 4.0, 8.0])
+    # ---- V2: realness / dtype / shape / finiteness -----------------------
+    # Station grid offset off the pole grid (audit W-A fix, 2026-07-10): the
+    # original integer grids shared exact (lat, lon) pairs with the poles, so
+    # per V1 these matrices contained NaN -- which isrealobj/dtype/shape all
+    # pass. Offset like V3, and check the finiteness this gate itself made a
+    # contract requirement.
+    lats = np.array([68.0, 69.0, 70.0, 71.0, 72.0]) + 0.37
+    lons = np.array([-8.0, -4.0, 0.0, 4.0, 8.0]) + 0.53
     glat, glon = np.meshgrid(lats, lons, indexing="ij")
     plat, plon = np.meshgrid(
         np.arange(66.0, 75.0, 1.0), np.arange(-12.0, 13.0, 4.0), indexing="ij"
@@ -256,8 +261,10 @@ def main():
     v2_shape = all(
         G.shape == (glat.size, plat.size) for M in mats.values() for G in M
     )
-    summary["checks"]["V2_pass"] = bool(v2_real and v2_shape)
-    summary["checks"]["V2_detail"] = {"real_float64": bool(v2_real), "shapes_ok": bool(v2_shape)}
+    v2_finite = all(np.isfinite(G).all() for M in mats.values() for G in M)
+    summary["checks"]["V2_pass"] = bool(v2_real and v2_shape and v2_finite)
+    summary["checks"]["V2_detail"] = {"real_float64": bool(v2_real), "shapes_ok": bool(v2_shape),
+                                      "all_finite": bool(v2_finite)}
     ok = ok and v2_real and v2_shape and v1_ok
 
     # ---- V3: CF ground block at every preset ----------------------------

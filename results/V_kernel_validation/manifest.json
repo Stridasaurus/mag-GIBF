@@ -1,9 +1,9 @@
 {
   "gate": "V",
-  "date": "2026-07-07",
+  "date": "2026-07-10",
   "secsy_version": "1.0.1.dev38+g6f699cbdd",
   "secsy_sha": "6f699cbdd4a0ebec8e9f6a97315ab80ede34a439",
-  "repo_commit": "1ca6817fb4aa13e07e897e5229b241d9c593c8f2",
+  "repo_commit": "1100edf778c3a060c8e8da205b64da088275c8eb",
   "numpy": "2.4.6",
   "python": "3.13.13",
   "RI_m": 6481200.0,

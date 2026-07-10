@@ -27,7 +27,8 @@
     "V2_pass": true,
     "V2_detail": {
       "real_float64": true,
-      "shapes_ok": true
+      "shapes_ok": true,
+      "all_finite": true
     },
     "V3_cf_ground_block": {
       "high": {
@@ -123,5 +124,5 @@
     "V5_pass": true
   },
   "GATE_V": "PASS",
-  "runtime_s": 11.9
+  "runtime_s": 44.4
 }

@@ -60,6 +60,7 @@ before duplicating it.
 | `viability-test/gateV_kernel_validation.py` | Gate V: runs the `secsy` CF-pair probe + realness/DF checks |
 | `viability-test/tier1_flr_coherence.py` | Card A Tier 1: κ/φ calibration curves, threshold pinning |
 | `viability-test/floor_distributions.py` | Audit A2: per-trial floor-control distributions (bit-exact Tier-1 replay) |
+| `viability-test/transfer.py` | DF-only real transfer matrix A (Gate-V-pinned secsy adapter; coincidence guard, finiteness assert, row-norm, cache) |
 | `tests/` | Semantic pytest gate (audit A4): artifacts recompute, gate consistency, doc-path existence |
 | `viability-test/SPEC_experiment_B.md` | Frozen Experiment B design (B1–B4, B6) |
 | `results/` | Committed output artifacts (figures, summaries) from the scripts above — reproducible, not hand-edited |

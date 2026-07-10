@@ -1,0 +1,78 @@
+{
+  "seed": 20260706,
+  "numpy": "2.4.6",
+  "git_commit": "75dfbe37d0af23b82802e12020764dbba4c16721",
+  "script_sha256": "b9e63a8b77bb9572d6b24df39bb79f500cba8024c36efc09486890441713ff1c",
+  "method": "bit-exact RNG-stream replay of tier1_flr_coherence.py; per-trial floor-control stats; means asserted against tier1_summary.csv before writing",
+  "replay_checks": [
+    {
+      "stat": "kappa",
+      "control": "incoherent",
+      "N": 64,
+      "replayed_mean": 0.2832998849931892,
+      "archived_mean": 0.2833,
+      "match": true
+    },
+    {
+      "stat": "imfrac",
+      "control": "incoherent",
+      "N": 64,
+      "replayed_mean": 0.06831464612197942,
+      "archived_mean": 0.0683,
+      "match": true
+    },
+    {
+      "stat": "kappa",
+      "control": "phi0_coherent",
+      "N": 64,
+      "replayed_mean": 0.011839954411103748,
+      "archived_mean": 0.0118,
+      "match": true
+    },
+    {
+      "stat": "imfrac",
+      "control": "phi0_coherent",
+      "N": 64,
+      "replayed_mean": 0.01631124716731829,
+      "archived_mean": 0.0163,
+      "match": true
+    },
+    {
+      "stat": "kappa",
+      "control": "incoherent",
+      "N": 1024,
+      "replayed_mean": 0.25634227890216066,
+      "archived_mean": 0.2563,
+      "match": true
+    },
+    {
+      "stat": "imfrac",
+      "control": "incoherent",
+      "N": 1024,
+      "replayed_mean": 0.0180695783634535,
+      "archived_mean": 0.0181,
+      "match": true
+    },
+    {
+      "stat": "kappa",
+      "control": "phi0_coherent",
+      "N": 1024,
+      "replayed_mean": 0.0026961139554123464,
+      "archived_mean": 0.0027,
+      "match": true
+    },
+    {
+      "stat": "imfrac",
+      "control": "phi0_coherent",
+      "N": 1024,
+      "replayed_mean": 0.003713532759994278,
+      "archived_mean": 0.0037,
+      "match": true
+    }
+  ],
+  "n_mc": {
+    "64": 400,
+    "1024": 100
+  },
+  "preregistration": "ROADMAP.md \u00a78 2026-07-10 (audit A1 sign-off; permutation test alpha=0.05 consumes these arrays, gap-conditioning consumes the gap arrays)"
+}

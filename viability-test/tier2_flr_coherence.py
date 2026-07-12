@@ -62,7 +62,9 @@ Strider's review; none is a pre-registered threshold change):
 
 import hashlib
 import json
+import shutil
 import subprocess
+import time
 from pathlib import Path
 
 import numpy as np
@@ -73,6 +75,9 @@ from transfer import build_transfer_matrix
 SEED = 20260712                     # pinned §8 2026-07-11 (fresh; not Tier 1's)
 KM_PER_DEG = 111.19
 RESULTS = Path(__file__).resolve().parent.parent / "results" / "A_flr_coherence"
+CKPT_DIR = RESULTS / "tier2_checkpoints"  # derived data; removed on success,
+# never committed. Resume is bit-exact: every cell+placement draws from its
+# own child seed, so a resumed run reproduces an uninterrupted one.
 
 Q_AXIS = (5.0, 10.0, 20.0)
 BETA_AXIS = (0.05, 0.10, 0.20)      # per 100 km
@@ -404,8 +409,22 @@ def sweep_variant(name, st_lat, st_lon, n_snap, n_mc, d_axis, xr_grid=None):
             lat, lon = synthetic_stations(d_km)
             ref_lat = 68.0
         geoms.append(build_geometry(lat, lon, lon_hw, ref_lat))
+    adj_keys = ("kappa", "gap", "imfrac", "x_r", "ipl", "sigma_bg",
+                "imfrac_ownmax")
     for id_, d_km in enumerate(d_axis):
         geom = geoms[id_]
+        ck = CKPT_DIR / f"{name}_N{n_snap}_d{id_}.npz"
+        if ck.exists():
+            d = np.load(ck)
+            for k in ("kappa", "gap", "imfrac"):
+                surf[k][:, :, id_, :] = d[f"surf_{k}"]
+            for k in adj_keys:
+                adj[k][:, :, id_, :] = d[f"adj_{k}"]
+            for k in ("kappa", "gap", "imfrac", "trace"):
+                per_trial[k][:, :, id_, :] = d[f"pt_{k}"]
+            print(f"    [{name} N={n_snap}] d={d_km:.1f} km from checkpoint",
+                  flush=True)
+            continue
         grid = (np.linspace(geom["st_lat"].min(), geom["st_lat"].max(),
                             N_PLACEMENTS) if xr_grid is None else xr_grid)
         for iq, q in enumerate(Q_AXIS):
@@ -423,8 +442,16 @@ def sweep_variant(name, st_lat, st_lon, n_snap, n_mc, d_axis, xr_grid=None):
                     adj["imfrac_ownmax"][idx] = means["imfrac"].max()
                     for k in ("kappa", "gap", "imfrac", "trace"):
                         per_trial[k][idx] = best[k]
+        CKPT_DIR.mkdir(parents=True, exist_ok=True)
+        np.savez(ck,
+                 **{f"surf_{k}": surf[k][:, :, id_, :]
+                    for k in ("kappa", "gap", "imfrac")},
+                 **{f"adj_{k}": adj[k][:, :, id_, :] for k in adj_keys},
+                 **{f"pt_{k}": per_trial[k][:, :, id_, :]
+                    for k in ("kappa", "gap", "imfrac", "trace")})
         print(f"    [{name} N={n_snap}] d={d_km:.1f} km done "
-              f"({geom['plat'].size} poles)", flush=True)
+              f"({geom['plat'].size} poles) at {time.strftime('%H:%M:%S')}",
+              flush=True)
     return dict(surf=surf, adj=adj, per_trial=per_trial, geoms=geoms)
 
 
@@ -771,6 +798,10 @@ def main():
                                  "snr10", "snr20", "image")))
     print(f"  N=1024 primary kappa_adj max: "
           f"{runs[('primary', 1024)]['adj']['kappa'].max():.4f}")
+
+    # checkpoints are derived data; the final artifacts supersede them
+    shutil.rmtree(CKPT_DIR, ignore_errors=True)
+    print("done.", flush=True)
 
 
 if __name__ == "__main__":

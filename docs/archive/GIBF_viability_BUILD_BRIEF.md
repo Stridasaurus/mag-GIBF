@@ -1,3 +1,11 @@
+> **ARCHIVED — 2026-07-11.** This was Claude's one-time build spec from June 2026 (written pre-rename; see the terminology note below). It is **not current** and is kept only for history / methods-paper backfill. For current status, read (in this order): root `README.md`, `ROADMAP.md` (canonical, live source of truth), `EXPERIMENT_CARD_A.md`, `viability-test/SPEC_experiment_B.md`.
+>
+> **What's landed since this was written** (per `ROADMAP.md` / git history as of 2026-07-11): `secsy` installed, pinned, and its adapter contract verified (this doc's "Appendix C" probe + §5.2) — that work is now **Validation Gate V, PASSED 2026-07-07**. `transfer.py` (this doc's §6.2 spec) is **built and pytest-gated**. This doc's "Experiment A" (CF/DF identifiability, §2/§8) is the work now called **Gate V** — already resolved above. This doc's "Card C"/FLR-coherence work is now **Card A**, whose **Tier 1 is complete** (2026-07-06) and **Tier 2 is the current frontier** (not yet run). This doc's **Experiment B** (§9, B1–B5) has a frozen design in `viability-test/SPEC_experiment_B.md` but has not been run. Appendix B's checklist below predates all of this and uses pre-rename terminology throughout — do not tick it against current work; treat the summary in this paragraph as authoritative instead.
+>
+> **Terminology note:** the project was renamed 2026-07-01 after peer review. This document uses the *old* names throughout (e.g. "Experiment A" below means CF/DF identifiability = today's Gate V, not today's "Experiment A/Card A"). See `README.md`'s rename table before cross-referencing anything in this file against current docs.
+
+---
+
 # SECS‑GIBF Viability Test — Master Build Brief
 
 **Repository:** `https://github.com/Stridasaurus/GIBF`

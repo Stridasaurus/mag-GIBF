@@ -40,10 +40,12 @@ names. `ROADMAP.md` §0 has the full rename map; the short version:
   pinned the co-primary thresholds (κ 0.394 holds / 0.137 fails) for whether
   inter-source phase survives ionospheric integration to the ground.
 - **Experiment B design: frozen** (2026-07-07), pending the build below.
-- **Frontier / next thing to build: `transfer.py`** — the real, DF-only transfer
-  matrix adapter, built against the contract Gate V just pinned. Everything else
-  (Card A Tier 2, the three solvers, Experiment B) is blocked behind it. See
-  `ROADMAP.md` §6 "Build Order" for the full sequence.
+- **`transfer.py`: built and pytest-gated** (2026-07-10) — the real, DF-only transfer
+  matrix adapter, built against the contract Gate V pinned. Semantic-drift audit items
+  A1-A3 landed the same sitting.
+- **Frontier / next thing to build: Card A Tier 2** — the H-A adjudication hinge. The
+  three solvers and Experiment B remain blocked behind it. See `ROADMAP.md` §6 "Build
+  Order" for the full sequence.
 
 **Before picking up new work, check `ROADMAP.md` and ask in the team channel** —
 several build-order items (`transfer.py`, the eigendecomposition/mode-selection step)
@@ -65,7 +67,7 @@ before duplicating it.
 | `viability-test/SPEC_experiment_B.md` | Frozen Experiment B design (B1–B4, B6) |
 | `results/` | Committed output artifacts (figures, summaries) from the scripts above — reproducible, not hand-edited |
 | `secsy/`, `mhd-ibf-reconstruction/`, `magnetometer-time-series-simulator/` | Git submodules. Only `secsy` is currently load-bearing (editable-installed into the conda env, pinned to a specific commit); the other two are still scaffolding |
-| `GIBF_viability_BUILD_BRIEF.md` | Older build brief — **known stale**, pending a revision pass; don't treat as current |
+| `docs/archive/GIBF_viability_BUILD_BRIEF.md` | **Archived 2026-07-11.** Claude's original build spec (June 2026), superseded by `ROADMAP.md` + `SPEC_experiment_B.md`; kept for history only. Uses pre-rename terminology — its own header explains the mapping |
 | `legacy_mhd_notebook.ipynb` | Legacy MHD notebook (pre-restructure) — the prior-practice MDL-13 cutoff cited by ROADMAP §8-viii lives here; renamed 2026-07-10 from `mhd_notebook (1).ipynb` |
 
 ## Environment setup

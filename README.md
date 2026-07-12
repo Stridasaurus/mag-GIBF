@@ -43,9 +43,9 @@ names. `ROADMAP.md` §0 has the full rename map; the short version:
 - **`transfer.py`: built and pytest-gated** (2026-07-10) — the real, DF-only transfer
   matrix adapter, built against the contract Gate V pinned. Semantic-drift audit items
   A1-A3 landed the same sitting.
-- **Frontier / next thing to build: Card A Tier 2** — the H-A adjudication hinge. The
-  three solvers and Experiment B remain blocked behind it. See `ROADMAP.md` §6 "Build
-  Order" for the full sequence.
+- **Frontier / next thing to run: Card A Tier 2** — the H-A adjudication hinge, design
+  fully pinned 2026-07-11 (`ROADMAP.md` §8). **Currently assigned to Shane Gilbertie —
+  see [`handoff.md`](handoff.md) for the complete, self-contained task.**
 
 **Before picking up new work, check `ROADMAP.md` and ask in the team channel** —
 several build-order items (`transfer.py`, the eigendecomposition/mode-selection step)
@@ -57,6 +57,7 @@ before duplicating it.
 | Path | What it is |
 |---|---|
 | `ROADMAP.md` | Canonical research state: decision tree, invariants, glossary, build order, experiment log |
+| `handoff.md` | Self-contained task handoff for the current assignee of the active frontier node (Card A Tier 2, 2026-07-11: Shane Gilbertie) |
 | `EXPERIMENT_CARD_A.md` | Card A (FLR source-coherence) experiment design |
 | `viability-test/` | The actual build — validation/experiment scripts and their frozen specs |
 | `viability-test/gateV_kernel_validation.py` | Gate V: runs the `secsy` CF-pair probe + realness/DF checks |
@@ -64,6 +65,7 @@ before duplicating it.
 | `viability-test/floor_distributions.py` | Audit A2: per-trial floor-control distributions (bit-exact Tier-1 replay) |
 | `viability-test/transfer.py` | DF-only real transfer matrix A (Gate-V-pinned secsy adapter; coincidence guard, finiteness assert, row-norm, cache) |
 | `tests/` | Semantic pytest gate (audit A4): artifacts recompute, gate consistency, doc-path existence |
+| `pytest.ini` | Scopes `pytest` collection to `tests/` — without it a bare `pytest -q` also collects the `secsy` submodule's own `test_scripts/`, which import `lompe` and abort collection |
 | `viability-test/SPEC_experiment_B.md` | Frozen Experiment B design (B1–B4, B6) |
 | `results/` | Committed output artifacts (figures, summaries) from the scripts above — reproducible, not hand-edited |
 | `secsy/`, `mhd-ibf-reconstruction/`, `magnetometer-time-series-simulator/` | Git submodules. Only `secsy` is currently load-bearing (editable-installed into the conda env, pinned to a specific commit); the other two are still scaffolding |
@@ -96,6 +98,12 @@ Both scripts below are deterministic/seeded — your output should match what's 
 committed in `results/`:
 
 ```bash
+conda run -n mhd-env python -m pytest -q
+#  -> 12 passed   (<1s; pytest.ini scopes collection to tests/ only —
+#     a bare `pytest -q` without it will also try to collect the secsy
+#     submodule's own test_scripts/, which import lompe and are not
+#     part of this project)
+
 conda run -n mhd-env python viability-test/gateV_kernel_validation.py
 #  -> GATE V: PASS   (~8s)
 

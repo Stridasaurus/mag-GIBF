@@ -1,233 +1,120 @@
-# Handoff — Card A Tier 2 (the H-A hinge)
+# Handoff — Experiment B kickoff: solver stack + B1 (cost/pilot/floor) + B3 (mode-selection surfaces)
 
-> **Assigned to:** Shane Gilbertie, 2026-07-11.
-> **This file is written to be run from cold** — point Claude Code at this repo after
-> cloning and it should be able to complete the task below without needing anything
-> that isn't already in this repository. If you (human or Claude) hit a real decision
+> **Assigned to:** TBD by Strider (the Shane-per-`handoff.md` pattern worked for Tier 2; his call).
+> **Written:** 2026-07-12, by the frontier session that verified the Tier 2 PR (verification memo
+> in Strider's research vault). The previous handoff (Card A Tier 2) completed 2026-07-12 —
+> H-A HOLDS, `ROADMAP.md` §8 — and lives in git history (`git show 00b426a:handoff.md`).
+>
+> **This file is written to be run from cold** — point Claude Code at this repo after cloning
+> and it should complete the task below from the repository alone. If you hit a real decision
 > this file and its links don't resolve, stop and ask Strider — do not improvise a
 > pre-registered value. See "If you get stuck" at the bottom.
 
+## GATES — do not start until all three are true
+
+1. **PR #1 (`tier2-flr-coherence`) is merged.** The Tier-2 PR review is the team's ratification
+   checkpoint for the audit-A1 pins; Experiment B consumes those pins.
+2. **The ratification §8 entry has been appended to `ROADMAP.md`** (Strider; drafted in the
+   vault review memo). It resolves the gap-conditioning scale reading — the fail-arm
+   statistic your permutation code must implement (expected resolution: **trace-normalized**,
+   gap × 2/trace(S); confirm against the actual appended entry, which is authoritative).
+3. **Strider has named the assignee** (top of this file updated).
+
 ## The one-line task
 
-Run **Card A Tier 2**: push the FLR source-coherence model through the real DF-only
-transfer matrix `A`, build the ground CSM, and adjudicate whether inter-source phase
-survives ionospheric integration to the ground (**H-A holds / fails / marginal**) —
-using the design pinned below. Land the result as a new `ROADMAP.md` §8 log entry,
-fill the two Card-A slots in `viability-test/SPEC_experiment_B.md` §S.7, and open a
-PR. **Stop there** — do not start building Experiment B (B1–B4/B6). That is
-deliberately out of scope for this handoff; Strider reviews the Tier 2 PR first.
+Build the Experiment-B module stack (solvers, metrics, mode selection, simulation extensions,
+cell runner) per `viability-test/SPEC_experiment_B.md`, pass the single-source exact-recovery
+gate, then run **B1** (full grid, both grid-reduction settings) and **B3** (both criteria),
+plus the **50-trial mini-pilot** at the φ=90°/5 dB/`d=3` cell. Land results + a §8 entry +
+open a PR. **Stop before powered B2/B6** — the power calculation (§8-ii: n_trials from
+max(B1 pilot SD, mini-pilot SD)) is reviewed by Strider together with the manifesto-lock
+pinning of the fairness protocol (§S.6) before any confirmatory cell runs.
+
+## Why this scope line (so you don't re-derive it)
+
+B1 and B3 **never adjudicate D2** (SPEC §S.2: B1 is cost/pilot/floor; B3 is descriptive,
+feeding B6a's `n_snap` choice). They are therefore safe to run before the fairness protocol's
+final pinning at manifesto lock. The confirmatory machinery (B2's φ-resolved signed gap at the
+§8-iii cells, B6a) waits for the power calc + protocol pinning — that boundary is exactly the
+pre-registration discipline that made Tier 2's verdict trustworthy.
 
 ## Read in this order
 
-1. This file (task + pinned design + workflow).
-2. [`README.md`](README.md) — repo orientation, environment setup, terminology
-   rename map (old docs use pre-2026-07-01 names).
-3. [`ROADMAP.md`](ROADMAP.md) §5 (node A, in the Decision Tree), §8's
-   **2026-07-11 entry** ("Card A Tier 2 design PINNED..." — the complete pinned
-   design, canonical; this handoff summarizes it but that entry is authoritative if
-   they ever disagree), and §9 (current status).
-4. [`EXPERIMENT_CARD_A.md`](EXPERIMENT_CARD_A.md) — the experiment card. §A.3.3 is
-   Tier 2's method description, §A.4 is the decision rule, §A.8 is required outputs.
-5. [`viability-test/tier1_flr_coherence.py`](viability-test/tier1_flr_coherence.py) —
-   Tier 1's implementation. Tier 2 reuses its statistics (`kappa`, `im_frac`), its FLR
-   phase model (`arg_r`), and its coding conventions (manifest format, seed handling,
-   figure style). Read it before writing Tier 2's script — don't reinvent these.
-6. [`viability-test/transfer.py`](viability-test/transfer.py) — the real transfer
-   matrix builder Tier 2 calls. Its docstring is the Gate-V-pinned adapter contract
-   (keyword names, return order, the coincidence-guard hazard). Read the docstring in
-   full before calling `build_transfer_matrix`.
-7. [`viability-test/floor_distributions.py`](viability-test/floor_distributions.py) —
-   the reference implementation of the permutation test you'll reuse for the fail arm
-   (see below).
+1. This file.
+2. `README.md` — repo orientation, environment, rename map.
+3. `BUILD_BRIEF.md` (repo root, the **current** onboarding brief, 2026-07-12) — the two
+   invariants, Gate-V/`transfer.py` adapter pins, audit-A1 amendments, §S.9 supersessions,
+   the AIC→MDL code-check verdict. The archived `GIBF_viability_BUILD_BRIEF.md` is stale;
+   where they conflict, `SPEC_experiment_B.md` and `ROADMAP.md` win.
+4. `viability-test/SPEC_experiment_B.md` — **your primary design document.** §S.1 (shared MC
+   skeleton), §S.2 (B1/B3 designs), §S.4 (modeselect), §S.5 (outputs), §S.6 (fairness protocol
+   draft — implement it as spec'd; its *final* pinning happens at manifesto lock), §S.7
+   (both Card-A slots now FILLED), §S.8 (module deltas — your build checklist).
+5. `ROADMAP.md` §2 (invariants), §5 node D2, §6 Card B, §8's 2026-07-12 entry (Tier 2) and
+   the ratification entry above it once appended, §9.
+6. `viability-test/transfer.py` docstring (adapter contract) and
+   `viability-test/tier2_flr_coherence.py` (conventions to mirror: manifest format,
+   seed-derivation scheme, per-trial archiving, figure style).
 
-## Environment (from README, repeated here for completeness)
+## Build checklist (SPEC §S.8, expanded)
 
-```bash
-git clone --recurse-submodules https://github.com/Stridasaurus/mag-GIBF.git
-cd mag-GIBF
-git submodule update --init --recursive   # if cloned without --recurse-submodules
+- `viability-test/solvers.py` (or a package — mirror existing layout conventions): L2
+  baseline, per-mode GIBF (L1-IRLS, per brief/SPEC), joint MMV-L1 (L2,1 row-sparse).
+  **Fairness invariants (SPEC §S.1/§S.6):** identical `V`, `A`, `eps_frac`, `weight_floor`,
+  `p_norm`, `max_iter`, `tol`, grid-reduction setting per run; MMV's μ and GIBF's per-mode
+  penalty tied through the same `eps_frac` scaling rule; `assert np.isrealobj(A)` in every
+  solver (B4's phantom arm is not in this handoff's scope).
+- `viability-test/modeselect.py`: Wax–Kailath in the log domain, `criterion="mdl"` default,
+  returns `K̂` + full AIC(k)/MDL(k) arrays, eigenvalue floor 1e-18, `K̂` clipped to [1, 6]
+  with clip events counted (SPEC §S.4).
+- `viability-test/metrics.py`: min-cost matched assignment, `τ_r = 1` grid cell (§8-v — not
+  the archived brief's 1.5), `P_sep`, `Δr̄`.
+- `simulate.py` additions per §S.8 (coherent-pair model per SPEC §S.2-B2 formula; B6b truth
+  variants can be stubbed behind `truth.jitter` but are not exercised in this handoff).
+- `viability-test/run_experiment_B.py`: the §S.1 skeleton; per-cell npz with **per-trial,
+  per-method** metrics; CI convention = percentile bootstrap, 2000 resamples, seeded from
+  cell id (§S.1).
+- Tests in `tests/`: solver fairness (identical shared params actually shared), the
+  single-source gate as a pytest, metrics pins (τ_r=1, assignment), modeselect MDL/AIC on
+  synthetic spectra with known K. `pytest -q` stays green — 22 passing now; do not break them.
 
-conda create -n mhd-env python=3.11 numpy scipy matplotlib pytest -y
-conda activate mhd-env
-pip install -e ./secsy
-```
+## Run order (each with its own commit before first run — A3 workflow)
 
-**Verify before touching Tier 2** (should both pass unmodified — if either doesn't,
-stop and diagnose before writing new code; something about your environment or clone
-diverges from what's pinned):
+1. **Single-source exact-recovery gate (SPEC §S.6.4):** one isolated DF source, 20 dB,
+   `n_snap=64` — all three solvers must localise to the exact cell. **Failure HALTS
+   Experiment B** (solver bug, not science). Archive the gate result like Gate V's artifacts.
+2. **B1:** `d ∈ {1,2,3,5,8}` cells × `snr_db ∈ {−5,0,5,10,20}`, `n_snap=64`, oracle K=2,
+   incoherent equal-power pair, grid reduction **on and off** (SPEC §S.2-B1). Deliverables:
+   signed-gap cost surfaces, the §8-ii pilot SD, the floor panel arrays.
+3. **B3:** `snr_db ∈ {−5,0,5,10,20}` × `n_snap ∈ {8,16,32,64,128}`, record BOTH AIC and MDL
+   `K̂` distributions vs truth K=2 (SPEC §S.2-B3). Deliverable: the MDL error-rate table over
+   (snr, n_snap) — B6a's `n_snap` is read from it per §8-vii (largest n_snap where MDL error
+   ≥ 20% at 5 dB, fallback 8). Compute and REPORT that value; do not run B6a.
+4. **Mini-pilot:** 50 trials at φ=90°, snr 5 dB, `d=3`, `n_snap=64`, `|ρ|=0.85` (SLOT-1),
+   both solvers — its SD is the other input to the §8-ii power calc. Report both SDs and a
+   candidate n_trials; **do not run the powered cells.**
 
-```bash
-python -m pytest -q
-#  -> 12 passed
-python viability-test/gateV_kernel_validation.py
-#  -> GATE V: PASS
-```
+Outputs to `results/B_viability/` per SPEC §S.5 (manifest with config hash, git commit,
+`script_sha256`, master seed). Seed: derive fresh (date-based, like Tier 2's 20260712 —
+record it; do not reuse 20260706/20260712).
 
-## The pinned design (full text: `ROADMAP.md` §8, 2026-07-11 entry)
+## Invariants (ROADMAP §2, restated)
 
-Every parameter below was locked by Strider before any Tier 2 number exists — this is
-the project's pre-registration discipline (see `ROADMAP.md` §2's log-hygiene
-invariant and the append-only §8 Experiment Log). **Do not deviate from these without
-appending a dated ROADMAP §8 entry explaining why**, the same way every prior
-amendment in this project is logged (e.g. the 2026-07-06 floor amendment, the
-2026-07-10 audit A1 sign-off). If a value below looks locally suboptimal once you're
-in the code, that is not sufficient reason to change it — pre-registration only works
-if it precedes the result.
+- `A` real, DF-only, from `transfer.py` — never rebuild it ad hoc, never pass CF types.
+- CSM from complex frequency-bin phasor snapshots; carry √λ (eigenmode = √λᵢ·uᵢ).
+- GIBF and MMV receive the identical `V` and `A` in every cell.
+- Report signed GIBF−MMV gaps, never magnitudes.
+- Pre-registration: every threshold you need is already pinned (§8-ii…viii, SPEC §S.3);
+  nothing is tuned after seeing a result. Log hygiene: §8 is append-only.
 
-### 1. Station geometry
+## Stop rule
 
-- **Primary:** synthetic meridional chain, 10 stations, fixed longitude 20.0°E,
-  centered 68.0°N, uniform meridional spacing swept `d ∈ {100, 150, 250}` km
-  (`Δlat = d / 111.19` km-per-degree), ground radius `r = RE` (the `transfer.py`
-  default — don't pass an explicit `r`).
-- **Descriptive secondary (one run, reported not adjudicated):** the real IMAGE
-  Finnish meridional chain — SOR, KEV, KIL, MUO, PEL, OUJ, HAN, NUR, TAR. Look up
-  current published coordinates for these IMAGE stations at run time (they are public
-  station metadata) and record exactly what you used in the run's `manifest.json` —
-  this is a descriptive check, so pinning the *procedure* (use the real IMAGE Finnish
-  chain) is sufficient; the exact coordinate values don't need pre-registration.
-- **SECS pole grid:** latitude spans the station span plus 2 station-spacings margin
-  on each side, sampled at half the station spacing. Longitude spans ±6° about the
-  station meridian, sampled at whatever Δlon gives roughly half-station-spacing
-  azimuthal resolution at 68°N (station spacing in degrees longitude ≈ station
-  spacing in km / (111.19 × cos(68°))). **Offset the pole grid by half a pole spacing
-  in longitude from the station meridian** — this is required, not optional: it's the
-  Gate V V1 coincidence guard (`transfer.py` raises `ValueError` on any exact
-  station–pole lat/lon match, and near-coincidence degrades conditioning even when it
-  doesn't hit the guard exactly).
-- **Descriptive row:** longitude extent doubled to ±12°, to measure how sensitive
-  `κ_ground` is to the azimuthal truncation width (relevant because the source
-  profile is flat in longitude — see below — so the grid's longitude extent is
-  effectively a source-width parameter).
-
-### 2. Sensor noise
-
-- **Primary (adjudicating):** sensor-noiseless. This matches the Tier 1 calibration
-  that pinned the 0.394/0.137 thresholds and the archived floor distributions
-  (`results/A_flr_coherence/floor_distributions.npz`) — both were computed with zero
-  sensor noise so that finite-N leakage was the only effect under calibration. Adding
-  sensor noise to the primary run would break the permutation-test comparison against
-  those floors.
-- **Descriptive sensitivity rows:** `snr_db ∈ {10, 20}` (additive complex Gaussian
-  noise per station-channel, calibrated to the stated SNR against the mean ground
-  signal power). Noise robustness as its own axis belongs to Experiment B, not here.
-
-### 3. Longitude source profile
-
-- **Primary:** flat — the FLR source amplitude `s_t(x)` is azimuthally uniform across
-  the pole grid's longitude extent. Isolates the latitudinal washout mechanism, which
-  is the physics under test.
-- **Descriptive row:** one run with a Gaussian azimuthal envelope, `σ_lon = 2°`, to
-  bound how much finite azimuthal width would change `κ_ground`.
-
-### 4. Monte Carlo and sweep parameters
-
-- `n_mc = 400` trials at the pre-registered primary snapshot count `N = 64` (matches
-  Tier 1's `n_mc`, so the permutation test against the archived floor distributions
-  compares equal-`n` samples — do not use a different `n_mc` at N=64).
-- `n_mc = 100` at `N = 1024` (asymptotic secondary, matches Tier 1).
-- Sweeps: `Q ∈ {5, 10, 20}` (FLR quality factor), `|ρ| ∈ {0.70, 0.85, 0.95}` (source
-  coherence magnitude), `β ∈ {0.05, 0.10, 0.20}` per 100 km (resonance latitudinal
-  gradient) — all three sets are exactly Tier 1's values (see
-  `tier1_flr_coherence.py`'s `phys` table), reused rather than re-chosen.
-- **Placement:** for each `(Q, β, d, |ρ|)` cell, sweep the resonant latitude `x_r`
-  across the station latitude span in 41 uniform steps and take the max over
-  placement (Card A §A.4's "best case a real array could sample" — same principle
-  Tier 1's `pair_phase_max` already implements for the abstract geometry curve;
-  Tier 2 does the analogous sweep through the real kernel).
-- **Seed:** `20260712` (fresh — do not reuse Tier 1's `20260706`).
-
-### 5. `|ρ|` on the continuum grid
-
-Tier 1's two-source model has an explicit `R_s = [[1, ρe^{iφ}],[ρe^{-iφ}, 1]]`
-between exactly two poles. Tier 2 has a continuum of poles along the resonance
-profile, so `|ρ|` needs an operational definition: **calibrate `σ_bg` per cell so
-that the complex coherence magnitude between the two poles nearest `x_r ± 1`
-resonance half-width equals the target `|ρ|`** (this is the continuum analogue of
-Tier 1's two-pole `R_s`, evaluated at the pair that sits closest to Tier 1's "one pole
-near resonance, one off by ~one width" exploitable geometry).
-
-### 6. `κ_source` computation
-
-Compute `κ_source` from the **sampled** source snapshots' CSM at the same `N` (not
-from the analytic `R_s`/continuum covariance in closed form). This keeps the
-source-vs-ground gap (`κ_source − κ_ground`) isolating the kernel's effect, not a
-mismatch between an analytic source statistic and a finite-sample ground statistic.
-
-### 7. Verdict aggregation over the realistic grid
-
-The experiment card pins max-over-placement within one `(Q, β, d, |ρ|)` cell, but not
-how the full realistic grid of cells aggregates into one H-A verdict. Pinned now,
-before any Tier 2 number exists:
-
-- **H-A holds** if **at least one** realistic-grid cell has MC-averaged
-  max-over-placement `κ_ground ≥ 0.30` **with the co-primary concurring**
-  (`‖Im S_ground‖/‖S_ground‖ ≥ 0.394`) at that same cell. This is an existence claim —
-  it matches Card A §A.4's framing ("the *best case* a real array could sample") and
-  Tier 1's own finding that band occupancy is parameter-dependent, not universal.
-- **H-A fails** if **every** realistic-grid cell fails its arm: `κ_ground < 0.10`, or
-  statistically indistinguishable from the same-N floor controls per the gap-conditioned,
-  permutation-tested fail arm (`ROADMAP.md` §8, 2026-07-10 audit A1 entry — reuse
-  `floor_distributions.py`'s per-trial archived distributions and test procedure
-  exactly; 10⁴ resamples, α=0.05, seeded), with the co-primary concurring in the same
-  floor-referenced sense.
-- **Marginal** otherwise. Report the full `κ_ground(Q, |ρ|, d)` surface — this becomes
-  B2's weighting per `ROADMAP.md` node A, regardless of which verdict lands.
-- `κ` is always the **top-1** definition (audit A1, 2026-07-10) — do not use a top-2
-  combination anywhere.
-- Archive **per-trial** arrays (not just MC means) at whichever cell(s) end up
-  adjudicating the verdict — the permutation test needs them, exactly as
-  `floor_distributions.py` archived Tier 1's per-trial floor arrays.
-
-## Invariants — do not violate (from `ROADMAP.md` §2, restated for this task)
-
-- `A` is real. `assert np.isrealobj(A)` — `transfer.py` already asserts finiteness and
-  realness internally; don't work around it.
-- DF-only. Never pass `current_types=("curlfree",)` or include CF columns in any
-  ground inversion — CF is excluded by theorem (Gate V), not by threshold.
-- Build the CSM from complex frequency-bin phasor snapshots, never raw real time
-  samples.
-- Always pre-register before looking at results — you already have every threshold
-  and rule above; do not adjust any of them after seeing a `κ_ground` number.
-- Log hygiene: append to `ROADMAP.md` §8, never edit a past entry.
-
-## Workflow (repo-standard, see the audit A3 entry in `ROADMAP.md` §8, 2026-07-10)
-
-1. Work on a branch, e.g. `tier2-flr-coherence`.
-2. Write `viability-test/tier2_flr_coherence.py` (naming mirrors
-   `tier1_flr_coherence.py`). **Commit the runner before its first real run**
-   (provenance workflow — a manifest that cites a commit must actually contain the
-   script that produced it; see the audit-D2 defect this project hit and fixed).
-3. Run it. Outputs go to `results/A_flr_coherence/` alongside the Tier 1 artifacts
-   (new files, e.g. `tier2_results.npz`, `tier2_summary.csv`, updated or new
-   `manifest.json` / figures — don't overwrite Tier 1's files). Include a
-   `script_sha256` field in the manifest (the A3 workflow standard).
-4. Add tests to `tests/` covering at minimum: the verdict-aggregation logic given a
-   synthetic `κ_ground` surface, and that the permutation test correctly reproduces
-   against a known archived floor distribution. `pytest -q` must stay green.
-5. Append the result to `ROADMAP.md` §8 as a new dated entry (append-only — see
-   existing entries for the expected level of detail: the exact numbers, the verdict,
-   and which cell(s) adjudicated it).
-6. Fill `viability-test/SPEC_experiment_B.md` §S.7 — replace the SLOT-1 placeholder
-   (`|ρ|` = 0.85 mid / {0.70, 0.95} endpoints) with Tier 2's actual realistic range,
-   and write SLOT-2's φ-weighting/framing per the verdict.
-7. Update `ROADMAP.md` §9's status block (the "Active node" / "Most load-bearing next
-   move" / "Sequence" lines) to reflect the landed verdict.
-8. Open a PR against `main`. In the PR description, state the verdict plainly
-   (holds/fails/marginal) and link the `ROADMAP.md` §8 entry.
-9. **Stop.** Do not start Experiment B (B1–B4/B6) — Strider reviews this PR first;
-   the review doubles as the team's ratification checkpoint for the audit A1 pins
-   (κ=top-1, the permutation test, the |ρ|=0.95 calibration curve) that this task
-   depends on.
+After B1 + B3 + mini-pilot land (results, §8 entry, §9 status update, PR): **stop.** The
+powered B2/B6 confirmatory runs start only after Strider reviews the PR, signs off the power
+calc, and the fairness protocol is pinned at manifesto lock. Do not draft manifesto text.
 
 ## If you get stuck
 
-Every design parameter needed to run Tier 2 is pinned above or in `ROADMAP.md` §8's
-2026-07-11 entry. If something genuinely isn't resolvable from this repo (a real
-ambiguity, not just an implementation-detail choice you could reasonably make either
-way), do not guess and do not silently pick a default — that's exactly the
-semantic-drift failure mode the 2026-07-07 repository audit found and fixed (see
-`ROADMAP.md` §8's audit entries). Stop, write down the specific question, and ask
-Strider directly rather than the "team channel" — this task was scoped to be
-answerable from the repo alone, so a real gap here is itself useful information for
-him.
+Same rule as the Tier-2 handoff: if something genuinely isn't resolvable from this repo (a
+real ambiguity, not an implementation choice), do not guess — stop, write down the specific
+question, and ask Strider. A real gap here is itself useful information.

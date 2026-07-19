@@ -8,10 +8,14 @@ SECS (Spherical Elementary Current Systems) source basis.
 **Start here, in this order:**
 
 1. This README (repo orientation, environment setup)
-2. [`ROADMAP.md`](ROADMAP.md) — **canonical, live source of truth** for the research
+2. [`BUILD_BRIEF.md`](BUILD_BRIEF.md) — **onboarding brief**: current build state, the two
+   non-negotiable invariants, the Gate-V/`transfer.py` adapter contract, the audit-A1 pins,
+   and what not to do. Reconciles the sources below into one place. Replaces the archived
+   `docs/archive/GIBF_viability_BUILD_BRIEF.md`.
+3. [`ROADMAP.md`](ROADMAP.md) — **canonical, live source of truth** for the research
    state, decision tree, and build order. If anything below and the roadmap disagree,
    the roadmap wins.
-3. [`EXPERIMENT_CARD_A.md`](EXPERIMENT_CARD_A.md) and
+4. [`EXPERIMENT_CARD_A.md`](EXPERIMENT_CARD_A.md) and
    [`viability-test/SPEC_experiment_B.md`](viability-test/SPEC_experiment_B.md) —
    the frozen experiment designs, once you need that level of detail.
 
@@ -69,7 +73,8 @@ before duplicating it.
 | `viability-test/SPEC_experiment_B.md` | Frozen Experiment B design (B1–B4, B6) |
 | `results/` | Committed output artifacts (figures, summaries) from the scripts above — reproducible, not hand-edited |
 | `secsy/`, `mhd-ibf-reconstruction/`, `magnetometer-time-series-simulator/` | Git submodules. Only `secsy` is currently load-bearing (editable-installed into the conda env, pinned to a specific commit); the other two are still scaffolding |
-| `docs/archive/GIBF_viability_BUILD_BRIEF.md` | **Archived 2026-07-11.** Claude's original build spec (June 2026), superseded by `ROADMAP.md` + `SPEC_experiment_B.md`; kept for history only. Uses pre-rename terminology — its own header explains the mapping |
+| `BUILD_BRIEF.md` | **Current onboarding brief** (2026-07-12): reconciles ROADMAP + SPEC §S.9 + Gate-V pins + audit-A1 + the `transfer.py` contract into one self-consistent read. Replaces the archived brief below |
+| `docs/archive/GIBF_viability_BUILD_BRIEF.md` | **Archived 2026-07-11.** Claude's original build spec (June 2026), superseded by `BUILD_BRIEF.md` + `ROADMAP.md` + `SPEC_experiment_B.md`; kept for history only. Uses pre-rename terminology — its own header explains the mapping |
 | `legacy_mhd_notebook.ipynb` | Legacy MHD notebook (pre-restructure) — the prior-practice MDL-13 cutoff cited by ROADMAP §8-viii lives here; renamed 2026-07-10 from `mhd_notebook (1).ipynb` |
 
 ## Environment setup

@@ -1,0 +1,595 @@
+{
+  "experiment": "Card A Tier 2 (H-A adjudication)",
+  "seed": 20260712,
+  "numpy": "2.4.6",
+  "secsy": "see submodule pin",
+  "git_commit": "1b6c9a54bcf48e4e7c63b74e2222c463cc61dd1e",
+  "script_sha256": "afd70c3fe44fe9461b677fe6aa0abadbbd7e4caff282085db0c58efd1d2da237",
+  "preregistration": "ROADMAP.md \u00a78 2026-07-11 (design pin) + 2026-07-10 (audit A1: kappa=top-1, permutation test alpha=0.05, gap conditioning, |rho|=0.95 threshold curve)",
+  "design": {
+    "stations": "10-station synthetic meridional chain, lon 20.0E, centered 68.0N, d in {100,150,250} km; ground r = RE (transfer.py default)",
+    "pole_grid": "station span + 2 station-spacings margin each side at half-station spacing; lon +/-6 deg (widelon: +/-12) at ~half-station azimuthal spacing at 68N, offset half a pole spacing in lon (Gate V V1 guard)",
+    "sensor_noise": "primary noiseless; descriptive snr_db in {10, 20} referenced to mean total ground signal power",
+    "lon_profile": "primary flat; descriptive Gaussian sigma_lon = 2 deg",
+    "n_mc": {
+      "64": 400,
+      "1024": 100
+    },
+    "Q": [
+      5.0,
+      10.0,
+      20.0
+    ],
+    "rho": [
+      0.7,
+      0.85,
+      0.95
+    ],
+    "beta_per_100km": [
+      0.05,
+      0.1,
+      0.2
+    ],
+    "placements": "x_r over station lat span, 41 uniform steps, max over placement per cell",
+    "rho_operationalization": "sigma_bg calibrated per cell+placement so |coherence| between the two poles nearest x_r +/- 1 half-width (meridian lon column; adjacent-pole tie-break) equals target",
+    "kappa_source": "from sampled source snapshots' CSM at same N (pass 2, identical snapshots as its paired ground stats; independent replicate of pass 1)"
+  },
+  "image_chain": {
+    "stations": {
+      "SOR": [
+        70.54,
+        22.22
+      ],
+      "KEV": [
+        69.76,
+        27.01
+      ],
+      "KIL": [
+        69.06,
+        20.77
+      ],
+      "MUO": [
+        68.02,
+        23.53
+      ],
+      "PEL": [
+        66.9,
+        24.08
+      ],
+      "OUJ": [
+        64.52,
+        27.23
+      ],
+      "HAN": [
+        62.25,
+        26.6
+      ],
+      "NUR": [
+        60.5,
+        24.65
+      ],
+      "TAR": [
+        58.26,
+        26.46
+      ]
+    },
+    "source": "https://space.fmi.fi/image/www/index.php?page=stations (retrieved 2026-07-12)",
+    "mean_spacing_km": 170.6766500000001,
+    "note": "descriptive only; ref_lat = mean station lat; meridian = mean station lon"
+  },
+  "rng_scheme": "np.random.default_rng([SEED, vid, N, iQ, ibeta, id, irho, ipl]) per cell+placement (pass 1); ... + [7] source pass; [SEED, 90, iQ, ibeta, id, irho, test_id] permutation tests",
+  "permutation_test": {
+    "kind": "one-sided two-sample, difference of means",
+    "n_resamples": 10000,
+    "alpha": 0.05,
+    "floors": "results/A_flr_coherence/floor_distributions.npz (audit A2)"
+  },
+  "thresholds": {
+    "kappa_holds": 0.3,
+    "kappa_fails": 0.1,
+    "imfrac_holds": 0.39411308712632537,
+    "imfrac_fails": 0.13690232058036927
+  },
+  "operational_readings": [
+    "GAP-SCALE NOTE: A1 gap-conditioning run raw as pinned AND trace-normalized (x 2/trace) as sensitivity; Tier-2 ground gaps (~tesla^2) vs Tier-1 unit-power floor gaps are scale-mismatched, so the raw test classifies every cell near-degenerate; flagged for Strider's review. Verdict identical under both readings: True",
+    "co-primary floor = canonical incoherent ImFrac floor (0.068); p vs phi0-coherent floor archived descriptively",
+    "both statistics adjudicated at the kappa-argmax placement; co-primary own-placement max archived descriptively",
+    "ground noise drawn in channel space via chol(A A^T) \u2014 equal in distribution to projecting source-space noise (A real)"
+  ],
+  "verdict": {
+    "raw": "holds",
+    "scaled": "holds",
+    "holds_cells": [
+      [
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        1
+      ],
+      [
+        0,
+        0,
+        0,
+        2
+      ],
+      [
+        0,
+        0,
+        1,
+        0
+      ],
+      [
+        0,
+        0,
+        1,
+        1
+      ],
+      [
+        0,
+        0,
+        1,
+        2
+      ],
+      [
+        0,
+        0,
+        2,
+        0
+      ],
+      [
+        0,
+        0,
+        2,
+        1
+      ],
+      [
+        0,
+        0,
+        2,
+        2
+      ],
+      [
+        0,
+        1,
+        0,
+        0
+      ],
+      [
+        0,
+        1,
+        0,
+        1
+      ],
+      [
+        0,
+        1,
+        0,
+        2
+      ],
+      [
+        0,
+        1,
+        1,
+        0
+      ],
+      [
+        0,
+        1,
+        1,
+        1
+      ],
+      [
+        0,
+        1,
+        1,
+        2
+      ],
+      [
+        0,
+        1,
+        2,
+        0
+      ],
+      [
+        0,
+        1,
+        2,
+        1
+      ],
+      [
+        0,
+        1,
+        2,
+        2
+      ],
+      [
+        0,
+        2,
+        0,
+        0
+      ],
+      [
+        0,
+        2,
+        0,
+        1
+      ],
+      [
+        0,
+        2,
+        0,
+        2
+      ],
+      [
+        0,
+        2,
+        1,
+        0
+      ],
+      [
+        0,
+        2,
+        1,
+        1
+      ],
+      [
+        0,
+        2,
+        1,
+        2
+      ],
+      [
+        0,
+        2,
+        2,
+        0
+      ],
+      [
+        0,
+        2,
+        2,
+        1
+      ],
+      [
+        0,
+        2,
+        2,
+        2
+      ],
+      [
+        1,
+        0,
+        0,
+        0
+      ],
+      [
+        1,
+        0,
+        0,
+        1
+      ],
+      [
+        1,
+        0,
+        0,
+        2
+      ],
+      [
+        1,
+        0,
+        1,
+        0
+      ],
+      [
+        1,
+        0,
+        1,
+        1
+      ],
+      [
+        1,
+        0,
+        1,
+        2
+      ],
+      [
+        1,
+        0,
+        2,
+        0
+      ],
+      [
+        1,
+        0,
+        2,
+        1
+      ],
+      [
+        1,
+        0,
+        2,
+        2
+      ],
+      [
+        1,
+        1,
+        0,
+        0
+      ],
+      [
+        1,
+        1,
+        0,
+        1
+      ],
+      [
+        1,
+        1,
+        0,
+        2
+      ],
+      [
+        1,
+        1,
+        1,
+        0
+      ],
+      [
+        1,
+        1,
+        1,
+        1
+      ],
+      [
+        1,
+        1,
+        1,
+        2
+      ],
+      [
+        1,
+        1,
+        2,
+        0
+      ],
+      [
+        1,
+        1,
+        2,
+        1
+      ],
+      [
+        1,
+        1,
+        2,
+        2
+      ],
+      [
+        1,
+        2,
+        0,
+        0
+      ],
+      [
+        1,
+        2,
+        0,
+        1
+      ],
+      [
+        1,
+        2,
+        0,
+        2
+      ],
+      [
+        1,
+        2,
+        1,
+        0
+      ],
+      [
+        1,
+        2,
+        1,
+        1
+      ],
+      [
+        1,
+        2,
+        1,
+        2
+      ],
+      [
+        1,
+        2,
+        2,
+        0
+      ],
+      [
+        1,
+        2,
+        2,
+        1
+      ],
+      [
+        1,
+        2,
+        2,
+        2
+      ],
+      [
+        2,
+        0,
+        0,
+        0
+      ],
+      [
+        2,
+        0,
+        0,
+        1
+      ],
+      [
+        2,
+        0,
+        0,
+        2
+      ],
+      [
+        2,
+        0,
+        1,
+        0
+      ],
+      [
+        2,
+        0,
+        1,
+        1
+      ],
+      [
+        2,
+        0,
+        1,
+        2
+      ],
+      [
+        2,
+        0,
+        2,
+        0
+      ],
+      [
+        2,
+        0,
+        2,
+        1
+      ],
+      [
+        2,
+        0,
+        2,
+        2
+      ],
+      [
+        2,
+        1,
+        0,
+        0
+      ],
+      [
+        2,
+        1,
+        0,
+        1
+      ],
+      [
+        2,
+        1,
+        0,
+        2
+      ],
+      [
+        2,
+        1,
+        1,
+        0
+      ],
+      [
+        2,
+        1,
+        1,
+        1
+      ],
+      [
+        2,
+        1,
+        1,
+        2
+      ],
+      [
+        2,
+        1,
+        2,
+        0
+      ],
+      [
+        2,
+        1,
+        2,
+        1
+      ],
+      [
+        2,
+        1,
+        2,
+        2
+      ],
+      [
+        2,
+        2,
+        0,
+        0
+      ],
+      [
+        2,
+        2,
+        0,
+        1
+      ],
+      [
+        2,
+        2,
+        0,
+        2
+      ],
+      [
+        2,
+        2,
+        1,
+        0
+      ],
+      [
+        2,
+        2,
+        1,
+        1
+      ],
+      [
+        2,
+        2,
+        1,
+        2
+      ],
+      [
+        2,
+        2,
+        2,
+        1
+      ],
+      [
+        2,
+        2,
+        2,
+        2
+      ]
+    ],
+    "best_cell": {
+      "idx": [
+        0,
+        2,
+        2,
+        2
+      ],
+      "kappa": 0.6815289163756754,
+      "imfrac": 0.6936166243626816
+    }
+  }
+}

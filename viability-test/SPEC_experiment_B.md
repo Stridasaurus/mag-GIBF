@@ -2,7 +2,7 @@
 
 > **Layer:** technical SPEC (repo context) — the design layer between `ROADMAP.md` §6 Card B (the decision layer, authoritative) and the code. Written 2026‑07‑07, the same sitting as the §8‑iii/vi/vii sign‑offs. Where this SPEC and the master build brief (`GIBF_viability_BUILD_BRIEF.md`, **flagged stale**) conflict, **this SPEC and the roadmap win**; conflicts are listed in §S.9.
 >
-> **Status: design frozen except two Card‑A slots** (§S.7) that Tier 2 fills before Experiment B runs, and the fairness protocol's final pinning at manifesto lock (§S.6, roadmap §9 open question 1). No Experiment‑B code exists yet; nothing here was tuned to a result.
+> **Status: design frozen; both Card‑A slots FILLED by Card A Tier 2 (2026‑07‑12, §S.7)** — only the fairness protocol's final pinning at manifesto lock remains open (§S.6, roadmap §9 open question 1). No Experiment‑B code exists yet; nothing here was tuned to a result.
 
 ## S.0 What is being decided, restated
 
@@ -83,8 +83,8 @@ D2's outcome map (worth‑it / free option / liability / robustness pivot / drop
 
 ## S.7 Card‑A slots (the only unfrozen design inputs)
 
-- **SLOT‑1 — `|ρ|`:** B2/B6 coherence magnitude = Card A Tier 2's realistic range (midpoint at confirmatory cells; range endpoints as descriptive rows). Until Tier 2 lands, placeholder 0.85 mid / {0.70, 0.95} endpoints (the Tier‑1 sweep values) — **not runnable as confirmatory until replaced**.
-- **SLOT‑2 — φ weighting/framing:** Card A's verdict sets the descriptive weighting of the φ axis and the paper framing per roadmap node A. It does **not** move the confirmatory cells (§8‑iii, pinned data‑independent).
+- **SLOT‑1 — `|ρ|`: FILLED (Card A Tier 2, 2026‑07‑12; `ROADMAP.md` §8).** B2/B6 coherence magnitude = **0.85 at the confirmatory cells; {0.70, 0.95} endpoints as descriptive rows.** Tier 2 confirmed the Tier‑1 sweep values as the realistic range: H‑A holds across all of |ρ| ∈ {0.70, 0.85, 0.95} (80/81 realistic cells), and κ_ground is |ρ|‑insensitive through the real kernel (grid means 0.561/0.568/0.571), so the former placeholder values are now the pinned values — Experiment B is runnable as confirmatory.
+- **SLOT‑2 — φ weighting/framing: FILLED (Card A Tier 2, 2026‑07‑12; H‑A HOLDS).** Per roadmap node A's holds arm: B2's **descriptive weighting** of the φ axis centres on the realistic phase‑offset band, weighted by the archived `κ_ground(Q, |ρ|, d)` surface (`results/A_flr_coherence/tier2_results.npz`; best cell κ_ground = 0.6815 with co‑primary 0.6936, IMAGE‑chain concurrence 0.689). Paper framing: **"exploitable structure exists in the physically dominant regime"** — with the Tier‑2 washout report (κ_source − κ_ground ∈ [−0.317, +0.206]; the kernel concentrates rather than destroys the coherent structure) as the mechanistic support. The confirmatory cells are unmoved (§8‑iii, pinned data‑independent).
 
 Sequencing gate restated: **Gate V → `transfer.py` → Card A Tier 2 → fill slots → Experiment B** (B1 pilot → mini‑pilot → powered B2/B6, B3/B4 alongside).
 

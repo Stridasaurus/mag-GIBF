@@ -1,6 +1,10 @@
 # Handoff — Experiment B kickoff: solver stack + B1 (cost/pilot/floor) + B3 (mode-selection surfaces)
 
-> **Assigned to:** TBD by Strider (the Shane-per-`handoff.md` pattern worked for Tier 2; his call).
+> **Assigned to:** a standard-tier Claude Code session (Strider's call, confirmed 2026-07-20).
+> This file is the assignment — run it from cold per the note below. Strider's only role in
+> Experiment B is the **§8-ii power-calc sign-off** that gates powered B2/B6; he is not the
+> executor. (A 2026-07-19 record briefly listed him as the assignee, which turned that gate into
+> an assignment and stalled the build for a day; corrected 2026-07-20.)
 > **Written:** 2026-07-12, by the frontier session that verified the Tier 2 PR (verification memo
 > in Strider's research vault). The previous handoff (Card A Tier 2) completed 2026-07-12 —
 > H-A HOLDS, `ROADMAP.md` §8 — and lives in git history (`git show 00b426a:handoff.md`).
@@ -18,7 +22,7 @@
    vault review memo). It resolves the gap-conditioning scale reading — the fail-arm
    statistic your permutation code must implement (expected resolution: **trace-normalized**,
    gap × 2/trace(S); confirm against the actual appended entry, which is authoritative).
-3. **Strider has named the assignee** (top of this file updated).
+3. ~~**Strider has named the assignee**~~ — **CLEARED 2026-07-20** (standard-tier session; header updated).
 
 ## The one-line task
 

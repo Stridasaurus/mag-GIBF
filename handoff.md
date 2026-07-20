@@ -27,16 +27,18 @@ cell runner) per `viability-test/SPEC_experiment_B.md`, pass the single-source e
 gate, then run **B1** (full grid, both grid-reduction settings) and **B3** (both criteria),
 plus the **50-trial mini-pilot** at the φ=90°/5 dB/`d=3` cell. Land results + a §8 entry +
 open a PR. **Stop before powered B2/B6** — the power calculation (§8-ii: n_trials from
-max(B1 pilot SD, mini-pilot SD)) is reviewed by Strider together with the manifesto-lock
-pinning of the fairness protocol (§S.6) before any confirmatory cell runs.
+max(B1 pilot SD, mini-pilot SD), **reduction-ON rows** per pinned §S.6.2) is reviewed by
+Strider before any confirmatory cell runs. The fairness protocol is **PINNED as of
+2026-07-19** (SPEC §S.6 + ROADMAP §8 amendment) — the power-calc sign-off is the only
+remaining gate.
 
 ## Why this scope line (so you don't re-derive it)
 
 B1 and B3 **never adjudicate D2** (SPEC §S.2: B1 is cost/pilot/floor; B3 is descriptive,
-feeding B6a's `n_snap` choice). They are therefore safe to run before the fairness protocol's
-final pinning at manifesto lock. The confirmatory machinery (B2's φ-resolved signed gap at the
-§8-iii cells, B6a) waits for the power calc + protocol pinning — that boundary is exactly the
-pre-registration discipline that made Tier 2's verdict trustworthy.
+feeding B6a's `n_snap` choice). They were therefore safe to run before the fairness protocol
+pinned — and it is now pinned (2026-07-19). The confirmatory machinery (B2's φ-resolved
+signed gap at the §8-iii cells, B6a) waits for the power-calc sign-off — that boundary is
+exactly the pre-registration discipline that made Tier 2's verdict trustworthy.
 
 ## Read in this order
 
@@ -48,7 +50,8 @@ pre-registration discipline that made Tier 2's verdict trustworthy.
    where they conflict, `SPEC_experiment_B.md` and `ROADMAP.md` win.
 4. `viability-test/SPEC_experiment_B.md` — **your primary design document.** §S.1 (shared MC
    skeleton), §S.2 (B1/B3 designs), §S.4 (modeselect), §S.5 (outputs), §S.6 (fairness protocol
-   draft — implement it as spec'd; its *final* pinning happens at manifesto lock), §S.7
+   — **PINNED 2026-07-19**; implement exactly as pinned, incl. the shared config object,
+   the V/√λ₁ scale convention, and the three-solver two-tier gate), §S.7
    (both Card-A slots now FILLED), §S.8 (module deltas — your build checklist).
 5. `ROADMAP.md` §2 (invariants), §5 node D2, §6 Card B, §8's 2026-07-12 entry (Tier 2) and
    the ratification entry above it once appended, §9.
@@ -80,8 +83,10 @@ pre-registration discipline that made Tier 2's verdict trustworthy.
 
 ## Run order (each with its own commit before first run — A3 workflow)
 
-1. **Single-source exact-recovery gate (SPEC §S.6.4):** one isolated DF source, 20 dB,
-   `n_snap=64` — all three solvers must localise to the exact cell. **Failure HALTS
+1. **Single-source exact-recovery gate (SPEC §S.6.4, pinned):** one isolated DF source at
+   the grid cell nearest the array centroid, oracle K=1, `n_snap=64` — **all three solvers**,
+   two tiers: (i) noise-free deterministic, (ii) 20 dB MC × 10 trials, all pass; exact cell
+   = global argmax (τ=0); sparse solvers at both reduction settings. **Failure HALTS
    Experiment B** (solver bug, not science). Archive the gate result like Gate V's artifacts.
 2. **B1:** `d ∈ {1,2,3,5,8}` cells × `snr_db ∈ {−5,0,5,10,20}`, `n_snap=64`, oracle K=2,
    incoherent equal-power pair, grid reduction **on and off** (SPEC §S.2-B1). Deliverables:
@@ -91,8 +96,9 @@ pre-registration discipline that made Tier 2's verdict trustworthy.
    (snr, n_snap) — B6a's `n_snap` is read from it per §8-vii (largest n_snap where MDL error
    ≥ 20% at 5 dB, fallback 8). Compute and REPORT that value; do not run B6a.
 4. **Mini-pilot:** 50 trials at φ=90°, snr 5 dB, `d=3`, `n_snap=64`, `|ρ|=0.85` (SLOT-1),
-   both solvers — its SD is the other input to the §8-ii power calc. Report both SDs and a
-   candidate n_trials; **do not run the powered cells.**
+   both solvers, **grid reduction ON** (pinned §S.6.2 — the confirmatory setting; the §8-ii
+   SD inputs read from reduction-ON rows) — its SD is the other input to the §8-ii power
+   calc. Report both SDs and a candidate n_trials; **do not run the powered cells.**
 
 Outputs to `results/B_viability/` per SPEC §S.5 (manifest with config hash, git commit,
 `script_sha256`, master seed). Seed: derive fresh (date-based, like Tier 2's 20260712 —
@@ -110,8 +116,8 @@ record it; do not reuse 20260706/20260712).
 ## Stop rule
 
 After B1 + B3 + mini-pilot land (results, §8 entry, §9 status update, PR): **stop.** The
-powered B2/B6 confirmatory runs start only after Strider reviews the PR, signs off the power
-calc, and the fairness protocol is pinned at manifesto lock. Do not draft manifesto text.
+powered B2/B6 confirmatory runs start only after Strider reviews the PR and signs off the
+power calc (the fairness protocol is already pinned, 2026-07-19). Do not draft manifesto text.
 
 ## If you get stuck
 

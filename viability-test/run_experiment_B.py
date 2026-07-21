@@ -206,25 +206,57 @@ def run_b3():
     """B3 (SPEC §S.2-B3): incoherent equal-power pair at fixed d=D_B3
     (documented choice, see module docstring), snr x n_snap grid, both AIC
     and MDL K-hat vs truth K=2. Grid reduction is irrelevant here (mode
-    selection precedes any solver call) so it is not swept."""
+    selection precedes any solver call) so it is not swept.
+
+    EIGENVALUE-FLOOR FINDING (documented, same class as Tier 2's gap-scale
+    note; NOT a re-opened pre-registration): SPEC §S.4 pins
+    `estimate_n_sources`'s eigenvalue floor at 1e-18, evidently calibrated
+    for an O(1) unit-power abstract scenario (Tier 1's convention). This
+    B-geometry's real ground CSM lives at ~1e-24 (tesla^2) -- BELOW the
+    floor entirely -- so every eigenvalue clips to the identical floor
+    value, the log-domain LLR degenerates to 0 for every k, and MDL/AIC
+    always select k_hat=0 (clipped to 1): 100% error at every (snr, n_snap)
+    cell, uninformative by construction, not a real finding about mode
+    selection. The Wax-Kailath LLR is provably invariant to a uniform
+    rescaling of ALL eigenvalues by a positive constant (log_geo shifts by
+    ln(c), ari scales by c, the difference log_geo - ln(ari) is unchanged)
+    -- so trace-normalizing before the floor (lam * 2/trace(S), the exact
+    rescaling SPEC/ROADMAP already adopted for Tier 2's gap-conditioning
+    statistic and for the S.6.1 solver scale convention) only changes how
+    the ABSOLUTE floor treats genuinely negligible noise eigenvalues; it
+    does not touch the LLR's actual discriminating content. Both readings
+    are computed and reported below; the trace-normalized one is used for
+    the B3 deliverable and the B6a n_snap procedure, flagged for Strider
+    exactly like Tier 2's dual raw/scaled gap-conditioning entry."""
     tm = build_array_and_grid(row_normalisation=ROW_NORMALISATION)
     idx_a, idx_b = row_center_cols(COL_A, D_B3)
     cells = {}
     for snr_db in SNR_AXIS_B3:
         for n_snap in NSNAP_AXIS_B3:
             k_mdl, k_aic = [], []
+            k_mdl_raw, k_aic_raw = [], []
             for trial in range(N_TRIALS_B3):
                 rng = _rng(3, "b3", snr_db, n_snap, trial)
                 X, _ = simulate_snapshots(tm, [idx_a, idx_b], [1.0, 1.0], rng,
                                           n_snap=n_snap, snr_db=snr_db)
                 S = build_csm(X)
                 lam, U = eigendecompose(S)
-                kh_mdl, _, _, _ = estimate_n_sources(lam, n_snap, criterion="mdl")
-                kh_aic, _, _, _ = estimate_n_sources(lam, n_snap, criterion="aic")
+                trace_S = float(np.sum(lam))
+                lam_norm = lam * (2.0 / trace_S) if trace_S > 0 else lam
+
+                kh_mdl, _, _, _ = estimate_n_sources(lam_norm, n_snap, criterion="mdl")
+                kh_aic, _, _, _ = estimate_n_sources(lam_norm, n_snap, criterion="aic")
                 k_mdl.append(kh_mdl)
                 k_aic.append(kh_aic)
+
+                kh_mdl_raw, _, _, _ = estimate_n_sources(lam, n_snap, criterion="mdl")
+                kh_aic_raw, _, _, _ = estimate_n_sources(lam, n_snap, criterion="aic")
+                k_mdl_raw.append(kh_mdl_raw)
+                k_aic_raw.append(kh_aic_raw)
             k_mdl = np.array(k_mdl)
             k_aic = np.array(k_aic)
+            k_mdl_raw = np.array(k_mdl_raw)
+            k_aic_raw = np.array(k_aic_raw)
             cells[(snr_db, n_snap)] = dict(
                 snr_db=snr_db, n_snap=n_snap,
                 mdl_error_rate=float(np.mean(k_mdl != 2)),
@@ -232,6 +264,8 @@ def run_b3():
                 mdl_mean=float(np.mean(k_mdl)), aic_mean=float(np.mean(k_aic)),
                 mdl_khat_hist={int(k): int(np.sum(k_mdl == k)) for k in sorted(set(k_mdl.tolist()))},
                 aic_khat_hist={int(k): int(np.sum(k_aic == k)) for k in sorted(set(k_aic.tolist()))},
+                mdl_error_rate_raw_aspinned=float(np.mean(k_mdl_raw != 2)),
+                aic_error_rate_raw_aspinned=float(np.mean(k_aic_raw != 2)),
             )
     return cells
 
@@ -250,8 +284,12 @@ def b1_max_sd_cell(b1_cells, reduction=True):
 
 def b6a_nsnap_from_b3(b3_cells, snr_db=5.0):
     """§8-vii procedure: largest n_snap in {8,16,32,64,128} where B3's MDL
-    K-hat error rate >= 20% at the given SNR (fallback 8). Computed and
-    REPORTED here; B6a itself is NOT run (out of this handoff's scope)."""
+    K-hat error rate >= 20% at the given SNR (fallback 8). Uses the
+    trace-normalized error rate (see run_b3's eigenvalue-floor finding) --
+    the raw-as-pinned rate is 100% at every cell (floor-clipping
+    degeneracy) and would trivially always return the fallback. Computed
+    and REPORTED here; B6a itself is NOT run (out of this handoff's
+    scope)."""
     candidates = [n for n in NSNAP_AXIS_B3
                  if b3_cells[(snr_db, n)]["mdl_error_rate"] >= 0.20]
     return max(candidates) if candidates else 8
@@ -341,8 +379,20 @@ def main():
     b3_serializable = {f"{s}|{n}": v for (s, n), v in b3_cells.items()}
     (RESULTS / "b3_results.json").write_text(json.dumps(b3_serializable, indent=2))
     b6a_nsnap = b6a_nsnap_from_b3(b3_cells, snr_db=5.0)
+    raw_err_5db = {n: b3_cells[(5.0, n)]["mdl_error_rate_raw_aspinned"] for n in NSNAP_AXIS_B3}
+    print(f"FINDING: SPEC S.4's eigenvalue floor (1e-18) is calibrated for "
+         f"O(1) unit-power scenarios; this B-geometry's real ground CSM is "
+         f"~1e-24, BELOW the floor entirely, so every eigenvalue clips "
+         f"identically and MDL/AIC always report k_hat=1 as literally "
+         f"pinned (raw error rate at 5dB across n_snap: {raw_err_5db}) -- "
+         f"a floor-clipping degeneracy, not a mode-selection result. "
+         f"Trace-normalized (lam * 2/trace(S), the LLR is provably scale- "
+         f"invariant under uniform rescaling; same precedent as Tier 2's "
+         f"gap-conditioning resolution) restores real discrimination; used "
+         f"for the deliverable below. Both readings archived; flagged for "
+         f"Strider, not resolved unilaterally.")
     print(f"B6a n_snap candidate (from B3 MDL error >= 20% at 5dB, "
-         f"fallback 8): {b6a_nsnap}")
+         f"trace-normalized reading, fallback 8): {b6a_nsnap}")
 
     print("=== Mini-pilot (50 trials, phi=90, 5dB, d=3, reduction ON) ===")
     minipilot = run_minipilot()
@@ -406,6 +456,23 @@ def main():
         b1_max_sd_cell=dict(d=int(max_sd_key[1]), snr_db=float(max_sd_key[2]), reduction=True,
                             gap_mean=max_sd_cell["gap_mean"], gap_sd=max_sd_cell["gap_sd"]),
         b6a_nsnap_candidate=b6a_nsnap,
+        eigenvalue_floor_finding=(
+            "SPEC S4's eigenvalue floor (1e-18) is calibrated for O(1) "
+            "unit-power scenarios; this B-geometry's real ground CSM "
+            "eigenvalues are ~1e-24, below the floor entirely, so raw "
+            "(as literally pinned) MDL/AIC always select k_hat=1 -- 100% "
+            "error at every B3 cell -- a floor-clipping degeneracy, not a "
+            "mode-selection finding (raw error rate at 5dB across n_snap: "
+            f"{raw_err_5db}). Trace-normalizing eigenvalues by 2/trace(S) "
+            "before the floor (the LLR is provably invariant to uniform "
+            "rescaling; same precedent as Tier 2's gap-conditioning "
+            "resolution and the S.6.1 solver scale convention) restores "
+            "real discrimination and is used for the B3 deliverable / B6a "
+            "n_snap procedure below. Both readings archived in "
+            "b3_results.json (mdl_error_rate = trace-normalized, "
+            "mdl_error_rate_raw_aspinned = literal SPEC S.4 reading); "
+            "flagged for Strider, not resolved unilaterally."
+        ),
         minipilot=dict(gap_mean=minipilot["gap_mean"], gap_sd=minipilot["gap_sd"],
                       n_trials=minipilot["n_trials"]),
         ceiling_effect_finding=(

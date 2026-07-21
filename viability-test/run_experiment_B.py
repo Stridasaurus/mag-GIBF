@@ -236,6 +236,18 @@ def run_b3():
     return cells
 
 
+def b1_max_sd_cell(b1_cells, reduction=True):
+    """The B1 grid cell (reduction-ON, per §S.6.2) with the largest observed
+    signed-gap SD. Neither ROADMAP.md nor SPEC_experiment_B.md names a
+    specific B1 cell as 'the pilot SD' — B1 as a whole serves pilot duty
+    (SPEC §S.2-B1: '...the §8-ii pilot SD...'). Reported as the conservative
+    alternative to whichever single matched cell is picked as a reference
+    (see run_experiment_B.main's ceiling-effect finding)."""
+    on_cells = {k: v for k, v in b1_cells.items() if k[0] is reduction}
+    best_key = max(on_cells, key=lambda k: on_cells[k]["gap_sd"])
+    return best_key, on_cells[best_key]
+
+
 def b6a_nsnap_from_b3(b3_cells, snr_db=5.0):
     """§8-vii procedure: largest n_snap in {8,16,32,64,128} where B3's MDL
     K-hat error rate >= 20% at the given SNR (fallback 8). Computed and
@@ -316,8 +328,13 @@ def main():
     b1_serializable = {f"{r}|{d}|{s}": v for (r, d, s), v in b1_cells.items()}
     (RESULTS / "b1_results.json").write_text(json.dumps(b1_serializable, indent=2))
     pilot_cell = b1_cells[(True, 3, 5.0)]
-    print(f"B1 pilot cell (d=3, snr=5dB, reduction=ON): "
-         f"GIBF-MMV gap mean={pilot_cell['gap_mean']:.4f} sd={pilot_cell['gap_sd']:.4f}")
+    print(f"B1 matched cell (d=3, snr=5dB, reduction=ON, mirroring the "
+         f"mini-pilot's d/coordinates): GIBF-MMV gap mean="
+         f"{pilot_cell['gap_mean']:.4f} sd={pilot_cell['gap_sd']:.4f}")
+    max_sd_key, max_sd_cell = b1_max_sd_cell(b1_cells, reduction=True)
+    print(f"B1 max-SD cell (reduction=ON) across the whole grid: "
+         f"d={max_sd_key[1]}, snr={max_sd_key[2]}dB -> gap sd="
+         f"{max_sd_cell['gap_sd']:.4f} (mean={max_sd_cell['gap_mean']:.4f})")
 
     print("=== B3 (mode-selection surfaces) ===")
     b3_cells = run_b3()
@@ -333,11 +350,32 @@ def main():
     print(f"Mini-pilot: GIBF-MMV gap mean={minipilot['gap_mean']:.4f} "
          f"sd={minipilot['gap_sd']:.4f}")
 
-    variance_input = max(pilot_cell["gap_sd"], minipilot["gap_sd"])
-    print(f"\n§8-ii power-calc variance input = max(B1 pilot SD, mini-pilot SD) "
-         f"= max({pilot_cell['gap_sd']:.4f}, {minipilot['gap_sd']:.4f}) "
-         f"= {variance_input:.4f} (reduction-ON rows, per §S.6.2)")
-    print("STOP — powered B2/B6 wait on Strider's §8-ii power-calc sign-off.")
+    ceiling_effect = (pilot_cell["gap_sd"] == 0.0 and minipilot["gap_sd"] == 0.0)
+    if ceiling_effect:
+        print("\nFINDING: both the matched B1 cell (d=3, 5dB) and the pinned "
+             "mini-pilot cell (d=3, coherent, 5dB) show ZERO variance — every "
+             "trial of every method achieves exact P_sep=1/delta_r_bar=0 at "
+             "d=3 in this (documented, non-pre-registered) grid geometry. "
+             "This is a genuine ceiling effect, not a solver bug (see the "
+             "single-source gate + B1's own d=1/d=2 rows, which show the "
+             "expected floor/cost structure). A zero-variance SD cannot "
+             "usefully seed the §8-ii power calc.")
+
+    variance_input_matched = max(pilot_cell["gap_sd"], minipilot["gap_sd"])
+    variance_input_conservative = max(max_sd_cell["gap_sd"], minipilot["gap_sd"])
+    print(f"\n§8-ii power-calc variance input, MATCHED-CELL reading = "
+         f"max(B1 d=3/5dB SD, mini-pilot SD) = max({pilot_cell['gap_sd']:.4f}, "
+         f"{minipilot['gap_sd']:.4f}) = {variance_input_matched:.4f}")
+    print(f"§8-ii power-calc variance input, CONSERVATIVE reading = "
+         f"max(B1 grid-max SD [d={max_sd_key[1]}, {max_sd_key[2]}dB], "
+         f"mini-pilot SD) = max({max_sd_cell['gap_sd']:.4f}, "
+         f"{minipilot['gap_sd']:.4f}) = {variance_input_conservative:.4f}")
+    print("Neither ROADMAP.md nor SPEC_experiment_B.md names which B1 cell "
+         "feeds 'the B1 pilot SD' when B1 has a d x snr grid rather than one "
+         "cell — flagged for Strider alongside the numbers, not resolved "
+         "unilaterally (same posture as Tier 2's gap-scale note).")
+    print("STOP — powered B2/B6 wait on Strider's §8-ii power-calc sign-off; "
+         "n_trials itself is NOT computed here.")
 
     script = Path(__file__).resolve()
     manifest = dict(
@@ -363,14 +401,34 @@ def main():
                              tol=FAIRNESS_CONFIG.tol,
                              min_active_factor=FAIRNESS_CONFIG.min_active_factor),
         gate_passed=gate["passed"],
-        b1_pilot_cell=dict(d=3, snr_db=5.0, reduction=True,
-                           gap_mean=pilot_cell["gap_mean"], gap_sd=pilot_cell["gap_sd"]),
+        b1_matched_cell=dict(d=3, snr_db=5.0, reduction=True,
+                             gap_mean=pilot_cell["gap_mean"], gap_sd=pilot_cell["gap_sd"]),
+        b1_max_sd_cell=dict(d=int(max_sd_key[1]), snr_db=float(max_sd_key[2]), reduction=True,
+                            gap_mean=max_sd_cell["gap_mean"], gap_sd=max_sd_cell["gap_sd"]),
         b6a_nsnap_candidate=b6a_nsnap,
         minipilot=dict(gap_mean=minipilot["gap_mean"], gap_sd=minipilot["gap_sd"],
                       n_trials=minipilot["n_trials"]),
-        power_calc_variance_input=variance_input,
-        power_calc_status="PENDING Strider's S8-ii sign-off; n_trials NOT yet "
-                          "computed/run; powered B2/B6 NOT executed",
+        ceiling_effect_finding=(
+            "d=3 (both the B1 matched cell and the pinned mini-pilot cell) "
+            "gives EXACT recovery (P_sep=1, delta_r_bar=0) for every trial, "
+            "every method, at this documented (non-pre-registered) grid "
+            "geometry -> zero-variance SD, unusable as a power-calc input. "
+            "d=1 is the opposite floor (sources merge into one peak, "
+            "P_sep=0 always). d=2 is the only grid point with real "
+            "cross-trial variance and shows the pre-registered structural "
+            "expectation cleanly (GIBF penalty largest at small d, reduction "
+            "OFF especially: MMV separates almost perfectly while GIBF "
+            "struggles at low SNR). Neither ROADMAP.md nor "
+            "SPEC_experiment_B.md names which B1 cell is 'the' §8-ii pilot "
+            "SD when B1 is a grid, not a single cell — this is flagged for "
+            "Strider, not resolved unilaterally, mirroring Tier 2's "
+            "gap-scale-note posture." if ceiling_effect else "not observed"
+        ),
+        power_calc_variance_input_matched_reading=variance_input_matched,
+        power_calc_variance_input_conservative_reading=variance_input_conservative,
+        power_calc_status="PENDING Strider's S8-ii sign-off (incl. which SD "
+                          "reading to adopt); n_trials NOT yet computed/run; "
+                          "powered B2/B6 NOT executed",
         runtime_s=round(time.time() - t0, 1),
     )
     (RESULTS / "manifest.json").write_text(json.dumps(manifest, indent=2))

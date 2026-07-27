@@ -2,8 +2,8 @@
   "experiment": "Experiment B kickoff: solver stack + B1 + B3 + mini-pilot",
   "seed": 20260727,
   "numpy": "2.4.6",
-  "git_commit": "79c42004f98caef5f38447f27f18f34566e3c652",
-  "script_sha256": "636e50bf34f605301e23356f7f56de6d22bd8621cd6c8f3768a7da345df913c9",
+  "git_commit": "19e27dbb98f2b832a2a417cca3c91b7c7d22df45",
+  "script_sha256": "d563f3dba27af5cce2b55bdf74eae62fa419dfa26c27c884ba6c0eccd986c3e9",
   "preregistration": "handoff.md (2026-07-12, assignee corrected 2026-07-20); SPEC_experiment_B.md S.1/S.2/S.4/S.6/S.10; ROADMAP.md S8-ii...viii + the 2026-07-27 entry",
   "geometry": {
     "center_lat": 70.0,
@@ -103,9 +103,15 @@
       }
     }
   },
-  "degenerate_confirmatory_cell": false,
+  "confirmatory_cell_gap_sd_is_zero": false,
+  "confirmatory_cell_at_ceiling": true,
+  "confirmatory_cell_ceiling_methods": [
+    "mmv"
+  ],
+  "confirmatory_cell_adjudicable": false,
+  "confirmatory_cell_note": "A sparse solver pinned at delta_r_bar = 0.000 on every trial makes the pre-registered win rule ('GIBF \u0394r\u0304 >= 20% lower' \u2014 20% below zero is negative) and the mirrored loss rule (a degenerate [0, 0] CI can never fail to overlap) unsatisfiable at this cell at ANY n_trials, and P_sep = 1.00 for both sparse solvers closes the second win-rule arm as well. A nonzero gap SD makes the \u00a78-ii VARIANCE INPUT usable; it does not make the CELL adjudicable. Read `confirmatory_cell_adjudicable`, not the SD, before sizing a confirmatory run.",
   "power_calc_variance_input_matched_reading": 0.34641016151377546,
   "power_calc_variance_input_conservative_reading": 10.55162518573036,
   "power_calc_status": "PENDING Strider's S8-ii sign-off (incl. which SD reading to adopt); n_trials NOT yet computed/run; powered B2/B6 NOT executed",
-  "runtime_s": 64.3
+  "runtime_s": 57.8
 }

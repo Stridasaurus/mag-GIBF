@@ -1,35 +1,35 @@
 {
   "n_grid": 121,
   "n_channels": 75,
-  "reduction": true,
+  "reduction": false,
   "min_active_factor_times_n_channels": 150,
   "gibf_n_iter_per_trial": [
     [
-      1,
-      1
+      26,
+      22
     ],
     [
-      1,
-      1
+      22,
+      27
     ],
     [
-      1,
-      1
+      29,
+      15
     ],
     [
-      1,
-      1
+      22,
+      40
     ],
     [
-      1,
-      1
+      23,
+      30
     ]
   ],
   "mmv_n_iter_per_trial": [
-    1,
-    1,
-    1,
-    1,
-    1
+    30,
+    23,
+    36,
+    19,
+    21
   ]
 }

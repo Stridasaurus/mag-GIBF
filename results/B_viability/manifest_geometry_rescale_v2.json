@@ -3,8 +3,8 @@
   "supersedes": "manifest_geometry_rescale.json / minipilot_rescaled_results.json (v1, git commits 26bbb78/753706f) -- v1 is left on disk, unedited, per the append-only log-hygiene convention; v1's own numbers are unchanged, but its placement (col_a=7, grid-centered) diverges from B1's edge-anchored calibration and it did not record n_iter. Re-running with only the placement fixed reproduces v1's ceiling exactly.",
   "seed": 20260727,
   "numpy": "2.4.6",
-  "git_commit": "b4a9b2f05011daae35c72bf44c8f73b7eba8002c",
-  "script_sha256": "8f02979af0dd7aef09c0335ce7dcaa4c7d2411393f0a1a0063ee9d3a7bf0a27d",
+  "git_commit": "df991094fd837c066e223a079244013442e03859",
+  "script_sha256": "034f056b1ea1d89a9d34cd62435ce4d6323d239fbbe977629038f3ef6b14bedb",
   "preregistration": "vault secs-gibf-viability-AT-DISPATCH.md, \u00a78-ii sign-off 2026-07-27 (Rulings 1 and 2); ROADMAP.md \u00a78 2026-07-27 entries",
   "geometry": {
     "original": {
@@ -86,8 +86,51 @@
       1
     ]
   },
+  "minipilot_rescaled_v2_reduction_off": {
+    "gap_mean": 0.0,
+    "gap_sd": 0.0,
+    "p_sep_gibf": 1.0,
+    "p_sep_mmv": 1.0,
+    "gibf_n_iter_mean": 26.24,
+    "gibf_n_iter_min": 9,
+    "gibf_n_iter_max": 50
+  },
+  "original_grid_reduction_off_reference": {
+    "gibf_n_iter_samples": [
+      [
+        26,
+        22
+      ],
+      [
+        22,
+        27
+      ],
+      [
+        29,
+        15
+      ],
+      [
+        22,
+        40
+      ],
+      [
+        23,
+        30
+      ]
+    ],
+    "mmv_n_iter_samples": [
+      30,
+      23,
+      36,
+      19,
+      21
+    ]
+  },
   "ceiling_survives": true,
-  "confound_b_niter_unresolved": true,
-  "status": "STOP per dispatch: powered B2/B6 NOT run; n_trials NOT computed; ceiling-survives finding is confounded by the n_iter side effect (confound B) and returns to Strider unresolved, alongside this run's real (still-zero) SD",
-  "runtime_s": 0.8
+  "ceiling_survives_reduction_off": true,
+  "confound_b_niter_flagged_and_tested": true,
+  "confound_b_finding": "With reduction OFF, n_iter is governed by cost-tolerance convergence at both grid densities (tens of iterations, comparable order of magnitude at both geometries) rather than by the density-dependent pruning threshold that produced the reduction-ON 1-vs-7 split. The ceiling still holds under this iteration-count-matched regime at both geometries -- evidence the ceiling reflects the (phi=90, |rho|=0.85, snr=5dB, N=64) regime's separability, not primarily the reduction-ON iteration-count artifact. Reported as evidence, not as a unilateral resolution of confound (B) -- Strider's call on how much weight this carries.",
+  "four_things_move_with_grid_density": "(1) physical cell size, intended by Ruling 1; (2) reduction-ON n_iter (evidenced, tested non-explanatory via the OFF row above); (3) tau_r=1 cell / '>=1 cell smaller' win criterion's physical meaning (SPEC S3, ROADMAP S8-iii/vi/vii); (4) metrics.py's grid-diagonal unmatched-source penalty and find_peaks_2d's peak search operate on a differently-sampled PSF at each density. All four are code-verifiable; only (1) was what Ruling 1's justification rested on.",
+  "status": "STOP per dispatch: powered B2/B6 NOT run; n_trials NOT computed; the reduction-ON ceiling-survives finding is now cross-checked against a reduction-OFF row (SPEC S.6.2, already-pinned descriptive protocol) that controls for the n_iter confound and still shows the ceiling -- returned to Strider as evidence, not a unilateral resolution",
+  "runtime_s": 2.0
 }

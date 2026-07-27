@@ -21,6 +21,27 @@ Two invariants honoured here (ROADMAP §2 / repo CLAUDE.md):
   - A stays real (asserted downstream in every solver, not here).
   - Snapshots are COMPLEX frequency-bin phasors (CN(0, power) draws), never
     raw real time samples -> CSM is genuinely complex Hermitian.
+
+GEOMETRY-RESCALE PASS (ROADMAP §8, 2026-07-27; vault ruling
+`secs-gibf-viability-AT-DISPATCH.md` §8-ii sign-off): the 50-trial mini-pilot
+at the pinned confirmatory cell (phi=90, 5dB, d=3, |rho|=0.85, N=64,
+reduction ON) returned gap SD = 0.0 on every trial for all three solvers --
+a genuine ceiling effect, because d=3 cells at this 11x11 pole grid's
+spacing is ~306 km, well past the array's separation resolution (B1's own
+d=1/d=2 rows -- already-run, non-confirmatory, incoherent data -- show a
+total floor at ~102 km and the only real cross-trial variance at ~204 km).
+Strider ruled: the grid geometry moves, not the pre-registered d/phi/snr/
+rho/reduction coordinates, because the geometry (this module's
+config/base.yaml-derived constants) was never pre-registered anywhere
+current while d=3 was (§8-iii, 2026-07-07, data-independent).
+`build_array_and_grid` therefore accepts optional pole-grid overrides
+(n_pole_lat/n_pole_lon/pole_lat_span/pole_lon_span) so a denser grid can be
+built WITHOUT changing the defaults B1/B3's already-archived results and the
+tests below depend on. `run_geometry_rescale.py` uses a 17x17 pole grid
+(same 18x28 deg span as the original 11x11 -- only the density changes) so
+that 3 grid cells falls at ~194 km, inside the informative band B1 already
+established -- chosen from B1's existing, non-confirmatory data before the
+rescaled mini-pilot was run, not from the rescaled mini-pilot's own result.
 """
 
 import numpy as np
@@ -42,15 +63,26 @@ def _linspace_centered(center, span, n):
     return center + np.linspace(-span / 2.0, span / 2.0, n)
 
 
-def build_array_and_grid(row_normalisation="none", cache_dir=None):
-    """Build the pinned-choice Experiment-B station array + SECS pole grid
-    and the real transfer matrix A (DF-only, per Gate V / transfer.py)."""
+def build_array_and_grid(row_normalisation="none", cache_dir=None,
+                         n_pole_lat=N_POLE_LAT, n_pole_lon=N_POLE_LON,
+                         pole_lat_span=POLE_LAT_SPAN, pole_lon_span=POLE_LON_SPAN):
+    """Build the Experiment-B station array + SECS pole grid and the real
+    transfer matrix A (DF-only, per Gate V / transfer.py).
+
+    The station array (5x5, 12x20 deg span) is not parametrised here -- it
+    is untouched by the 2026-07-27 geometry-rescale ruling, which moves only
+    the SECS pole grid. `n_pole_lat`/`n_pole_lon`/`pole_lat_span`/
+    `pole_lon_span` default to the original B1/B3 constants (11x11, 18x28
+    deg) so every existing caller and test is byte-for-byte unchanged;
+    passing denser overrides (see module docstring, "GEOMETRY-RESCALE PASS")
+    is how `run_geometry_rescale.py` shrinks the physical size of one grid
+    cell without moving the pre-registered `d` (grid-cell) coordinate."""
     st_lat_ax = _linspace_centered(CENTER_LAT, STATION_LAT_SPAN, N_STATION_LAT)
     st_lon_ax = _linspace_centered(CENTER_LON, STATION_LON_SPAN, N_STATION_LON)
     st_lat, st_lon = np.meshgrid(st_lat_ax, st_lon_ax, indexing="ij")
 
-    po_lat_ax = _linspace_centered(CENTER_LAT, POLE_LAT_SPAN, N_POLE_LAT)
-    po_lon_ax = _linspace_centered(CENTER_LON, POLE_LON_SPAN, N_POLE_LON)
+    po_lat_ax = _linspace_centered(CENTER_LAT, pole_lat_span, n_pole_lat)
+    po_lon_ax = _linspace_centered(CENTER_LON, pole_lon_span, n_pole_lon)
     # Offset by half the pole grid's own spacing (V1 coincidence guard).
     po_lat_ax = po_lat_ax + 0.5 * (po_lat_ax[1] - po_lat_ax[0])
     po_lon_ax = po_lon_ax + 0.5 * (po_lon_ax[1] - po_lon_ax[0])

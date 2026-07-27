@@ -5,6 +5,7 @@ import sys
 from pathlib import Path
 
 import numpy as np
+import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "viability-test"))
 
@@ -85,3 +86,28 @@ def test_row_center_cols_out_of_range_raises():
     import pytest
     with pytest.raises(ValueError):
         row_center_cols(9, 8)  # col_a=9, d=8 -> col_b=17, grid width is 11
+
+
+def test_pole_grid_override_denser_geometry_stays_real_and_finite():
+    """ROADMAP §8 2026-07-27 geometry-rescale ruling: build_array_and_grid
+    must accept a denser pole grid (same lat/lon span, more poles) WITHOUT
+    touching the default 11x11 geometry B1/B3 already ran at -- the default
+    call above (test_grid_geometry_offset_from_coincidence) must still see
+    n_grid == 121."""
+    tm = build_array_and_grid(n_pole_lat=17, n_pole_lon=17)
+    assert tm.n_channels == 75
+    assert tm.n_grid == 17 * 17
+    assert np.isrealobj(tm.A)
+    assert np.isfinite(tm.A).all()
+    # Same span as the original 11x11 grid, just denser -- the pole grid's
+    # overall footprint over the array is unchanged, only its resolution.
+    assert tm.pole_lat.max() - tm.pole_lat.min() == pytest.approx(18.0)
+    assert tm.pole_lon.max() - tm.pole_lon.min() == pytest.approx(28.0)
+
+
+def test_row_center_cols_works_on_overridden_grid_shape():
+    idx_a, idx_b = row_center_cols(7, 3, grid_shape=(17, 17))
+    row_a, col_a = divmod(idx_a, 17)
+    row_b, col_b = divmod(idx_b, 17)
+    assert row_a == row_b == 17 // 2
+    assert col_b - col_a == 3

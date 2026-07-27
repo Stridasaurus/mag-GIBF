@@ -104,14 +104,22 @@ def _rng(*components):
 
 # --------------------------------------------------------------- gate (S.6.4)
 
-def single_source_gate():
+def single_source_gate(tm=None):
     """SPEC §S.6.4: all three solvers, one isolated DF source at the grid
     cell nearest the array centroid, oracle K=1, n_snap=64, exact cell =
     global argmax (tau=0). Tier (i) noise-free deterministic (all 3 solvers,
     sparse solvers both reduction settings); tier (ii) 20 dB MC x 10 trials
     (sparse solvers only, both reduction settings, per §S.6.4 "L2 runs tier
-    (i) only"). ANY failure halts Experiment B."""
-    tm = build_array_and_grid(row_normalisation=ROW_NORMALISATION)
+    (i) only"). ANY failure halts Experiment B.
+
+    `tm` defaults to the original 11x11 B1/B3 geometry (built here, exactly
+    as before this parameter existed) when not supplied -- so every existing
+    caller (incl. tests/test_experiment_b_gate.py) is unaffected. Passing an
+    explicit `tm` (e.g. built with simulate.py's pole-grid overrides) lets
+    `run_geometry_rescale.py` re-verify the gate at the rescaled geometry
+    before trusting a re-run at that geometry (ROADMAP §8, 2026-07-27)."""
+    if tm is None:
+        tm = build_array_and_grid(row_normalisation=ROW_NORMALISATION)
     idx = centroid_grid_index(tm)
     failures = []
 

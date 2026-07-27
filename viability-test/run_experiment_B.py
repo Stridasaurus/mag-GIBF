@@ -400,26 +400,42 @@ def main():
     print(f"  per-method P_sep: {minipilot['p_sep_rate']}  |  "
          f"detected-peak counts: {minipilot['n_peaks_hist']}")
 
-    # A zero SD has TWO distinct causes and they are different findings:
-    # a ceiling (everyone recovers exactly) vs a floor (everyone is pinned at
-    # the unmatched-source penalty = grid diagonal). Diagnose by the
-    # per-method values, never by the gap SD alone.
+    # Degeneracy diagnosis. A zero gap SD is the crude symptom; the condition
+    # that actually matters is whether either PRE-REGISTERED rule can be
+    # satisfied at this cell at ANY n_trials. A sparse solver pinned at
+    # delta_r_bar == 0.0 on every trial makes the win rule's "GIBF >= 20%
+    # lower" unsatisfiable (20% below zero is negative) and the mirrored loss
+    # rule unreachable (a degenerate [0, 0] CI can never fail to overlap), and
+    # P_sep == 1.00 for both sparse solvers kills the second win-rule arm too
+    # -- all of which is true even when a stray trial makes the SD nonzero.
+    # Diagnose by the per-method arrays, never by the gap SD alone.
     grid_diag = float(np.hypot(GRID_SHAPE[0] - 1, GRID_SHAPE[1] - 1))
     mp_mean = minipilot["delta_r_bar_mean"]
+    mp_all = minipilot["delta_r_bar"]
+    sparse_at_ceiling = [m for m in ("gibf", "mmv")
+                         if all(v == 0.0 for v in mp_all[m])]
+    sparse_at_floor = [m for m in ("gibf", "mmv")
+                       if all(abs(v - grid_diag) < 1e-9 for v in mp_all[m])]
+    at_ceiling = len(sparse_at_ceiling) > 0
     degenerate = minipilot["gap_sd"] == 0.0
-    if degenerate:
-        if all(v == 0.0 for v in mp_mean.values()):
-            mode = ("CEILING — every method recovers both sources exactly "
-                    "(delta_r_bar=0, P_sep=1) at the refined d=3")
-        elif all(abs(v - grid_diag) < 1e-9 for v in mp_mean.values()):
-            mode = ("FLOOR — every method is pinned at the unmatched-source "
-                    f"penalty (grid diagonal = {grid_diag:.3f} cells); the "
-                    "refined d=3 is below what any method resolves")
+    if at_ceiling or sparse_at_floor or degenerate:
+        if at_ceiling:
+            mode = (f"CEILING — {'/'.join(sparse_at_ceiling)} recover(s) both "
+                    "sources exactly (delta_r_bar = 0.000) on EVERY trial, and "
+                    f"P_sep = {minipilot['p_sep_rate']}")
+        elif sparse_at_floor:
+            mode = (f"FLOOR — {'/'.join(sparse_at_floor)} pinned at the "
+                    f"unmatched-source penalty (grid diagonal = "
+                    f"{grid_diag:.3f} cells) on every trial")
         else:
-            mode = "TIED but not at either extreme — inspect per-trial arrays"
-        print(f"\nFINDING: the mini-pilot gap SD is 0.0000 — {mode}. "
-             "This is reported as a design finding, NOT repaired by further "
-             "parameter changes (handoff stop rule).")
+            mode = "TIED but at neither extreme — inspect the per-trial arrays"
+        print(f"\nFINDING: {mode}. The pre-registered win rule (GIBF Δr̄ >= 20% "
+             "lower; or smallest d with P_sep >= 0.8 at least 1 cell smaller) "
+             "and the mirrored loss rule CANNOT be satisfied at this cell at "
+             "any n_trials while a sparse solver sits at the ceiling — a "
+             "nonzero gap SD makes the VARIANCE INPUT usable, not the CELL "
+             "adjudicable. Reported as a design finding, NOT repaired by "
+             "further parameter changes (stop rule).")
 
     variance_input_matched = max(pilot_cell["gap_sd"], minipilot["gap_sd"])
     variance_input_conservative = max(max_sd_cell["gap_sd"], minipilot["gap_sd"])
@@ -485,7 +501,20 @@ def main():
                       delta_r_bar_mean=minipilot["delta_r_bar_mean"],
                       p_sep_rate=minipilot["p_sep_rate"],
                       n_peaks_hist=minipilot["n_peaks_hist"]),
-        degenerate_confirmatory_cell=bool(degenerate),
+        confirmatory_cell_gap_sd_is_zero=bool(degenerate),
+        confirmatory_cell_at_ceiling=bool(at_ceiling),
+        confirmatory_cell_ceiling_methods=sparse_at_ceiling,
+        confirmatory_cell_adjudicable=not (at_ceiling or bool(sparse_at_floor)),
+        confirmatory_cell_note=(
+            "A sparse solver pinned at delta_r_bar = 0.000 on every trial makes "
+            "the pre-registered win rule ('GIBF Δr̄ >= 20% lower' — 20% below "
+            "zero is negative) and the mirrored loss rule (a degenerate [0, 0] "
+            "CI can never fail to overlap) unsatisfiable at this cell at ANY "
+            "n_trials, and P_sep = 1.00 for both sparse solvers closes the "
+            "second win-rule arm as well. A nonzero gap SD makes the §8-ii "
+            "VARIANCE INPUT usable; it does not make the CELL adjudicable. "
+            "Read `confirmatory_cell_adjudicable`, not the SD, before sizing "
+            "a confirmatory run."),
         power_calc_variance_input_matched_reading=variance_input_matched,
         power_calc_variance_input_conservative_reading=variance_input_conservative,
         power_calc_status="PENDING Strider's S8-ii sign-off (incl. which SD "

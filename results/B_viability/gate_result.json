@@ -1,9 +1,9 @@
 {
   "passed": true,
   "failures": [],
-  "idx": 48,
-  "centroid_lat": 69.1,
-  "centroid_lon": -1.4000000000000004,
+  "idx": 262,
+  "centroid_lat": 69.71498321389527,
+  "centroid_lon": -0.833333333333333,
   "tier_i": {
     "l2_reduction_True": true,
     "gibf_reduction_True": true,

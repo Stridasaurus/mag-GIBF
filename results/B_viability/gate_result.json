@@ -1,0 +1,68 @@
+{
+  "passed": true,
+  "failures": [],
+  "idx": 48,
+  "centroid_lat": 69.1,
+  "centroid_lon": -1.4000000000000004,
+  "tier_i": {
+    "l2_reduction_True": true,
+    "gibf_reduction_True": true,
+    "mmv_reduction_True": true,
+    "gibf_reduction_False": true,
+    "mmv_reduction_False": true
+  },
+  "tier_ii": {
+    "gibf": {
+      "True": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "False": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+      ]
+    },
+    "mmv": {
+      "True": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "False": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+      ]
+    }
+  }
+}

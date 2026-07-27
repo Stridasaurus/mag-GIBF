@@ -1,0 +1,46 @@
+{
+  "experiment": "Experiment B kickoff: solver stack + B1 + B3 + mini-pilot",
+  "seed": 20260721,
+  "numpy": "2.4.6",
+  "git_commit": "45574b0ce79067537b819013aeaf1a1b1cada9ab",
+  "script_sha256": "9659020f9e0197a01e62a22dc3a19273e6a914592434fa35d712d78bb5e7bb5f",
+  "preregistration": "handoff.md (2026-07-12, assignee corrected 2026-07-20); SPEC_experiment_B.md S.1/S.2/S.6; ROADMAP.md S8-ii...viii",
+  "geometry_note": "Experiment-B array+grid = archived build brief's config/base.yaml (5x5=25-station array, 11x11=121-pole SECS grid, 'high' 70N/0E preset) \u2014 NOT pre-registered anywhere current; a documented implementation choice (see simulate.py docstring). n_trials=50 for B1/B3 likewise documented (archived brief default); mini-pilot n_trials=50 IS pinned.",
+  "row_normalisation": "none",
+  "fairness_config": {
+    "eps_frac": 0.01,
+    "p_norm": 1.0,
+    "weight_floor": 1e-10,
+    "beta": 0.9,
+    "max_iter": 50,
+    "tol": 0.0001,
+    "min_active_factor": 2
+  },
+  "gate_passed": true,
+  "b1_matched_cell": {
+    "d": 3,
+    "snr_db": 5.0,
+    "reduction": true,
+    "gap_mean": 0.0,
+    "gap_sd": 0.0
+  },
+  "b1_max_sd_cell": {
+    "d": 2,
+    "snr_db": 5.0,
+    "reduction": true,
+    "gap_mean": 4.251219330881976,
+    "gap_sd": 3.5997718855708123
+  },
+  "b6a_nsnap_candidate": 64,
+  "eigenvalue_floor_finding": "SPEC S4's eigenvalue floor (1e-18) is calibrated for O(1) unit-power scenarios; this B-geometry's real ground CSM eigenvalues are ~1e-24, below the floor entirely, so raw (as literally pinned) MDL/AIC always select k_hat=1 -- 100% error at every B3 cell -- a floor-clipping degeneracy, not a mode-selection finding (raw error rate at 5dB across n_snap: {8: 1.0, 16: 1.0, 32: 1.0, 64: 1.0, 128: 1.0}). Trace-normalizing eigenvalues by 2/trace(S) before the floor (the LLR is provably invariant to uniform rescaling; same precedent as Tier 2's gap-conditioning resolution and the S.6.1 solver scale convention) restores real discrimination and is used for the B3 deliverable / B6a n_snap procedure below. Both readings archived in b3_results.json (mdl_error_rate = trace-normalized, mdl_error_rate_raw_aspinned = literal SPEC S.4 reading); flagged for Strider, not resolved unilaterally.",
+  "minipilot": {
+    "gap_mean": 0.0,
+    "gap_sd": 0.0,
+    "n_trials": 50
+  },
+  "ceiling_effect_finding": "d=3 (both the B1 matched cell and the pinned mini-pilot cell) gives EXACT recovery (P_sep=1, delta_r_bar=0) for every trial, every method, at this documented (non-pre-registered) grid geometry -> zero-variance SD, unusable as a power-calc input. d=1 is the opposite floor (sources merge into one peak, P_sep=0 always). d=2 is the only grid point with real cross-trial variance and shows the pre-registered structural expectation cleanly (GIBF penalty largest at small d, reduction OFF especially: MMV separates almost perfectly while GIBF struggles at low SNR). Neither ROADMAP.md nor SPEC_experiment_B.md names which B1 cell is 'the' \u00a78-ii pilot SD when B1 is a grid, not a single cell \u2014 this is flagged for Strider, not resolved unilaterally, mirroring Tier 2's gap-scale-note posture.",
+  "power_calc_variance_input_matched_reading": 0.0,
+  "power_calc_variance_input_conservative_reading": 3.5997718855708123,
+  "power_calc_status": "PENDING Strider's S8-ii sign-off (incl. which SD reading to adopt); n_trials NOT yet computed/run; powered B2/B6 NOT executed",
+  "runtime_s": 31.8
+}

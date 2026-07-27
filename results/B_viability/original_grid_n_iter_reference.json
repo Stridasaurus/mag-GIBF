@@ -1,0 +1,34 @@
+{
+  "n_grid": 121,
+  "n_channels": 75,
+  "min_active_factor_times_n_channels": 150,
+  "gibf_n_iter_per_trial": [
+    [
+      1,
+      1
+    ],
+    [
+      1,
+      1
+    ],
+    [
+      1,
+      1
+    ],
+    [
+      1,
+      1
+    ],
+    [
+      1,
+      1
+    ]
+  ],
+  "mmv_n_iter_per_trial": [
+    1,
+    1,
+    1,
+    1,
+    1
+  ]
+}

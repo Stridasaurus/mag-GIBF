@@ -1,0 +1,93 @@
+{
+  "pass_name": "Geometry-rescale pass v2 (CORRECTED): edge-anchored placement + n_iter confound evidence",
+  "supersedes": "manifest_geometry_rescale.json / minipilot_rescaled_results.json (v1, git commits 26bbb78/753706f) -- v1 is left on disk, unedited, per the append-only log-hygiene convention; v1's own numbers are unchanged, but its placement (col_a=7, grid-centered) diverges from B1's edge-anchored calibration and it did not record n_iter. Re-running with only the placement fixed reproduces v1's ceiling exactly.",
+  "seed": 20260727,
+  "numpy": "2.4.6",
+  "git_commit": "b4a9b2f05011daae35c72bf44c8f73b7eba8002c",
+  "script_sha256": "8f02979af0dd7aef09c0335ce7dcaa4c7d2411393f0a1a0063ee9d3a7bf0a27d",
+  "preregistration": "vault secs-gibf-viability-AT-DISPATCH.md, \u00a78-ii sign-off 2026-07-27 (Rulings 1 and 2); ROADMAP.md \u00a78 2026-07-27 entries",
+  "geometry": {
+    "original": {
+      "n_pole_lat": 11,
+      "n_pole_lon": 11,
+      "pole_lat_span": 18.0,
+      "pole_lon_span": 28.0,
+      "cell_km_at_row_center": 101.9,
+      "note": "B1's own d=1/d=2/d=3 rows at this geometry: ~102/~204/~306 km, edge-anchored placement (col_a=1)"
+    },
+    "rescaled": {
+      "n_pole_lat": 17,
+      "n_pole_lon": 17,
+      "pole_lat_span": 18.0,
+      "pole_lon_span": 28.0,
+      "col_a": 2,
+      "d3_physical_km_approx": 194.3,
+      "justification": "d=3 (3 grid cells) now falls at ~194 km, matching B1's own already-archived d=2 informative cell (~204 km at the original grid) rather than the original grid's d=3 ceiling (~306 km) -- chosen from B1's existing data, before this run. col_a=2 anchors the pair near the array's western edge (lon=-9.625 deg), matching B1's own edge placement (lon=-9.8 deg) -- corrected from v1's grid-centered col_a=7."
+    },
+    "unchanged_pinned_coordinates": {
+      "phi_deg": 90.0,
+      "snr_db": 5.0,
+      "d": 3,
+      "abs_rho": 0.85,
+      "n_snap": 64,
+      "n_trials": 50,
+      "reduction": true,
+      "tau_r": 1.0
+    }
+  },
+  "row_normalisation": "none",
+  "fairness_config": {
+    "eps_frac": 0.01,
+    "p_norm": 1.0,
+    "weight_floor": 1e-10,
+    "beta": 0.9,
+    "max_iter": 50,
+    "tol": 0.0001,
+    "min_active_factor": 2
+  },
+  "gate_passed": true,
+  "minipilot_rescaled_v2": {
+    "gap_mean": 0.0,
+    "gap_sd": 0.0,
+    "n_trials": 50,
+    "gibf_n_iter_mean": 7.0,
+    "mmv_n_iter_mean": 7.0
+  },
+  "original_grid_n_iter_reference": {
+    "n_grid": 121,
+    "min_active_factor_times_n_channels": 150,
+    "gibf_n_iter_samples": [
+      [
+        1,
+        1
+      ],
+      [
+        1,
+        1
+      ],
+      [
+        1,
+        1
+      ],
+      [
+        1,
+        1
+      ],
+      [
+        1,
+        1
+      ]
+    ],
+    "mmv_n_iter_samples": [
+      1,
+      1,
+      1,
+      1,
+      1
+    ]
+  },
+  "ceiling_survives": true,
+  "confound_b_niter_unresolved": true,
+  "status": "STOP per dispatch: powered B2/B6 NOT run; n_trials NOT computed; ceiling-survives finding is confounded by the n_iter side effect (confound B) and returns to Strider unresolved, alongside this run's real (still-zero) SD",
+  "runtime_s": 0.8
+}

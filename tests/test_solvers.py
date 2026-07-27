@@ -47,7 +47,7 @@ def test_fairness_config_is_one_shared_object():
 
 
 def test_solve_all_feeds_identical_V_and_A_to_gibf_and_mmv():
-    idx_a, idx_b = row_center_cols(1, 3)
+    idx_a, idx_b = row_center_cols(3)
     rng = np.random.default_rng(1)
     X, _ = simulate_snapshots(_TM, [idx_a, idx_b], [1.0, 1.0], rng,
                               n_snap=64, snr_db=5.0)
@@ -118,7 +118,7 @@ def test_single_source_gate_tier2_20db_mc_10_trials():
 
 def test_two_source_incoherent_high_snr_separates_and_metrics_agree():
     tm = build_array_and_grid()
-    idx_a, idx_b = row_center_cols(1, 5)
+    idx_a, idx_b = row_center_cols(5)
     true_cells = [np.unravel_index(idx_a, GRID_SHAPE), np.unravel_index(idx_b, GRID_SHAPE)]
     rng = np.random.default_rng(7)
     X, _ = simulate_snapshots(tm, [idx_a, idx_b], [1.0, 1.0], rng, n_snap=64, snr_db=20.0)

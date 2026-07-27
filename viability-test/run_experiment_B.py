@@ -21,24 +21,36 @@ Per repo-root `handoff.md` (2026-07-12, corrected 2026-07-20) and
 STOPS THERE. Does not run powered B2/B6 — that is gated on Strider's §8-ii
 power-calc sign-off, reviewed after this PR lands (handoff.md stop rule).
 
-GEOMETRY NOTE (documented choice, not a re-opened pre-registration): see
-simulate.py's module docstring. No absolute B1/B3 array+grid geometry is
-pinned in ROADMAP/SPEC/EXPERIMENT_CARD_A; the archived build brief's
-config/base.yaml (5x5 station array, 11x11 SECS grid, "high" 70 deg preset)
-is the only concrete geometry on record and SPEC §S.9's supersession list
-does not touch it, so it is inherited unchanged here.
+GEOMETRY-RESCALE PASS, 2026-07-27 (ROADMAP §8 2026-07-27; Strider's §8-ii
+sign-off). This script is unchanged in design; it re-runs on the REFINED SECS
+grid (pole spacing 63.5 km, 33x17=561 poles, centred source placement — the
+full rule and its justification live in simulate.py's module docstring and are
+recorded structurally by `simulate.geometry_record()` in the manifest) and with
+SPEC §S.4's eigenvalue floor re-expressed in trace-normalized units
+(modeselect.py). EVERY pre-registered coordinate is untouched: d=3, phi=90 deg,
+snr in {5,10} (B1 sweeps its pinned axis), |rho|=0.85, n_snap=64, tau_r=1
+cell, reduction ON at the confirmatory setting.
+
+CELL-UNIT NOTE (load-bearing for the §8-ii sign-off): every adjudication
+quantity here is denominated in GRID CELLS — delta_r_bar, tau_r = 1 cell
+(§8-v), and the win rule's "resolves >= 1 grid cell smaller". The pins are
+literally unchanged, but the refinement shrinks one cell from 106.6 km to
+63.5 km, so the same pinned numbers now mean a 1.68x smaller physical
+tolerance. Reported in both units below and in the §8 entry.
 
 N_TRIALS NOTE (documented choice): B1/B3 use n_trials=50 per cell — the
 archived brief's own `monte_carlo.n_trials` default, and consistent with B1
 being explicitly the *pilot* whose job is to measure a variance, not to be
 independently powered. The mini-pilot's n_trials=50 IS pinned (handoff.md).
+The powered `n_trials` is NOT computed anywhere in this script: it is
+Strider's §8-ii sign-off.
 
 ROW NORMALISATION NOTE (documented choice): `row_normalisation="none"`
 (transfer.py's own default) is used throughout, identically for every
 solver and every cell (never mixed).
 
-SEED: 20260721 (fresh; distinct from Tier 1's 20260706 and Tier 2's
-20260712 per the handoff's no-seed-reuse instruction).
+SEED: 20260727 (fresh; distinct from Tier 1's 20260706, Tier 2's 20260712 and
+the 2026-07-21 kickoff run's 20260721 per the handoff's no-seed-reuse rule).
 """
 
 import hashlib
@@ -51,14 +63,15 @@ from pathlib import Path
 
 import numpy as np
 
-from metrics import delta_r_bar, p_sep
+from metrics import delta_r_bar, find_peaks_2d, p_sep
 from modeselect import estimate_n_sources
-from simulate import (build_array_and_grid, build_csm, centroid_grid_index,
-                      eigendecompose, eigenmodes, row_center_cols,
-                      simulate_snapshots, GRID_SHAPE)
+from simulate import (POLE_SPACING_KM, build_array_and_grid, build_csm,
+                      centroid_grid_index, eigendecompose, eigenmodes,
+                      geometry_record, row_center_cols, simulate_snapshots,
+                      GRID_SHAPE)
 from solvers import FAIRNESS_CONFIG, solve_all, with_reduction
 
-SEED = 20260721
+SEED = 20260727
 RESULTS = Path(__file__).resolve().parent.parent / "results" / "B_viability"
 ROW_NORMALISATION = "none"
 
@@ -78,9 +91,10 @@ MINIPILOT_D = 3
 MINIPILOT_ABS_RHO = 0.85  # SLOT-1 pinned midpoint (ROADMAP §8 2026-07-12/SPEC §S.7)
 MINIPILOT_N_SNAP = 64
 MINIPILOT_N_TRIALS = 50   # pinned, handoff.md
-MINIPILOT_COL_A = 1
 
-COL_A = 1                 # fixed left-source column for all B1/B3/mini-pilot cells
+# Source placement is `simulate.row_center_cols(d)` — the pair centred on the
+# grid's centre row/column (simulate.PLACEMENT_RULE). The inherited fixed
+# `col_a = 1` is retired with the old grid; see simulate.py's docstring.
 
 
 def _seed_component(x):
@@ -168,7 +182,7 @@ def run_b1():
     for reduction in (True, False):
         cfg = with_reduction(FAIRNESS_CONFIG, reduction)
         for d in D_AXIS:
-            idx_a, idx_b = row_center_cols(COL_A, d)
+            idx_a, idx_b = row_center_cols(d)
             true_cells = [np.unravel_index(idx_a, GRID_SHAPE),
                          np.unravel_index(idx_b, GRID_SHAPE)]
             for snr_db in SNR_AXIS_B1:
@@ -188,6 +202,7 @@ def run_b1():
                         ps[name].append(p_sep(I2d, true_cells))
                 cell = dict(
                     d=d, snr_db=snr_db, reduction=reduction,
+                    separation_km=round(d * POLE_SPACING_KM, 2),
                     delta_r_bar={k: v for k, v in dr.items()},
                     p_sep_rate={k: float(np.mean(v)) for k, v in ps.items()},
                     delta_r_bar_mean={k: float(np.mean(v)) for k, v in dr.items()},
@@ -208,55 +223,31 @@ def run_b3():
     and MDL K-hat vs truth K=2. Grid reduction is irrelevant here (mode
     selection precedes any solver call) so it is not swept.
 
-    EIGENVALUE-FLOOR FINDING (documented, same class as Tier 2's gap-scale
-    note; NOT a re-opened pre-registration): SPEC §S.4 pins
-    `estimate_n_sources`'s eigenvalue floor at 1e-18, evidently calibrated
-    for an O(1) unit-power abstract scenario (Tier 1's convention). This
-    B-geometry's real ground CSM lives at ~1e-24 (tesla^2) -- BELOW the
-    floor entirely -- so every eigenvalue clips to the identical floor
-    value, the log-domain LLR degenerates to 0 for every k, and MDL/AIC
-    always select k_hat=0 (clipped to 1): 100% error at every (snr, n_snap)
-    cell, uninformative by construction, not a real finding about mode
-    selection. The Wax-Kailath LLR is provably invariant to a uniform
-    rescaling of ALL eigenvalues by a positive constant (log_geo shifts by
-    ln(c), ari scales by c, the difference log_geo - ln(ari) is unchanged)
-    -- so trace-normalizing before the floor (lam * 2/trace(S), the exact
-    rescaling SPEC/ROADMAP already adopted for Tier 2's gap-conditioning
-    statistic and for the S.6.1 solver scale convention) only changes how
-    the ABSOLUTE floor treats genuinely negligible noise eigenvalues; it
-    does not touch the LLR's actual discriminating content. Both readings
-    are computed and reported below; the trace-normalized one is used for
-    the B3 deliverable and the B6a n_snap procedure, flagged for Strider
-    exactly like Tier 2's dual raw/scaled gap-conditioning entry."""
+    Raw CSM eigenvalues are passed straight to `estimate_n_sources`, which
+    since 2026-07-27 trace-normalizes internally before applying SPEC §S.4's
+    floor (modeselect.py docstring; ROADMAP §8 2026-07-27 ruling 2). The
+    2026-07-21 run's dual raw/normalized reading is retired: the raw reading
+    was a floor-clipping artefact of an absolute floor meeting a ~1e-24
+    tesla^2 spectrum, and preserving it as a code path would just carry the
+    defect forward. It stays reproducible at commit 12ff377."""
     tm = build_array_and_grid(row_normalisation=ROW_NORMALISATION)
-    idx_a, idx_b = row_center_cols(COL_A, D_B3)
+    idx_a, idx_b = row_center_cols(D_B3)
     cells = {}
     for snr_db in SNR_AXIS_B3:
         for n_snap in NSNAP_AXIS_B3:
             k_mdl, k_aic = [], []
-            k_mdl_raw, k_aic_raw = [], []
             for trial in range(N_TRIALS_B3):
                 rng = _rng(3, "b3", snr_db, n_snap, trial)
                 X, _ = simulate_snapshots(tm, [idx_a, idx_b], [1.0, 1.0], rng,
                                           n_snap=n_snap, snr_db=snr_db)
                 S = build_csm(X)
                 lam, U = eigendecompose(S)
-                trace_S = float(np.sum(lam))
-                lam_norm = lam * (2.0 / trace_S) if trace_S > 0 else lam
-
-                kh_mdl, _, _, _ = estimate_n_sources(lam_norm, n_snap, criterion="mdl")
-                kh_aic, _, _, _ = estimate_n_sources(lam_norm, n_snap, criterion="aic")
+                kh_mdl, _, _, _ = estimate_n_sources(lam, n_snap, criterion="mdl")
+                kh_aic, _, _, _ = estimate_n_sources(lam, n_snap, criterion="aic")
                 k_mdl.append(kh_mdl)
                 k_aic.append(kh_aic)
-
-                kh_mdl_raw, _, _, _ = estimate_n_sources(lam, n_snap, criterion="mdl")
-                kh_aic_raw, _, _, _ = estimate_n_sources(lam, n_snap, criterion="aic")
-                k_mdl_raw.append(kh_mdl_raw)
-                k_aic_raw.append(kh_aic_raw)
             k_mdl = np.array(k_mdl)
             k_aic = np.array(k_aic)
-            k_mdl_raw = np.array(k_mdl_raw)
-            k_aic_raw = np.array(k_aic_raw)
             cells[(snr_db, n_snap)] = dict(
                 snr_db=snr_db, n_snap=n_snap,
                 mdl_error_rate=float(np.mean(k_mdl != 2)),
@@ -264,8 +255,6 @@ def run_b3():
                 mdl_mean=float(np.mean(k_mdl)), aic_mean=float(np.mean(k_aic)),
                 mdl_khat_hist={int(k): int(np.sum(k_mdl == k)) for k in sorted(set(k_mdl.tolist()))},
                 aic_khat_hist={int(k): int(np.sum(k_aic == k)) for k in sorted(set(k_aic.tolist()))},
-                mdl_error_rate_raw_aspinned=float(np.mean(k_mdl_raw != 2)),
-                aic_error_rate_raw_aspinned=float(np.mean(k_aic_raw != 2)),
             )
     return cells
 
@@ -284,12 +273,8 @@ def b1_max_sd_cell(b1_cells, reduction=True):
 
 def b6a_nsnap_from_b3(b3_cells, snr_db=5.0):
     """§8-vii procedure: largest n_snap in {8,16,32,64,128} where B3's MDL
-    K-hat error rate >= 20% at the given SNR (fallback 8). Uses the
-    trace-normalized error rate (see run_b3's eigenvalue-floor finding) --
-    the raw-as-pinned rate is 100% at every cell (floor-clipping
-    degeneracy) and would trivially always return the fallback. Computed
-    and REPORTED here; B6a itself is NOT run (out of this handoff's
-    scope)."""
+    K-hat error rate >= 20% at the given SNR (fallback 8). Computed and
+    REPORTED here; B6a itself is NOT run (out of this handoff's scope)."""
     candidates = [n for n in NSNAP_AXIS_B3
                  if b3_cells[(snr_db, n)]["mdl_error_rate"] >= 0.20]
     return max(candidates) if candidates else 8
@@ -302,7 +287,7 @@ def run_minipilot():
     both solvers, grid reduction ON (pinned §S.6.2 — the confirmatory
     setting; the §8-ii SD inputs are read from reduction-ON rows)."""
     tm = build_array_and_grid(row_normalisation=ROW_NORMALISATION)
-    idx_a, idx_b = row_center_cols(MINIPILOT_COL_A, MINIPILOT_D)
+    idx_a, idx_b = row_center_cols(MINIPILOT_D)
     true_cells = [np.unravel_index(idx_a, GRID_SHAPE),
                  np.unravel_index(idx_b, GRID_SHAPE)]
     rho = MINIPILOT_ABS_RHO * np.exp(1j * np.deg2rad(MINIPILOT_PHI_DEG))
@@ -310,6 +295,7 @@ def run_minipilot():
 
     dr = {"l2": [], "gibf": [], "mmv": []}
     ps = {"l2": [], "gibf": [], "mmv": []}
+    npk = {"l2": [], "gibf": [], "mmv": []}
     for trial in range(MINIPILOT_N_TRIALS):
         rng = _rng(4, "minipilot", trial)
         X, _ = simulate_snapshots(tm, [idx_a, idx_b], [1.0, 1.0], rng,
@@ -323,16 +309,23 @@ def run_minipilot():
             I2d = out[name]["I"].reshape(GRID_SHAPE)
             dr[name].append(delta_r_bar(I2d, true_cells))
             ps[name].append(p_sep(I2d, true_cells))
+            # instrumentation only (never adjudicating): how the peak-finder
+            # behaves under refinement, at unchanged rel_thresh/max_peaks.
+            npk[name].append(len(find_peaks_2d(I2d)))
 
     gap = [g - m for g, m in zip(dr["gibf"], dr["mmv"])]
     return dict(
         phi_deg=MINIPILOT_PHI_DEG, snr_db=MINIPILOT_SNR_DB, d=MINIPILOT_D,
+        separation_km=round(MINIPILOT_D * POLE_SPACING_KM, 2),
         abs_rho=MINIPILOT_ABS_RHO, n_snap=MINIPILOT_N_SNAP,
         n_trials=MINIPILOT_N_TRIALS, reduction=True,
+        true_cells=[[int(c[0]), int(c[1])] for c in true_cells],
         delta_r_bar={k: v for k, v in dr.items()},
         p_sep_rate={k: float(np.mean(v)) for k, v in ps.items()},
         delta_r_bar_mean={k: float(np.mean(v)) for k, v in dr.items()},
         delta_r_bar_sd={k: float(np.std(v, ddof=1)) for k, v in dr.items()},
+        n_peaks_hist={m: {int(k): int(np.sum(np.array(v) == k))
+                          for k in sorted(set(v))} for m, v in npk.items()},
         gap_signed=gap, gap_mean=float(np.mean(gap)), gap_sd=float(np.std(gap, ddof=1)),
     )
 
@@ -350,6 +343,18 @@ def _git_commit():
 def main():
     t0 = time.time()
     RESULTS.mkdir(parents=True, exist_ok=True)
+
+    geom = geometry_record()
+    print("=== Geometry (REFINED 2026-07-27, ROADMAP §8) ===")
+    print(f"  pole grid {geom['n_pole_lat']}x{geom['n_pole_lon']} = "
+         f"{geom['n_poles']} poles, spacing {geom['pole_spacing_km']} km "
+         f"(isotropic); station array unchanged "
+         f"({geom['n_station_lat']}x{geom['n_station_lon']}, lon spacing "
+         f"{geom['station_lon_spacing_km']} km)")
+    print(f"  d axis in km: {geom['d_axis_km']}  |  confirmatory d=3 = "
+         f"{geom['confirmatory_d_km']} km = 1 station spacing")
+    print(f"  tau_r = 1 cell = {geom['tau_r_km']} km (was 106.6 km); "
+         f"overcompleteness {geom['overcompleteness']}x")
 
     print("=== Single-source exact-recovery gate (SPEC S.6.4) ===")
     gate = single_source_gate()
@@ -379,51 +384,57 @@ def main():
     b3_serializable = {f"{s}|{n}": v for (s, n), v in b3_cells.items()}
     (RESULTS / "b3_results.json").write_text(json.dumps(b3_serializable, indent=2))
     b6a_nsnap = b6a_nsnap_from_b3(b3_cells, snr_db=5.0)
-    raw_err_5db = {n: b3_cells[(5.0, n)]["mdl_error_rate_raw_aspinned"] for n in NSNAP_AXIS_B3}
-    print(f"FINDING: SPEC S.4's eigenvalue floor (1e-18) is calibrated for "
-         f"O(1) unit-power scenarios; this B-geometry's real ground CSM is "
-         f"~1e-24, BELOW the floor entirely, so every eigenvalue clips "
-         f"identically and MDL/AIC always report k_hat=1 as literally "
-         f"pinned (raw error rate at 5dB across n_snap: {raw_err_5db}) -- "
-         f"a floor-clipping degeneracy, not a mode-selection result. "
-         f"Trace-normalized (lam * 2/trace(S), the LLR is provably scale- "
-         f"invariant under uniform rescaling; same precedent as Tier 2's "
-         f"gap-conditioning resolution) restores real discrimination; used "
-         f"for the deliverable below. Both readings archived; flagged for "
-         f"Strider, not resolved unilaterally.")
+    mdl_err_5db = {n: b3_cells[(5.0, n)]["mdl_error_rate"] for n in NSNAP_AXIS_B3}
+    print(f"MDL error rate at 5 dB across n_snap: {mdl_err_5db}")
     print(f"B6a n_snap candidate (from B3 MDL error >= 20% at 5dB, "
-         f"trace-normalized reading, fallback 8): {b6a_nsnap}")
+         f"fallback 8): {b6a_nsnap}")
 
     print("=== Mini-pilot (50 trials, phi=90, 5dB, d=3, reduction ON) ===")
     minipilot = run_minipilot()
     (RESULTS / "minipilot_results.json").write_text(json.dumps(minipilot, indent=2))
-    print(f"Mini-pilot: GIBF-MMV gap mean={minipilot['gap_mean']:.4f} "
+    print(f"Mini-pilot ({minipilot['separation_km']} km separation): "
+         f"GIBF-MMV gap mean={minipilot['gap_mean']:.4f} "
          f"sd={minipilot['gap_sd']:.4f}")
+    print(f"  per-method delta_r_bar mean (cells): "
+         f"{ {k: round(v, 3) for k, v in minipilot['delta_r_bar_mean'].items()} }")
+    print(f"  per-method P_sep: {minipilot['p_sep_rate']}  |  "
+         f"detected-peak counts: {minipilot['n_peaks_hist']}")
 
-    ceiling_effect = (pilot_cell["gap_sd"] == 0.0 and minipilot["gap_sd"] == 0.0)
-    if ceiling_effect:
-        print("\nFINDING: both the matched B1 cell (d=3, 5dB) and the pinned "
-             "mini-pilot cell (d=3, coherent, 5dB) show ZERO variance — every "
-             "trial of every method achieves exact P_sep=1/delta_r_bar=0 at "
-             "d=3 in this (documented, non-pre-registered) grid geometry. "
-             "This is a genuine ceiling effect, not a solver bug (see the "
-             "single-source gate + B1's own d=1/d=2 rows, which show the "
-             "expected floor/cost structure). A zero-variance SD cannot "
-             "usefully seed the §8-ii power calc.")
+    # A zero SD has TWO distinct causes and they are different findings:
+    # a ceiling (everyone recovers exactly) vs a floor (everyone is pinned at
+    # the unmatched-source penalty = grid diagonal). Diagnose by the
+    # per-method values, never by the gap SD alone.
+    grid_diag = float(np.hypot(GRID_SHAPE[0] - 1, GRID_SHAPE[1] - 1))
+    mp_mean = minipilot["delta_r_bar_mean"]
+    degenerate = minipilot["gap_sd"] == 0.0
+    if degenerate:
+        if all(v == 0.0 for v in mp_mean.values()):
+            mode = ("CEILING — every method recovers both sources exactly "
+                    "(delta_r_bar=0, P_sep=1) at the refined d=3")
+        elif all(abs(v - grid_diag) < 1e-9 for v in mp_mean.values()):
+            mode = ("FLOOR — every method is pinned at the unmatched-source "
+                    f"penalty (grid diagonal = {grid_diag:.3f} cells); the "
+                    "refined d=3 is below what any method resolves")
+        else:
+            mode = "TIED but not at either extreme — inspect per-trial arrays"
+        print(f"\nFINDING: the mini-pilot gap SD is 0.0000 — {mode}. "
+             "This is reported as a design finding, NOT repaired by further "
+             "parameter changes (handoff stop rule).")
 
     variance_input_matched = max(pilot_cell["gap_sd"], minipilot["gap_sd"])
     variance_input_conservative = max(max_sd_cell["gap_sd"], minipilot["gap_sd"])
-    print(f"\n§8-ii power-calc variance input, MATCHED-CELL reading = "
-         f"max(B1 d=3/5dB SD, mini-pilot SD) = max({pilot_cell['gap_sd']:.4f}, "
-         f"{minipilot['gap_sd']:.4f}) = {variance_input_matched:.4f}")
-    print(f"§8-ii power-calc variance input, CONSERVATIVE reading = "
-         f"max(B1 grid-max SD [d={max_sd_key[1]}, {max_sd_key[2]}dB], "
-         f"mini-pilot SD) = max({max_sd_cell['gap_sd']:.4f}, "
+    print(f"\n§8-ii power-calc variance inputs (REPORTED ONLY — n_trials is "
+         f"Strider's sign-off and is NOT computed here):")
+    print(f"  matched-cell reading = max(B1 d=3/5dB SD, mini-pilot SD) = "
+         f"max({pilot_cell['gap_sd']:.4f}, {minipilot['gap_sd']:.4f}) = "
+         f"{variance_input_matched:.4f}")
+    print(f"  conservative reading = max(B1 grid-max SD [d={max_sd_key[1]}, "
+         f"{max_sd_key[2]}dB], mini-pilot SD) = max({max_sd_cell['gap_sd']:.4f}, "
          f"{minipilot['gap_sd']:.4f}) = {variance_input_conservative:.4f}")
-    print("Neither ROADMAP.md nor SPEC_experiment_B.md names which B1 cell "
-         "feeds 'the B1 pilot SD' when B1 has a d x snr grid rather than one "
-         "cell — flagged for Strider alongside the numbers, not resolved "
-         "unilaterally (same posture as Tier 2's gap-scale note).")
+    print("  UNITS: all gap SDs are in GRID CELLS; one cell is now "
+         f"{POLE_SPACING_KM:.2f} km (was 106.6 km before the 2026-07-27 "
+         "refinement). tau_r = 1 cell and the win rule's '>= 1 grid cell' "
+         "are pinned in cells and unchanged; their physical meaning moved.")
     print("STOP — powered B2/B6 wait on Strider's §8-ii power-calc sign-off; "
          "n_trials itself is NOT computed here.")
 
@@ -434,14 +445,25 @@ def main():
         git_commit=_git_commit(),
         script_sha256=hashlib.sha256(script.read_bytes()).hexdigest(),
         preregistration="handoff.md (2026-07-12, assignee corrected 2026-07-20); "
-                        "SPEC_experiment_B.md S.1/S.2/S.6; ROADMAP.md S8-ii...viii",
-        geometry_note="Experiment-B array+grid = archived build brief's "
-                      "config/base.yaml (5x5=25-station array, 11x11=121-pole "
-                      "SECS grid, 'high' 70N/0E preset) — NOT pre-registered "
-                      "anywhere current; a documented implementation choice "
-                      "(see simulate.py docstring). n_trials=50 for B1/B3 "
-                      "likewise documented (archived brief default); "
-                      "mini-pilot n_trials=50 IS pinned.",
+                        "SPEC_experiment_B.md S.1/S.2/S.4/S.6/S.10; "
+                        "ROADMAP.md S8-ii...viii + the 2026-07-27 entry",
+        geometry=geom,
+        geometry_supersedes=("the 2026-07-21 kickoff run's inherited "
+                             "config/base.yaml geometry (11x11 poles, 106.6 km "
+                             "lon cell, fixed col_a=1), whose d=3 was a 320 km "
+                             "separation and returned a degenerate zero-variance "
+                             "confirmatory cell; see ROADMAP §8 2026-07-27"),
+        unit_note=("all delta_r_bar / gap / tau_r quantities are in GRID CELLS; "
+                   f"one cell = {POLE_SPACING_KM:.3f} km after the 2026-07-27 "
+                   "refinement (was 106.6 km along lon, 200.4 km along lat). "
+                   "Every pinned numeral (tau_r=1, '>= 1 grid cell', 20%) is "
+                   "unchanged; its physical meaning moved with the cell."),
+        eig_floor_units=("SPEC §S.4 floor 1e-18 re-expressed in "
+                         "TRACE-NORMALIZED units (lam * 2/trace) inside "
+                         "modeselect.py, 2026-07-27 — numeral unchanged, "
+                         "units fixed; estimate_n_sources is now scale-free "
+                         "and pytest-pinned across 48 decades"),
+        n_trials_b1_b3=N_TRIALS_B1,
         row_normalisation=ROW_NORMALISATION,
         fairness_config=dict(eps_frac=FAIRNESS_CONFIG.eps_frac,
                              p_norm=FAIRNESS_CONFIG.p_norm,
@@ -456,41 +478,14 @@ def main():
         b1_max_sd_cell=dict(d=int(max_sd_key[1]), snr_db=float(max_sd_key[2]), reduction=True,
                             gap_mean=max_sd_cell["gap_mean"], gap_sd=max_sd_cell["gap_sd"]),
         b6a_nsnap_candidate=b6a_nsnap,
-        eigenvalue_floor_finding=(
-            "SPEC S4's eigenvalue floor (1e-18) is calibrated for O(1) "
-            "unit-power scenarios; this B-geometry's real ground CSM "
-            "eigenvalues are ~1e-24, below the floor entirely, so raw "
-            "(as literally pinned) MDL/AIC always select k_hat=1 -- 100% "
-            "error at every B3 cell -- a floor-clipping degeneracy, not a "
-            "mode-selection finding (raw error rate at 5dB across n_snap: "
-            f"{raw_err_5db}). Trace-normalizing eigenvalues by 2/trace(S) "
-            "before the floor (the LLR is provably invariant to uniform "
-            "rescaling; same precedent as Tier 2's gap-conditioning "
-            "resolution and the S.6.1 solver scale convention) restores "
-            "real discrimination and is used for the B3 deliverable / B6a "
-            "n_snap procedure below. Both readings archived in "
-            "b3_results.json (mdl_error_rate = trace-normalized, "
-            "mdl_error_rate_raw_aspinned = literal SPEC S.4 reading); "
-            "flagged for Strider, not resolved unilaterally."
-        ),
+        b3_mdl_error_rate_5db=mdl_err_5db,
         minipilot=dict(gap_mean=minipilot["gap_mean"], gap_sd=minipilot["gap_sd"],
-                      n_trials=minipilot["n_trials"]),
-        ceiling_effect_finding=(
-            "d=3 (both the B1 matched cell and the pinned mini-pilot cell) "
-            "gives EXACT recovery (P_sep=1, delta_r_bar=0) for every trial, "
-            "every method, at this documented (non-pre-registered) grid "
-            "geometry -> zero-variance SD, unusable as a power-calc input. "
-            "d=1 is the opposite floor (sources merge into one peak, "
-            "P_sep=0 always). d=2 is the only grid point with real "
-            "cross-trial variance and shows the pre-registered structural "
-            "expectation cleanly (GIBF penalty largest at small d, reduction "
-            "OFF especially: MMV separates almost perfectly while GIBF "
-            "struggles at low SNR). Neither ROADMAP.md nor "
-            "SPEC_experiment_B.md names which B1 cell is 'the' §8-ii pilot "
-            "SD when B1 is a grid, not a single cell — this is flagged for "
-            "Strider, not resolved unilaterally, mirroring Tier 2's "
-            "gap-scale-note posture." if ceiling_effect else "not observed"
-        ),
+                      n_trials=minipilot["n_trials"],
+                      separation_km=minipilot["separation_km"],
+                      delta_r_bar_mean=minipilot["delta_r_bar_mean"],
+                      p_sep_rate=minipilot["p_sep_rate"],
+                      n_peaks_hist=minipilot["n_peaks_hist"]),
+        degenerate_confirmatory_cell=bool(degenerate),
         power_calc_variance_input_matched_reading=variance_input_matched,
         power_calc_variance_input_conservative_reading=variance_input_conservative,
         power_calc_status="PENDING Strider's S8-ii sign-off (incl. which SD "

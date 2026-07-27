@@ -39,9 +39,27 @@ current while d=3 was (§8-iii, 2026-07-07, data-independent).
 built WITHOUT changing the defaults B1/B3's already-archived results and the
 tests below depend on. `run_geometry_rescale.py` uses a 17x17 pole grid
 (same 18x28 deg span as the original 11x11 -- only the density changes) so
-that 3 grid cells falls at ~194 km, inside the informative band B1 already
-established -- chosen from B1's existing, non-confirmatory data before the
-rescaled mini-pilot was run, not from the rescaled mini-pilot's own result.
+that 3 grid cells falls at ~194 km, matching the SEPARATION of B1's
+informative d=2 row -- chosen from B1's existing, non-confirmatory data
+before the rescaled mini-pilot was run, not from the rescaled mini-pilot's
+own result.
+
+CORRECTION / STATUS (ROADMAP §8, 2026-07-27, same-day entry after the above):
+"inside the informative band" describes the SEPARATION choice only, not the
+outcome. The rescaled mini-pilot's own re-run (both an initial grid-centered
+placement and a corrected edge-anchored placement matching B1's calibration
+exactly) still returns gap SD = 0.0 (a ceiling) at this geometry -- the
+denser grid did not, in fact, land in an informative regime for the
+CONFIRMATORY coherent cell (phi=90, |rho|=0.85, snr=5dB), even though its
+separation matches the cell B1 found informative for the INCOHERENT regime.
+A second confound (solver iteration count scaling with grid density via the
+pinned FAIRNESS_CONFIG's absolute min_active_factor*n_channels stopping
+rule) was found and tested (not fully resolved) via the SPEC S.6.2
+reduction-OFF descriptive row -- see run_geometry_rescale.py's module
+docstring and ROADMAP §8 for the full account. Read the §8 entries before
+treating this module's grid-override mechanism as validated for producing
+an informative cell; it is validated only as a mechanism for changing
+physical cell size without touching B1/B3's archived defaults.
 """
 
 import numpy as np

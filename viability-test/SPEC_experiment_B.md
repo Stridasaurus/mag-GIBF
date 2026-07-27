@@ -67,7 +67,7 @@ D2's outcome map (worth‑it / free option / liability / robustness pivot / drop
 
 ## S.4 Mode‑selection design (consolidated)
 
-`modeselect.estimate_n_sources(eigvals, n_snapshots, criterion="mdl")`, log‑domain Wax–Kailath per brief §6.5 with eigenvalue floor `1e‑18`; returns `K̂` plus the full AIC(k)/MDL(k) arrays. The brief's "AIC or MDL" ambiguity is resolved: **MDL is primary** (§8‑viii); `criterion` stays an argument so B3 can score both. Consumers: B3 (record‑only, both criteria), B6a (solver‑fed, MDL), downstream D3 diagnostics (MDL). `K̂` is clipped to `[1, K_max]` with `K_max = 6` (guards the pathological all‑modes case; clipping events counted and reported).
+`modeselect.estimate_n_sources(eigvals, n_snapshots, criterion="mdl")`, log‑domain Wax–Kailath per brief §6.5. **Eigenvalue floor, re‑expressed trace‑normalized (§8, 2026‑07‑27 geometry‑rescale ruling, superseding the original absolute‑unit pin below):** eigenvalues are normalized by `2/trace(S)` **inside** `estimate_n_sources`, *then* floored at `1e‑18`. The original pin floored raw eigenvalues directly at `1e‑18` — calibrated for the O(1) unit‑power spectra the archived brief's desk‑checks used; Experiment B's real ground‑CSM eigenvalues sit at ~1e‑24, entirely below that floor, so every eigenvalue clipped identically and MDL/AIC degenerated to `k̂=1` at every cell (§8, 2026‑07‑21 B3 finding). The Wax–Kailath LLR is provably invariant to a uniform positive rescaling of all eigenvalues, so this changes no content except where the absolute floor would otherwise have spuriously clipped. Returns `K̂` plus the full AIC(k)/MDL(k) arrays. The brief's "AIC or MDL" ambiguity is resolved: **MDL is primary** (§8‑viii); `criterion` stays an argument so B3 can score both. Consumers: B3 (record‑only, both criteria), B6a (solver‑fed, MDL), downstream D3 diagnostics (MDL). `K̂` is clipped to `[1, K_max]` with `K_max = 6` (guards the pathological all‑modes case; clipping events counted and reported).
 
 ## S.5 Outputs
 
@@ -105,4 +105,5 @@ Sequencing gate restated: **Gate V → `transfer.py` → Card A Tier 2 → fill 
 2. Brief §9‑B2 fixed `rho: 0.95` → SLOT‑1 (Card A).
 3. Brief §6.6 `τ_r = 1.5` cells → 1 cell (§8‑v).
 4. Brief §6.5 "AIC or MDL" → MDL primary (§8‑viii).
+5. This SPEC's own §S.4 absolute eigenvalue floor (`1e‑18` on raw eigenvalues) → trace‑normalized (`2/trace(S)` applied internally before the same `1e‑18` floor) — §8, 2026‑07‑27 geometry‑rescale ruling, superseding the 2026‑07‑21 call‑site‑only workaround.
 5. Brief §9‑B5 and §8 (Experiment A identifiability) → retired/replaced by Gate V (07‑01; theorem).

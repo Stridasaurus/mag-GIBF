@@ -1,11 +1,48 @@
 {
   "experiment": "Experiment B kickoff: solver stack + B1 + B3 + mini-pilot",
-  "seed": 20260721,
+  "seed": 20260727,
   "numpy": "2.4.6",
-  "git_commit": "45574b0ce79067537b819013aeaf1a1b1cada9ab",
-  "script_sha256": "9659020f9e0197a01e62a22dc3a19273e6a914592434fa35d712d78bb5e7bb5f",
-  "preregistration": "handoff.md (2026-07-12, assignee corrected 2026-07-20); SPEC_experiment_B.md S.1/S.2/S.6; ROADMAP.md S8-ii...viii",
-  "geometry_note": "Experiment-B array+grid = archived build brief's config/base.yaml (5x5=25-station array, 11x11=121-pole SECS grid, 'high' 70N/0E preset) \u2014 NOT pre-registered anywhere current; a documented implementation choice (see simulate.py docstring). n_trials=50 for B1/B3 likewise documented (archived brief default); mini-pilot n_trials=50 IS pinned.",
+  "git_commit": "19e27dbb98f2b832a2a417cca3c91b7c7d22df45",
+  "script_sha256": "d563f3dba27af5cce2b55bdf74eae62fa419dfa26c27c884ba6c0eccd986c3e9",
+  "preregistration": "handoff.md (2026-07-12, assignee corrected 2026-07-20); SPEC_experiment_B.md S.1/S.2/S.4/S.6/S.10; ROADMAP.md S8-ii...viii + the 2026-07-27 entry",
+  "geometry": {
+    "center_lat": 70.0,
+    "center_lon": 0.0,
+    "n_station_lat": 5,
+    "n_station_lon": 5,
+    "station_lat_span_deg": 12.0,
+    "station_lon_span_deg": 20.0,
+    "station_lon_spacing_km": 190.368,
+    "station_lat_spacing_km": 333.96,
+    "n_pole_lat": 33,
+    "n_pole_lon": 17,
+    "n_poles": 561,
+    "pole_spacing_km": 63.456,
+    "pole_lat_step_deg": 0.570034,
+    "pole_lon_step_deg": 1.666667,
+    "pole_lat_span_deg": 18.2411,
+    "pole_lon_span_deg": 26.6667,
+    "confirmatory_d": 3,
+    "confirmatory_d_km": 190.368,
+    "grid_oversampling_factor": 3,
+    "d_axis_km": {
+      "1": 63.5,
+      "2": 126.9,
+      "3": 190.4,
+      "5": 317.3,
+      "8": 507.6
+    },
+    "tau_r_cells": 1.0,
+    "tau_r_km": 63.456,
+    "overcompleteness": 7.48,
+    "placement_rule": "two-source pair on the grid centre row, symmetric about the grid centre column (refinement-invariant; supersedes the inherited fixed col_a=1)",
+    "refinement_rule": "d=3 (pre-registered, \u00a78-iii) pinned to the array's along-axis station spacing; pole spacing = that / 3 (image-grid oversampling x3). Extents preserved to within one cell; station array unchanged.",
+    "authority": "ROADMAP \u00a78 2026-07-27 (Strider's \u00a78-ii sign-off, ruling 1)"
+  },
+  "geometry_supersedes": "the 2026-07-21 kickoff run's inherited config/base.yaml geometry (11x11 poles, 106.6 km lon cell, fixed col_a=1), whose d=3 was a 320 km separation and returned a degenerate zero-variance confirmatory cell; see ROADMAP \u00a78 2026-07-27",
+  "unit_note": "all delta_r_bar / gap / tau_r quantities are in GRID CELLS; one cell = 63.456 km after the 2026-07-27 refinement (was 106.6 km along lon, 200.4 km along lat). Every pinned numeral (tau_r=1, '>= 1 grid cell', 20%) is unchanged; its physical meaning moved with the cell.",
+  "eig_floor_units": "SPEC \u00a7S.4 floor 1e-18 re-expressed in TRACE-NORMALIZED units (lam * 2/trace) inside modeselect.py, 2026-07-27 \u2014 numeral unchanged, units fixed; estimate_n_sources is now scale-free and pytest-pinned across 48 decades",
+  "n_trials_b1_b3": 50,
   "row_normalisation": "none",
   "fairness_config": {
     "eps_frac": 0.01,
@@ -21,26 +58,60 @@
     "d": 3,
     "snr_db": 5.0,
     "reduction": true,
-    "gap_mean": 0.0,
-    "gap_sd": 0.0
+    "gap_mean": 0.32,
+    "gap_sd": 0.34641016151377546
   },
   "b1_max_sd_cell": {
     "d": 2,
-    "snr_db": 5.0,
+    "snr_db": 20.0,
     "reduction": true,
-    "gap_mean": 4.251219330881976,
-    "gap_sd": 3.5997718855708123
+    "gap_mean": 7.567646651599359,
+    "gap_sd": 10.55162518573036
   },
   "b6a_nsnap_candidate": 64,
-  "eigenvalue_floor_finding": "SPEC S4's eigenvalue floor (1e-18) is calibrated for O(1) unit-power scenarios; this B-geometry's real ground CSM eigenvalues are ~1e-24, below the floor entirely, so raw (as literally pinned) MDL/AIC always select k_hat=1 -- 100% error at every B3 cell -- a floor-clipping degeneracy, not a mode-selection finding (raw error rate at 5dB across n_snap: {8: 1.0, 16: 1.0, 32: 1.0, 64: 1.0, 128: 1.0}). Trace-normalizing eigenvalues by 2/trace(S) before the floor (the LLR is provably invariant to uniform rescaling; same precedent as Tier 2's gap-conditioning resolution and the S.6.1 solver scale convention) restores real discrimination and is used for the B3 deliverable / B6a n_snap procedure below. Both readings archived in b3_results.json (mdl_error_rate = trace-normalized, mdl_error_rate_raw_aspinned = literal SPEC S.4 reading); flagged for Strider, not resolved unilaterally.",
-  "minipilot": {
-    "gap_mean": 0.0,
-    "gap_sd": 0.0,
-    "n_trials": 50
+  "b3_mdl_error_rate_5db": {
+    "8": 1.0,
+    "16": 1.0,
+    "32": 1.0,
+    "64": 1.0,
+    "128": 0.0
   },
-  "ceiling_effect_finding": "d=3 (both the B1 matched cell and the pinned mini-pilot cell) gives EXACT recovery (P_sep=1, delta_r_bar=0) for every trial, every method, at this documented (non-pre-registered) grid geometry -> zero-variance SD, unusable as a power-calc input. d=1 is the opposite floor (sources merge into one peak, P_sep=0 always). d=2 is the only grid point with real cross-trial variance and shows the pre-registered structural expectation cleanly (GIBF penalty largest at small d, reduction OFF especially: MMV separates almost perfectly while GIBF struggles at low SNR). Neither ROADMAP.md nor SPEC_experiment_B.md names which B1 cell is 'the' \u00a78-ii pilot SD when B1 is a grid, not a single cell \u2014 this is flagged for Strider, not resolved unilaterally, mirroring Tier 2's gap-scale-note posture.",
-  "power_calc_variance_input_matched_reading": 0.0,
-  "power_calc_variance_input_conservative_reading": 3.5997718855708123,
+  "minipilot": {
+    "gap_mean": 0.01,
+    "gap_sd": 0.07071067811865474,
+    "n_trials": 50,
+    "separation_km": 190.37,
+    "delta_r_bar_mean": {
+      "l2": 18.38854381999832,
+      "gibf": 0.01,
+      "mmv": 0.0
+    },
+    "p_sep_rate": {
+      "l2": 0.0,
+      "gibf": 1.0,
+      "mmv": 1.0
+    },
+    "n_peaks_hist": {
+      "l2": {
+        "1": 50
+      },
+      "gibf": {
+        "2": 50
+      },
+      "mmv": {
+        "2": 50
+      }
+    }
+  },
+  "confirmatory_cell_gap_sd_is_zero": false,
+  "confirmatory_cell_at_ceiling": true,
+  "confirmatory_cell_ceiling_methods": [
+    "mmv"
+  ],
+  "confirmatory_cell_adjudicable": false,
+  "confirmatory_cell_note": "A sparse solver pinned at delta_r_bar = 0.000 on every trial makes the pre-registered win rule ('GIBF \u0394r\u0304 >= 20% lower' \u2014 20% below zero is negative) and the mirrored loss rule (a degenerate [0, 0] CI can never fail to overlap) unsatisfiable at this cell at ANY n_trials, and P_sep = 1.00 for both sparse solvers closes the second win-rule arm as well. A nonzero gap SD makes the \u00a78-ii VARIANCE INPUT usable; it does not make the CELL adjudicable. Read `confirmatory_cell_adjudicable`, not the SD, before sizing a confirmatory run.",
+  "power_calc_variance_input_matched_reading": 0.34641016151377546,
+  "power_calc_variance_input_conservative_reading": 10.55162518573036,
   "power_calc_status": "PENDING Strider's S8-ii sign-off (incl. which SD reading to adopt); n_trials NOT yet computed/run; powered B2/B6 NOT executed",
-  "runtime_s": 31.8
+  "runtime_s": 57.8
 }

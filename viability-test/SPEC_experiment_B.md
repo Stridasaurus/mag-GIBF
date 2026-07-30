@@ -2,7 +2,9 @@
 
 > **Layer:** technical SPEC (repo context) — the design layer between `ROADMAP.md` §6 Card B (the decision layer, authoritative) and the code. Written 2026‑07‑07, the same sitting as the §8‑iii/vi/vii sign‑offs. Where this SPEC and the master build brief (`GIBF_viability_BUILD_BRIEF.md`, **flagged stale**) conflict, **this SPEC and the roadmap win**; conflicts are listed in §S.9.
 >
-> **Status: design frozen; both Card‑A slots FILLED by Card A Tier 2 (2026‑07‑12, §S.7); fairness protocol PINNED (2026‑07‑19, §S.6)** — no design inputs remain open (roadmap §9 open question 1 closed). No Experiment‑B code exists yet; nothing here was tuned to a result.
+> **Status: design frozen; both Card‑A slots FILLED by Card A Tier 2 (2026‑07‑12, §S.7); fairness protocol PINNED (2026‑07‑19, §S.6)** — no design inputs remain open (roadmap §9 open question 1 closed). No Experiment‑B code exists yet; nothing here was tuned to a result. *(That last sentence is as‑written 2026‑07‑07; the module stack was built 2026‑07‑21.)*
+>
+> **Amended 2026‑07‑27 (geometry‑rescale pass; ROADMAP §8 2026‑07‑27, Strider's §8‑ii sign‑off):** two additions, both to *unprotected* design surface — **no pre‑registered coordinate moved** (`d = 3`, `φ = 90°`, `snr ∈ {5,10}`, `|ρ| = 0.85`, `n_snap = 64`, `τ_r = 1`, reduction ON all stand exactly as signed off). **§S.4** — the eigenvalue floor's numeral is unchanged but is now denominated in trace‑normalized units. **§S.10 (new)** — the array + SECS grid geometry, previously pinned nowhere and inherited by accident, is pinned; the SECS grid is refined so the pre‑registered `d = 3` is one station spacing rather than 1.7× the array's sampling limit.
 
 ## S.0 What is being decided, restated
 
@@ -67,7 +69,9 @@ D2's outcome map (worth‑it / free option / liability / robustness pivot / drop
 
 ## S.4 Mode‑selection design (consolidated)
 
-`modeselect.estimate_n_sources(eigvals, n_snapshots, criterion="mdl")`, log‑domain Wax–Kailath per brief §6.5 with eigenvalue floor `1e‑18`; returns `K̂` plus the full AIC(k)/MDL(k) arrays. The brief's "AIC or MDL" ambiguity is resolved: **MDL is primary** (§8‑viii); `criterion` stays an argument so B3 can score both. Consumers: B3 (record‑only, both criteria), B6a (solver‑fed, MDL), downstream D3 diagnostics (MDL). `K̂` is clipped to `[1, K_max]` with `K_max = 6` (guards the pathological all‑modes case; clipping events counted and reported).
+`modeselect.estimate_n_sources(eigvals, n_snapshots, criterion="mdl")`, log‑domain Wax–Kailath per brief §6.5 with eigenvalue floor `1e‑18` **in trace‑normalized units** (amended 2026‑07‑27, see below); returns `K̂` plus the full AIC(k)/MDL(k) arrays.
+
+> **Amendment 2026‑07‑27 — the floor is re‑expressed in trace‑normalized units (ROADMAP §8 2026‑07‑27, Strider's §8‑ii sign‑off ruling 2).** The pinned numeral `1e‑18` is **unchanged**; only the units it is denominated in change. Applied to *raw* eigenvalues it is an **absolute** floor calibrated for an O(1) unit‑power scenario (Tier 1's convention), so against Experiment B's real ground CSM (~`1e‑24` T²) every eigenvalue clipped to the same value, the log‑domain LLR flattened to 0 for every candidate `k`, and MDL/AIC reported `K̂ = 1` at 100 % of B3 cells (the 2026‑07‑21 finding). `estimate_n_sources` now trace‑normalizes internally (`λ × 2/trace`, the repo‑wide convention) **before** applying the floor, making it scale‑free by construction. This is content‑preserving: the Wax–Kailath LLR `N·p·(mean log λ_tail − log mean λ_tail)` is provably invariant to `λ → cλ` for `c > 0`, and the penalty terms contain no eigenvalues — so the normalization is a no‑op on any full‑rank spectrum and changes only *which* eigenvalues the floor catches. The floor's sole remaining job is keeping `ln` finite on the exact zeros of a rank‑deficient sample CSM (`n_snap < n_channels`), which is exactly what it was for. **Why in the units and not at the call site:** this was the third mis‑fire of one root cause (Card A Tier 2's gap‑conditioning statistic → §S.6.1's solver scale convention → §S.4), and the same sitting's grid refinement (§S.10) moves the CSM scale again. `tests/test_modeselect.py` pins the invariance across 48 decades including the rank‑deficient case; the 2026‑07‑21 dual raw/normalized reporting path is retired (reproducible at commit `12ff377`). The brief's "AIC or MDL" ambiguity is resolved: **MDL is primary** (§8‑viii); `criterion` stays an argument so B3 can score both. Consumers: B3 (record‑only, both criteria), B6a (solver‑fed, MDL), downstream D3 diagnostics (MDL). `K̂` is clipped to `[1, K_max]` with `K_max = 6` (guards the pathological all‑modes case; clipping events counted and reported).
 
 ## S.5 Outputs
 
@@ -106,3 +110,27 @@ Sequencing gate restated: **Gate V → `transfer.py` → Card A Tier 2 → fill 
 3. Brief §6.6 `τ_r = 1.5` cells → 1 cell (§8‑v).
 4. Brief §6.5 "AIC or MDL" → MDL primary (§8‑viii).
 5. Brief §9‑B5 and §8 (Experiment A identifiability) → retired/replaced by Gate V (07‑01; theorem).
+
+## S.10 Array + SECS grid geometry (pinned 2026‑07‑27)
+
+> **New section.** Until now no absolute geometry was pinned anywhere: ROADMAP/SPEC/`EXPERIMENT_CARD_A.md` pin `φ / snr / d / |ρ| / n_snap / τ_r` in **relative** terms only, so the 2026‑07‑21 kickoff run inherited the archived brief's `config/base.yaml` and flagged it. That gap is what produced a degenerate confirmatory cell. Pinned here so it is never again inherited by accident. Authority: ROADMAP §8 2026‑07‑27 (Strider's §8‑ii sign‑off, ruling 1) — **the geometry moves, the pre‑registration does not.**
+
+**Station array — unchanged.** 5×5 = 25 stations, lat span 12°, lon span 20°, centred 70 °N / 0 °E ("high" preset). 3 components ⇒ 75 channels. Nearest‑neighbour spacing 334.0 km (lat) / **190.4 km (lon)**.
+
+**SECS pole grid — refined.** The rule, fixed before any re‑run and consulting no result:
+
+| Quantity | Value | Where it comes from |
+|---|---|---|
+| Confirmatory coordinate `d` | **3** | §8‑iii, pre‑registered 2026‑07‑07 — **not moved** |
+| `d = 3` in physical units | **190.4 km = 1 station spacing** | the scale below which a ground array cannot sample horizontal structure |
+| Pole spacing `Δ` | **63.456 km**, isotropic | `= station spacing / 3` (image‑grid oversampling ×3) |
+| Pole count | **33 × 17 = 561** | odd counts preserving the inherited 18°/28° imaging extents to within one cell (18.24° / 26.67°) |
+| `d` axis in km | 63 / 127 / **190** / 317 / 508 | the pre‑registered `d ∈ {1,2,3,5,8}` now **spans** the array's resolution transition |
+| Source placement | pair on the centre row, symmetric about the centre column | refinement‑invariant; supersedes the inherited fixed `col_a = 1`, which on a 17‑wide grid would fall outside the array footprint |
+| Overcompleteness | 561 / 75 = **7.5×** (was 1.6×) | adjacent‑column correlation ≈ 0.997 |
+
+**Unit consequence — load‑bearing for §8‑ii.** Every adjudication quantity is denominated in **grid cells**: `Δr̄`, `τ_r = 1 cell` (§8‑v), and the win rule's "resolves ≥ 1 grid cell smaller". Those numerals are pinned and unchanged, but one cell is now **63.5 km** where it was 106.6 km (lon) / 200.4 km (lat) — a 1.68× tighter physical tolerance along the separation axis, and an isotropic one, where the old grid made `metrics.py`'s Euclidean index distance mix two different physical lengths. Both units are reported everywhere.
+
+**Why this rule and not a coherence‑based one.** The normalized column correlation of `A` only falls to 1/√2 at ~350 km, yet all three solvers recovered a 320 km pair exactly at −5 dB — coherence bounds worst‑case ℓ₁ recovery and these solvers beat that bound comfortably, so a coherence anchor would have certified the ceiling‑ing grid as already correct. The station‑sampling anchor is a property of the array, is computable before any experiment, and gives the confirmatory coordinate a physical meaning rather than an accidental one.
+
+Runners record `simulate.geometry_record()` structurally in every manifest (`script_sha256` covers the runner only; the geometry lives in `simulate.py`).

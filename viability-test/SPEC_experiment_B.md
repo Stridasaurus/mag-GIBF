@@ -65,6 +65,8 @@ As brief §9‑B4, unchanged: GIBF‑only, real `A` vs `A ⊙ exp(iΦ)` geometri
 | `P_sep` | correctly placed = within **1 grid cell** under min‑cost matched assignment; distinct = peaks match different true sources | §8‑v (supersedes brief's 1.5‑cell `τ_r`) |
 | `K̂` estimator | MDL (Wax–Kailath), solver‑fed everywhere a single count is consumed; AIC reported in B3 and as sensitivity rows only | §8‑viii |
 
+> **Amendment 2026‑08‑01 (§S.11).** Every `d = 3` in this table's Win rule cells / B6 rule / Power rows is superseded by **`d = 8`**, per the blind draw in §S.11 (the `d=3` cell adjudicated as a ceiling/saturation result, not a win or loss). Left as‑written above rather than silently rewritten, for the same audit‑trail reason §S.10 was added as an amendment rather than an edit to the original pins: a methods paper needs the history of what was pre‑registered when, not just the current value. `φ = 90°`, `snr_db ∈ {5,10}`, `n_snap = 64`, `|ρ|` = SLOT‑1 midpoint are unaffected.
+
 D2's outcome map (worth‑it / free option / liability / robustness pivot / drop / inconclusive) is read off these adjudicated cells exactly as in roadmap §5‑D2.
 
 ## S.4 Mode‑selection design (consolidated)
@@ -132,5 +134,23 @@ Sequencing gate restated: **Gate V → `transfer.py` → Card A Tier 2 → fill 
 **Unit consequence — load‑bearing for §8‑ii.** Every adjudication quantity is denominated in **grid cells**: `Δr̄`, `τ_r = 1 cell` (§8‑v), and the win rule's "resolves ≥ 1 grid cell smaller". Those numerals are pinned and unchanged, but one cell is now **63.5 km** where it was 106.6 km (lon) / 200.4 km (lat) — a 1.68× tighter physical tolerance along the separation axis, and an isotropic one, where the old grid made `metrics.py`'s Euclidean index distance mix two different physical lengths. Both units are reported everywhere.
 
 **Why this rule and not a coherence‑based one.** The normalized column correlation of `A` only falls to 1/√2 at ~350 km, yet all three solvers recovered a 320 km pair exactly at −5 dB — coherence bounds worst‑case ℓ₁ recovery and these solvers beat that bound comfortably, so a coherence anchor would have certified the ceiling‑ing grid as already correct. The station‑sampling anchor is a property of the array, is computable before any experiment, and gives the confirmatory coordinate a physical meaning rather than an accidental one.
+
+## S.11 New confirmatory coordinate for powered B2/B6 (pinned 2026‑08‑01, blind draw)
+
+**Why a new pin was needed.** The §8‑ii cell‑adjudication ruling (2026‑07‑30, ROADMAP §8) found `d=3` — the original confirmatory coordinate — cannot adjudicate: both GIBF and MMV saturate there (Δr̄=0.000, P_sep=1.00 on 50/50 trials), a ceiling/ resolvability‑floor result, not a comparative one. Re‑anchoring `d=3` itself was explicitly rejected (would repeat the un‑pre‑registered‑geometry failure Ruling 1 fixed). A **new** coordinate had to be pre‑registered blind — chosen without consulting any mini‑pilot result — per the same discipline that produced the original `d=3` pin.
+
+**Why a random draw, not Strider's own pick.** By 2026‑08‑01, Strider had already seen mini‑pilot SD/gap numbers across most of the `d` axis from the rescale pass (§S.10's execution record — e.g. `d=2`'s SD=10.5516 at 20 dB, `d=3`'s now‑informative row at 5 dB). A coordinate he chose himself at this point would carry a real risk of contaminated blindness. Strider's ruling (2026‑08‑01, live): have the session draw it via a documented, non‑result‑derived random mechanism instead — removes the exposure problem by construction, since no party with any knowledge of prior results makes the pick.
+
+**The draw.**
+
+| Quantity | Value |
+|---|---|
+| Candidate set | `{1, 2, 5, 8}` — the full pre‑registered `d ∈ {1,2,3,5,8}` axis (§S.10) minus `d=3` (retired, ceiling‑adjudicated, structurally excluded — not a results‑based exclusion) |
+| Mechanism | `secrets.choice()` (Python's CSPRNG, OS entropy) over the candidate list, run in a fresh process with no access to any experiment result |
+| Drawn | **`d = 8`** → **508 km** (§S.10's `d` axis: 63/127/190/317/**508** km) |
+| Timestamp | 2026‑08‑01T17:34:14 UTC |
+| Consulted before the draw | Nothing — no mini‑pilot, no B1/B2/B6 result, no SD table |
+
+**Consequence.** `φ = 90°`, `snr_db ∈ {5, 10}`, `n_snap = 64` all stay pinned exactly as signed off (§S.6/§8‑iii); only the confirmatory `d` changes, from 3 to **8**. The next step is the §8‑ii mini‑pilot + power calc *at this new coordinate* — unchanged procedure, new cell. `d=8` sits at the coarse end of the axis (largest source separation), which is neither favorable nor unfavorable by construction — that is the point of drawing it blind rather than choosing it.
 
 Runners record `simulate.geometry_record()` structurally in every manifest (`script_sha256` covers the runner only; the geometry lives in `simulate.py`).

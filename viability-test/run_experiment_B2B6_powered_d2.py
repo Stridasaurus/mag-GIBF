@@ -818,6 +818,11 @@ def main(argv=None):
         git_commit=_git("rev-parse", "HEAD"),
         script_committed_clean=script_is_committed_clean(),
         script_sha256=hashlib.sha256(Path(__file__).resolve().read_bytes()).hexdigest(),
+        # line-ending-normalized identity of the committed runner (the sha256
+        # above hashes working-copy bytes, which differ under CRLF checkout)
+        script_git_blob=_git("rev-parse",
+                             f"HEAD:{Path(__file__).resolve().relative_to(REPO).as_posix()}",
+                             cwd=REPO),
         secsy_sha=_git("rev-parse", "HEAD", cwd=REPO / "secsy"),
         numpy=np.__version__, python=sys.version.split()[0],
         config_hash_sha256=config_hash, config=cfg,
@@ -828,7 +833,7 @@ def main(argv=None):
                  b3_reading=b3),
         preregistration=("SPEC_experiment_B.md S.1, S.2-B2, S.2-B6, S.3 (as amended by "
                          "S.11/S.12), S.5, S.6, S.7, S.12, S.13; ROADMAP.md S5-D2, "
-                         "S8-ii..viii; proposed S.14 items P1..P12 pending ratification"),
+                         "S8-ii..viii; proposed S.14 items P1..P14 pending ratification"),
         adjudication="NOT applied by this run; use --adjudicate-only after review",
         cells=cell_summaries,
         timing_s=timings,

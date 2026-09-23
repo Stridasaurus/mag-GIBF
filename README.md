@@ -35,33 +35,47 @@ names. `ROADMAP.md` §0 has the full rename map; the short version:
 
 ## Where the project stands right now
 
+*(Refreshed 2026-08-28 — the section below was six weeks and three merged PRs stale;
+`ROADMAP.md` §8/§9 is and remains the canonical detail, this is just a current summary.)*
+
 - **Validation Gate V: PASSED** (2026-07-07). Confirms the `secsy` library implements
   the Fukushima/Amm theorem correctly — curl-free (CF) current produces exactly zero
   ground field for radial FACs — and pins the exact adapter contract (`secsy` keyword
   map, `(Ge, Gn, Gr)` return order, a coincidence/NaN guard) that `transfer.py` must
   satisfy.
-- **Card A Tier 1: complete** (2026-07-06). Forward-modeled realistic FLR source pairs;
-  pinned the co-primary thresholds (κ 0.394 holds / 0.137 fails) for whether
-  inter-source phase survives ionospheric integration to the ground.
-- **Experiment B design: frozen** (2026-07-07), pending the build below.
+- **Card A Tier 1: complete** (2026-07-06); **Card A Tier 2: COMPLETE — H-A HOLDS**
+  (2026-07-12, PR #1 ratified + merged 2026-07-19). 80/81 realistic FLR cells hold;
+  inter-source phase survives ionospheric integration to the ground CSM.
 - **`transfer.py`: built and pytest-gated** (2026-07-10) — the real, DF-only transfer
-  matrix adapter, built against the contract Gate V pinned. Semantic-drift audit items
-  A1-A3 landed the same sitting.
-- **Frontier / next thing to run: Card A Tier 2** — the H-A adjudication hinge, design
-  fully pinned 2026-07-11 (`ROADMAP.md` §8). **Currently assigned to Shane Gilbertie —
-  see [`handoff.md`](handoff.md) for the complete, self-contained task.**
+  matrix adapter, built against the contract Gate V pinned.
+- **Experiment B: solver stack + B1 + B3 + mini-pilot built and run** (PR #2, merged
+  2026-07-21), **geometry rescaled and the mode-selection floor unit bug fixed**
+  (PR #3, merged 2026-07-30). Two confirmatory-coordinate attempts have since
+  **ceiling-adjudicated** — `d=3` (190.4 km) and `d=8` (508 km, PR #4) both saturate:
+  every solver exact-recovers, so the pre-registered win/loss rule can't fire at
+  either coordinate at any sample size. Reported as findings, not comparative results.
+- **Frontier, as of 2026-08-28: `d=2` (127 km) accepted as the confirmatory coordinate**
+  — the one point in the original blind-draw pool `{1,2,5,8}` never already knowable
+  as degenerate from existing data (Strider's ruling, 2026-08-16). The `d=2` pilot
+  pass (branch `b2b6-confirmatory-d2`) came back **ADJUDICABLE** — neither solver
+  saturates, and the S8-ii power calc produced a real number for the first time in
+  this project: **n = 1635 trials**. **Next: build the powered B2/B6 runner** (SPEC
+  §S.2-B2 win/null cells, §S.6.5 regularization-sensitivity panel, §S.3 B6a paired
+  oracle/K̂ arm) — no confirmatory coordinate has reached this step before, so this is
+  new code, not a parameter swap on an existing runner.
+- **Team, as of the 2026-08-28 restart:** solo — Strider, agent-assisted for
+  mechanical build/doc work. `handoff.md`'s Shane-Gilbertie assignment (2026-07-11,
+  Card A Tier 2) is historical, not current.
 
-**Before picking up new work, check `ROADMAP.md` and ask in the team channel** —
-several build-order items (`transfer.py`, the eigendecomposition/mode-selection step)
-were assigned informally before this repo existed; confirm what's already started
-before duplicating it.
+Full experiment-by-experiment detail: `ROADMAP.md` §8 (append-only log) and §9
+(status). Do not re-derive from this summary — it is intentionally short.
 
 ## Repo layout
 
 | Path | What it is |
 |---|---|
 | `ROADMAP.md` | Canonical research state: decision tree, invariants, glossary, build order, experiment log |
-| `handoff.md` | Self-contained task handoff for the current assignee of the active frontier node (Card A Tier 2, 2026-07-11: Shane Gilbertie) |
+| `handoff.md` | Historical: the Experiment-B-kickoff task handoff (2026-07-12). Superseded as a live assignment doc — see README "Where the project stands" above for the current frontier. |
 | `EXPERIMENT_CARD_A.md` | Card A (FLR source-coherence) experiment design |
 | `viability-test/` | The actual build — validation/experiment scripts and their frozen specs |
 | `viability-test/gateV_kernel_validation.py` | Gate V: runs the `secsy` CF-pair probe + realness/DF checks |

@@ -424,3 +424,86 @@ def test_non_confirmatory_n_refuses_results_dir():
 def test_only_is_smoke_only(tmp_path):
     with pytest.raises(SystemExit):
         R.main(["--n-trials", "3", "--only", "win", "--out-dir", str(tmp_path)])
+
+
+def test_any_run_refuses_an_out_dir_with_a_manifest(tmp_path):
+    (tmp_path / "manifest.json").write_text("{}")
+    with pytest.raises(SystemExit):
+        R.main(["--smoke", "--n-trials", "2", "--out-dir", str(tmp_path)])
+    with pytest.raises(SystemExit):
+        R.resolve_run(R.parse_args(["--out-dir", str(tmp_path)]), clean=True)
+
+
+def test_master_seed_run_must_write_under_results(tmp_path):
+    with pytest.raises(SystemExit):
+        R.resolve_run(R.parse_args(["--out-dir", str(tmp_path)]), clean=True)
+
+
+def test_master_seed_run_requires_committed_clean_runner():
+    out = R.RESULTS_ROOT / "B_viability" / "_never_created_test_dir"
+    with pytest.raises(SystemExit):
+        R.resolve_run(R.parse_args(["--out-dir", str(out)]), clean=False)
+    assert not out.exists()
+
+
+def test_nondefault_b6a_nsnap_cannot_touch_the_confirmatory_dir():
+    with pytest.raises(SystemExit):
+        R.resolve_run(R.parse_args(["--b6a-nsnap", "128"]), clean=True)
+
+
+def test_nondefault_b6a_nsnap_is_a_descriptive_b6a_only_run():
+    out = R.RESULTS_ROOT / "B_viability" / "_never_created_b6a_n128"
+    run = R.resolve_run(R.parse_args(["--b6a-nsnap", "128", "--out-dir", str(out)]),
+                        clean=True)
+    assert run["confirmatory"] is False and run["roles"] == ("b6a",)
+    assert run["seed"] == R.MASTER_SEED
+    assert not out.exists()          # resolve_run never creates anything
+
+
+def test_default_run_is_the_confirmatory_run():
+    if (R.DEFAULT_OUT / "manifest.json").exists():
+        pytest.skip("the confirmatory run already exists")
+    run = R.resolve_run(R.parse_args([]), clean=True)
+    assert run["confirmatory"] is True and set(run["roles"]) == set(R.ALL_ROLES)
+
+
+def test_smoke_run_is_never_confirmatory(tmp_path):
+    run = R.resolve_run(R.parse_args(["--smoke", "--n-trials", "3",
+                                      "--out-dir", str(tmp_path / "s")]))
+    assert run["confirmatory"] is False and run["seed"] == R.SMOKE_SEED
+
+
+def test_d_axis_arm_both_infinite_is_no_effect():
+    r = R.d_axis_arm(_psep_trials(99, 99), "gibf", _ids("f"))
+    assert r["d_min"] == {"gibf": math.inf, "mmv": math.inf}
+    assert not r["effect_met"] and not r["met"]
+
+
+def test_miss_and_matched_error_decomposes_delta_r_bar():
+    from metrics import delta_r_bar
+    true_cells = [(16, 7), (16, 9)]
+    I = np.zeros(GRID_SHAPE)
+    I[16, 7] = 1.0
+    I[17, 10] = 0.9                   # second peak 1 row + 1 col off
+    miss, err = R.miss_and_matched_error(I, true_cells)
+    assert miss is False
+    assert err == pytest.approx(np.hypot(1, 1) / 2)
+    assert err == pytest.approx(delta_r_bar(I, true_cells))
+    I2 = np.zeros(GRID_SHAPE)
+    I2[16, 7] = 1.0                   # only one detected peak -> miss
+    miss, err = R.miss_and_matched_error(I2, true_cells)
+    assert miss is True and np.isnan(err)
+    diag = float(np.hypot(GRID_SHAPE[0] - 1, GRID_SHAPE[1] - 1))
+    assert delta_r_bar(I2, true_cells) == pytest.approx(diag / 2)   # penalty applied
+
+
+def test_real_solver_records_miss_fields(tm):
+    cell = [c for c in R.build_plan() if c.role == "d_axis_null"][0]
+    arrays, _ = R.run_data_cell(tm, cell, 2, TEST_SEED, solve_fn=solve_all)
+    rec = arrays["oracle_on_x1"]
+    for m in R.METHODS:
+        miss = rec[f"miss_{m}"]
+        assert miss.dtype == bool and miss.shape == (2,)
+        assert np.all(np.isnan(rec[f"matched_err_{m}"][miss]))
+        assert np.allclose(rec[f"matched_err_{m}"][~miss], rec[f"dr_{m}"][~miss])
+        assert np.all((rec[f"npeaks_{m}"] < 2) == miss)

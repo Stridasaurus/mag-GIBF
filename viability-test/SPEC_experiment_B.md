@@ -185,9 +185,9 @@ Runners record `simulate.geometry_record()` structurally in every manifest (`scr
 
 ## S.14 Powered d=2 runner: unpinned implementation decisions (2026‑09‑23) — **PROPOSED — pending Strider's ratification**
 
-> **Status: PROPOSED, not pinned.** Written the same sitting that `viability-test/run_experiment_B2B6_powered_d2.py` was built (branch `b2b6-powered-runner-d2`), **before any confirmatory execution**. No confirmatory trial has been computed; the only executions were smoke tests at `n_trials ∈ {3, 20}` under a separate smoke seed, written outside `results/`, and no gap, `P_sep` or verdict from them was read or reported. Each item below is either a place where the SPEC/ROADMAP does not pin a choice the code must make, or a pinned reading that needs Strider's attention. The runner implements the reading written here and cites the item number (`S.14 Pn`) in its comments. Ratify, amend or strike each item before the confirmatory run; an amended item means a runner edit and a re‑commit before the run (A3 workflow).
+> **Status: PROPOSED, not pinned.** Written the same sitting that `viability-test/run_experiment_B2B6_powered_d2.py` was built (branch `b2b6-powered-runner-d2`), **before any confirmatory execution**. No confirmatory trial has been computed; the only executions were smoke tests at `n_trials ∈ {3, 20}` under a separate smoke seed, written outside `results/`, and no gap, `P_sep` or verdict from them was read or reported. Each item below is either a place where the SPEC/ROADMAP does not pin a choice the code must make, or a pinned reading that needs Strider's attention. The runner implements the reading written here and cites the item number (`S.14 Pn`, `On` for observations) in its comments. Ratify, amend or strike each item before the confirmatory run; an amended item means a runner edit and a re‑commit before the run (A3 workflow).
 
-**Pinned inputs the runner consumes unchanged** (for the record, not for ratification): `d = 2` (§S.12); φ = 90° win / φ ∈ {0°, 180°} null; `snr_db ∈ {5, 10}`; `|ρ| = 0.85`; `n_snap = 64`; oracle `K = 2`; reduction ON (§S.6(2)); `n_trials = 1635` (§S.12 power calc, provenance copied into the manifest from `results/B_viability/confirmatory_d2_manifest.json`, commit `a42a873`); `eps_frac × {0.1, 0.3, 1, 3, 10}` (§S.6(5)); 2000‑resample percentile bootstrap (§S.1); `τ_r = 1` cell (§8‑v). **Master seed `2250821694`**: `secrets.randbits(32)` in an isolated interpreter (`python -I`, scratch cwd, no repo import, no result opened), drawn 2026‑09‑23T07:38:11Z, committed in the runner (commit `0008332`) before any execution of it.
+**Pinned inputs the runner consumes unchanged** (for the record, not for ratification): `d = 2` (§S.12); φ = 90° win / φ ∈ {0°, 180°} null; `snr_db ∈ {5, 10}`; `|ρ| = 0.85`; `n_snap = 64`; oracle `K = 2`; reduction ON (§S.6(2)); `n_trials = 1635` — **the §S.12 value, under audit** (the §8‑ii power calc may not match the per‑method‑CI non‑overlap criterion; see O1 — not described anywhere in the runner as adequately powered; a CLI argument; provenance copied into the manifest from `results/B_viability/confirmatory_d2_manifest.json`, commit `a42a873`); `eps_frac × {0.1, 0.3, 1, 3, 10}` (§S.6(5)); 2000‑resample percentile bootstrap (§S.1); `τ_r = 1` cell (§8‑v). **Master seed `2250821694`**: `secrets.randbits(32)` in an isolated interpreter (`python -I`, scratch cwd, no repo import, no result opened), drawn 2026‑09‑23T07:38:11Z, committed in the runner (commit `0008332`) before any execution of it.
 
 **P1 — B6a `n_snap` and the MDL clip. NEEDS A RULING BEFORE THE CONFIRMATORY RUN.** The §8‑vii procedure, applied mechanically to `results/B_viability/b3_results.json`, gives **`n_snap = 64`**. That matches the kickoff manifest's `b6a_nsnap_candidate`, and the runner uses it. The B3 row behind it (5 dB, incoherent, **B3 was run at `d = 3`** per `run_experiment_B.py` `D_B3 = 3`) is not a graded error curve:
 - MDL `K̂ = 6`, the `K_MAX` clip, on 50/50 trials at each of `n_snap ∈ {8, 16, 32, 64}`.
@@ -209,15 +209,17 @@ So at the pinned cell B6a will almost certainly feed `K̂ = 6` to all solvers on
 
 **P2 — The d axis is also run at both null φ.** §8‑vi and the §S.3 loss row require the loss rule to use "the same d reading", which §8‑iii defines as including the full‑d‑axis `P_sep` arm. Applying the loss rule as pinned therefore needs `d ∈ {1, 3, 5, 8}` at φ ∈ {0°, 180°} × `snr ∈ {5, 10}`, which is 16 cells, in addition to the 8 at φ = 90°. The build brief listed the d axis at φ = 90° only; the pin was followed. The cells are cheap (about 1 minute each at full n). If Strider strikes them, the loss rule reduces to its Δr̄ arm.
 
-**P3 — Reading and CI of the "smallest d with `P_sep ≥ 0.8` is ≥ 1 cell smaller" arm.**
+**P3 — Reading and CI of the "smallest d with `P_sep ≥ 0.8` is ≥ 1 cell smaller" arm. No CI for `P_sep` is pinned anywhere; this is a proposal.**
 - `d_min` is the smallest `d` on {1, 2, 3, 5, 8} with the cell's `P_sep` rate ≥ 0.8 (inclusive).
 - It is read literally even if `P_sep` is non‑monotone in `d`.
-- It is `+∞` if no `d` reaches 0.8, so any finite `d_min` beats it.
-- "≥ 1 grid cell smaller" means favored `d_min ≤` other `d_min − 1`. On this axis that is the same as strictly smaller.
-- "Non‑overlapping 95% CIs" is applied to a **percentile bootstrap of `d_min` per method**. Each `d` cell's trials are resampled independently (each is its own Monte‑Carlo cell with its own seeds) using that cell's own cell‑id‑seeded indices. The indices are shared by both methods.
-- Quantiles use the inverted‑CDF rule, because `d_min` is discrete and can be `+∞`.
-
-Alternative not chosen: requiring non‑overlapping `P_sep` CIs at the favored method's `d_min`.
+- It is `+∞` if no `d` reaches 0.8.
+- "≥ 1 grid cell smaller" means favored `d_min ≤` other `d_min − 1`, **and the favored `d_min` must be finite**. With both `d_min = +∞`, "∞ ≤ ∞ − 1" is true in IEEE arithmetic but is not an effect; this case is excluded and pytest‑pinned. On this axis, "≥ 1 cell smaller" is the same as strictly smaller.
+- **Proposed per‑cell `P_sep` CI:** a percentile bootstrap of the success rate over trials, with 2000 resamples seeded from the cell id (the §S.1 convention, the same resample indices as that cell's Δr̄ CIs, shared by both methods). It is reported per method per cell for every `d`.
+- **Proposed arm CI:** "non‑overlapping 95% CIs" is applied to the **bootstrap distribution of `d_min` per method**. This distribution is built by pushing each `d` cell's own resampled `P_sep` rates (the draws above, independent across `d` cells, since each is its own Monte‑Carlo cell) through the `d_min` rule. The arm is met iff the effect holds and `CI_hi(d_min, favored) < CI_lo(d_min, other)`. Quantiles use the inverted‑CDF rule, because `d_min` is discrete and can be `+∞`.
+- **Alternatives, not chosen:**
+  - (i) non‑overlapping per‑method `P_sep` CIs at the favored method's `d_min`;
+  - (ii) the same, but with Wilson or Clopper–Pearson binomial intervals instead of the bootstrap;
+  - (iii) requiring the favored method's `P_sep` CI lower bound to be ≥ 0.8 at its `d_min`, and the other's upper bound to be < 0.8 there.
 
 **P4 — Combining the two arms across SNRs.** Within each SNR level the Δr̄ arm and the `d`‑axis arm are OR'd. The win rule, and the loss rule at a given null, requires **both** SNR levels to meet the rule; the arm that satisfies it may differ between the two SNRs. Alternative: require the same arm at both SNRs.
 
@@ -249,10 +251,17 @@ Alternative not chosen: requiring non‑overlapping `P_sep` CIs at the favored m
 - At B6a both the `K̂` and the oracle arms get an OFF pair.
 - OFF rows are labelled `descriptive_reduction_off`, have no panel, and are never adjudicated.
 
-**P11 — Smoke and run guards.**
-- Smoke tests use `SMOKE_SEED = 1`, never the master seed, so no confirmatory trial is computed before the real run.
-- Any smoke run, any `n ≠ 1635` run, and any `--only` subset run is refused an output directory under `results/`.
-- A run into `results/` is refused unless the runner file is committed and clean against `HEAD`.
+**P11 — Smoke and run guards** (`resolve_run()`, evaluated before any computation, pytest‑pinned).
+- **Any run** refuses an output directory that already holds a `manifest.json`. No run ever overwrites another run's record.
+- **Smoke runs** (`--smoke`) use `SMOKE_SEED = 1`, never the master seed, so no confirmatory trial is computed before the real run. Smoke output never goes under `results/`, and a smoke run is never `confirmatory_run`.
+- **Every master‑seed run** requires:
+  - the runner committed and clean against `HEAD` (A3);
+  - `n_trials = 1635` (other `n` only via `--smoke`);
+  - an output directory under `results/`, so the blind trials are never computed somewhere unrecorded;
+  - no `--only`.
+- **A master‑seed run is exactly one of these:**
+  - the **confirmatory run**: default `--b6a-nsnap`, the full plan, `confirmatory_run: true`;
+  - a **descriptive B6a row** (see P1(d)): a non‑default `--b6a-nsnap`, the B6a cell only, into an output directory other than the confirmatory `results/B_viability/powered_d2/`, with `confirmatory_run: false`.
 - The manifest records `script_sha256`, which hashes the working‑copy bytes and so depends on CRLF, and also the line‑ending‑normalized git blob id.
 
 **P12 — What the panel re‑solves.**
@@ -265,4 +274,11 @@ Alternative not chosen: requiring non‑overlapping `P_sep` CIs at the favored m
 - Every cell, including the `d`‑axis cells and every OFF pair, runs at the full `n_trials`.
 - Arms are labelled `headline` (this includes the `d`‑axis points that feed the second rule arm), `sensitivity_panel`, `descriptive_reduction_off` or `b6a_oracle_reference`.
 
-**Observation (no proposal):** the §8‑ii power calc sized `n_trials` for a paired one‑sample test on the signed gap at α = 0.006. The pinned rules adjudicate by non‑overlap of the two **per‑method** CIs (§S.1). §5‑D2 already names the α ≈ 0.006 equivalence as the intended approximation. It is recorded here so that, if the powered verdict comes out "inconclusive", the reading of "adequate power" has this on the table.
+**P15 — Miss‑rate / conditional‑precision decomposition (descriptive; added at the coordinator's request, 2026‑09‑23).** Per trial, per method, per arm, the runner also records three things:
+- the detected‑peak count, from `metrics.find_peaks_2d` at its pinned `rel_thresh = 0.10`;
+- a **miss** flag: fewer detected peaks than true sources, which is exactly when `delta_r_bar` applies its grid‑diagonal penalty;
+- the **unpenalized** mean matched error (grid cells, `metrics._matched_assignment`) on non‑miss trials, `NaN` on miss trials. On a non‑miss trial it equals Δr̄ exactly (pytest‑pinned).
+
+Summaries give the miss rate with a bootstrap CI and the mean non‑miss error, which has no CI because its `n` varies by method. None of this is adjudicated; it lets a miss‑rate vs conditional‑precision reading of Δr̄ come from the same run.
+
+**O1 — `n_trials = 1635` is under audit (observation, no proposal).** The §8‑ii power calc sized `n_trials` for a **paired one‑sample test on the signed gap** at α = 0.006. The pinned rules adjudicate by **non‑overlap of the two per‑method CIs** (§S.1). §5‑D2 names the α ≈ 0.006 equivalence as the intended approximation, but whether 1635 gives ≥ 80% power under the per‑method‑CI criterion has not been shown, and a methodology audit is open on it. The runner therefore labels 1635 as "the §S.12 value, under audit", never as adequately powered, and keeps it a CLI argument. Any change is a runner edit plus re‑commit before the confirmatory run.

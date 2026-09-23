@@ -16,10 +16,12 @@ Pins implemented here (every value is cited; none is chosen in this file):
     K = 2, grid reduction ON (S.6(2)).
   * Reduction-OFF pair of every confirmatory cell at the same n_trials,
     DESCRIPTIVE only — S.6(2).
-  * n_trials = 1635 — S.12 / ROADMAP S8 2026-08-28 power calc (provenance
-    copied into the manifest from results/B_viability/confirmatory_d2_manifest
-    .json). CLI-overridable for smoke tests only; any n != 1635 is stamped
-    non-confirmatory and cannot be written under results/.
+  * n_trials = 1635 — the S.12 value, UNDER AUDIT: the S8-ii power calc that
+    produced it sized a paired signed-gap test and may not match the pinned
+    per-method-CI non-overlap criterion (S.14 observation O1). It is NOT
+    described here as adequately powered. Provenance copied into the manifest
+    from results/B_viability/confirmatory_d2_manifest.json. A CLI argument;
+    only a smoke run may use another n.
   * Win/loss rule second arm: "smallest d with P_sep >= 0.8 is >= 1 grid cell
     smaller along the full d axis {1,2,3,5,8}" — S.3 / ROADMAP S5-D2 / S8-iii.
     The loss rule uses the "same d reading" (S8-vi, S.3 loss row), so the d
@@ -78,7 +80,7 @@ from pathlib import Path
 
 import numpy as np
 
-from metrics import delta_r_bar, find_peaks_2d, p_sep
+from metrics import _matched_assignment, delta_r_bar, find_peaks_2d, p_sep
 from modeselect import K_MAX, estimate_n_sources
 from simulate import (GRID_SHAPE, POLE_SPACING_KM, build_array_and_grid,
                       build_csm, eigendecompose, eigenmodes, geometry_record,
@@ -116,7 +118,7 @@ N_SNAP = 64                         # S8-iii
 ABS_RHO = 0.85                      # SLOT-1 midpoint, SPEC S.7
 K_ORACLE = 2
 
-N_TRIALS_POWERED = 1635             # SPEC S.12 / ROADMAP S8 2026-08-28 power calc
+N_TRIALS_POWERED = 1635             # S.12 value, UNDER AUDIT (S.14 O1) -- not claimed adequately powered
 EPS_BAND = (0.1, 0.3, 1.0, 3.0, 10.0)   # SPEC S.6(5); x1 is the headline
 HEADLINE_BAND_INDEX = EPS_BAND.index(1.0)
 N_BOOT = 2000                       # SPEC S.1 CI convention
@@ -307,6 +309,22 @@ def arm_config(arm):
     return cfg
 
 
+def miss_and_matched_error(I2d, true_cells, rel_thresh=0.10):
+    """Descriptive decomposition of metrics.delta_r_bar (coordinator addendum
+    2026-09-23; S.14 P15), using metrics.py's own peak finder at its pinned
+    rel_thresh and its own min-cost assignment -- nothing re-implemented:
+      miss      True iff fewer detected peaks than true sources, i.e. exactly
+                when delta_r_bar applies its grid-diagonal penalty;
+      matched   the UNPENALIZED mean matched error (grid cells) on non-miss
+                trials; NaN on miss trials.
+    On a non-miss trial `matched` equals delta_r_bar exactly (pytest-pinned)."""
+    det = [(p[0], p[1]) for p in find_peaks_2d(I2d, rel_thresh)]
+    if len(det) < len(true_cells):
+        return True, float("nan")
+    row_ind, col_ind, cost = _matched_assignment(true_cells, det)
+    return False, float(cost[row_ind, col_ind].sum() / len(true_cells))
+
+
 def _pad(values, fill):
     out = np.full(K_MAX, fill, dtype=float)
     out[:len(values)] = values
@@ -330,6 +348,8 @@ def run_data_cell(tm, cell, n_trials, seed, solve_fn=solve_all, on_trial=None):
             rec[f"dr_{m}"] = np.empty(n_trials)
             rec[f"psep_{m}"] = np.empty(n_trials, dtype=bool)
             rec[f"npeaks_{m}"] = np.empty(n_trials, dtype=int)
+            rec[f"miss_{m}"] = np.empty(n_trials, dtype=bool)
+            rec[f"matched_err_{m}"] = np.empty(n_trials)
         rec["k_used"] = np.empty(n_trials, dtype=int)
         rec["scale_s"] = np.empty(n_trials)
         rec["eps_l2"] = np.empty(n_trials)
@@ -360,6 +380,9 @@ def run_data_cell(tm, cell, n_trials, seed, solve_fn=solve_all, on_trial=None):
                 rec[f"dr_{m}"][t] = delta_r_bar(I2d, tr["true_cells"])
                 rec[f"psep_{m}"][t] = p_sep(I2d, tr["true_cells"])
                 rec[f"npeaks_{m}"][t] = len(find_peaks_2d(I2d))
+                miss, merr = miss_and_matched_error(I2d, tr["true_cells"])
+                rec[f"miss_{m}"][t] = miss
+                rec[f"matched_err_{m}"][t] = merr
             rec["k_used"][t] = V.shape[1]
             rec["scale_s"][t] = res.get("scale_s", np.nan)
             rec["eps_l2"][t] = res["l2"]["realized_eps"]
@@ -396,6 +419,15 @@ def summarize_arm(rec, idx):
         s[f"dr_{m}"] = mean_ci(rec[f"dr_{m}"], idx)
         s[f"psep_{m}"] = mean_ci(rec[f"psep_{m}"], idx)
     s["gap_gibf_minus_mmv"] = mean_ci(rec["dr_gibf"] - rec["dr_mmv"], idx)
+    # Descriptive miss-rate / conditional-precision decomposition (S.14 P15):
+    # never adjudicated. Conditional error has no CI (its n varies by method).
+    if f"miss_{METHODS[0]}" in rec:
+        for m in METHODS:
+            miss = np.asarray(rec[f"miss_{m}"], dtype=bool)
+            s[f"miss_rate_{m}"] = mean_ci(miss, idx)
+            s[f"n_nonmiss_{m}"] = int(np.sum(~miss))
+            s[f"matched_err_nonmiss_mean_{m}"] = (
+                float(np.mean(rec[f"matched_err_{m}"][~miss])) if np.any(~miss) else None)
     s["niter_gibf_mean"] = float(np.nanmean(np.where(rec["niter_gibf"] < 0, np.nan,
                                                       rec["niter_gibf"])))
     s["niter_mmv_mean"] = float(np.mean(rec["niter_mmv"]))
@@ -544,7 +576,11 @@ def d_axis_arm(psep_trials, favored, cell_ids, n_boot=N_BOOT):
             bd = np.where(rates[d] >= PSEP_THRESHOLD, float(d), bd)
         dmins[m] = point
         boots[m] = percentile_ci(bd, method="inverted_cdf")
-    effect = dmins[favored] <= dmins[other] - D_CELL_MARGIN
+    # The favored method must actually reach P_sep >= 0.8 somewhere on the
+    # axis: with both d_min = +inf, "inf <= inf - 1" is true in IEEE
+    # arithmetic but is not an effect (S.14 P3).
+    effect = (math.isfinite(dmins[favored])
+              and dmins[favored] <= dmins[other] - D_CELL_MARGIN)
     sep = ci_non_overlap(boots[favored], boots[other])
     return dict(met=bool(effect and sep), effect_met=bool(effect),
                 ci_non_overlap=bool(sep), d_min=dmins, d_min_ci=boots)
@@ -701,6 +737,9 @@ def power_provenance():
         rec["runtime_copy_matches"] = (pc.get("n_trials") == POWER_CALC_EXPECTED["n_trials"]
                                        and m.get("git_commit") == POWER_CALC_EXPECTED["source_commit"])
     rec["citation"] = "SPEC_experiment_B.md S.12; ROADMAP.md S8 2026-08-28 entry"
+    rec["status"] = ("S.12 value, under audit -- the S8-ii power calc sized a paired "
+                     "signed-gap test and may not match the per-method-CI "
+                     "non-overlap criterion (SPEC S.14 O1); not claimed adequately powered")
     return rec
 
 
@@ -734,7 +773,8 @@ def _is_under(path, root):
 def parse_args(argv=None):
     p = argparse.ArgumentParser(description=__doc__.split("\n")[0])
     p.add_argument("--n-trials", type=int, default=N_TRIALS_POWERED,
-                   help="trials per cell (default 1635, the S.12 power calc)")
+                   help="trials per cell (default 1635: the S.12 value, under audit -- "
+                        "see SPEC S.14 O1)")
     p.add_argument("--b6a-nsnap", type=int, default=B6A_NSNAP_PINNED,
                    help="B6a n_snap (default 64 = the S8-vii pin; other values "
                         "stamp B6a DESCRIPTIVE)")
@@ -748,6 +788,55 @@ def parse_args(argv=None):
     return p.parse_args(argv)
 
 
+ALL_ROLES = ("win", "null", "d_axis_win", "d_axis_null", "b6a")
+
+
+def resolve_run(args, clean=None):
+    """Every write/seed guard, evaluated BEFORE any computation (S.14 P11).
+    Returns dict(seed, confirmatory, roles) or exits. `clean` is injectable for
+    tests; by default it is script_is_committed_clean().
+
+    Rules:
+      * Any run refuses an out-dir that already holds a manifest.json (no run
+        ever overwrites another run's record).
+      * --smoke: SMOKE_SEED; never under results/; any n; --only allowed.
+      * Otherwise (MASTER_SEED): the runner must be committed and clean
+        (A3), n_trials must be 1635, the out-dir must be under results/ (the
+        blind trials are never computed somewhere unrecorded), and exactly
+        one of:
+          - the CONFIRMATORY run: default --b6a-nsnap, full plan, no --only;
+          - a DESCRIPTIVE B6a row: non-default --b6a-nsnap, B6a cell only,
+            into an out-dir other than the confirmatory DEFAULT_OUT."""
+    out_dir = Path(args.out_dir)
+    if (out_dir / "manifest.json").exists():
+        sys.exit(f"{out_dir} already holds a manifest.json; refusing to overwrite a run")
+    nondefault_nsnap = args.b6a_nsnap != B6A_NSNAP_PINNED
+    if args.smoke:
+        if _is_under(out_dir, RESULTS_ROOT):
+            sys.exit("--smoke refuses to write under results/; pass --out-dir elsewhere")
+        roles = tuple(args.only.split(",")) if args.only else ALL_ROLES
+        return dict(seed=SMOKE_SEED, confirmatory=False, roles=roles)
+    if MASTER_SEED is None:
+        sys.exit("MASTER_SEED is not pinned; refusing to run")
+    if args.only is not None:
+        sys.exit("--only is a smoke-test option")
+    if args.n_trials != N_TRIALS_POWERED:
+        sys.exit(f"a master-seed run uses n_trials={N_TRIALS_POWERED}; use --smoke for other n")
+    if not _is_under(out_dir, RESULTS_ROOT):
+        sys.exit("a master-seed run must write under results/ (use --smoke for scratch runs)")
+    if nondefault_nsnap and out_dir.resolve() == DEFAULT_OUT.resolve():
+        sys.exit("a non-default --b6a-nsnap is a DESCRIPTIVE B6a row; pass an --out-dir "
+                 "other than the confirmatory directory")
+    if clean is None:
+        clean = script_is_committed_clean()
+    if not clean:
+        sys.exit("A3 workflow: commit this runner before a master-seed run "
+                 "(working copy differs from HEAD or is untracked)")
+    if nondefault_nsnap:
+        return dict(seed=MASTER_SEED, confirmatory=False, roles=("b6a",))
+    return dict(seed=MASTER_SEED, confirmatory=True, roles=ALL_ROLES)
+
+
 def main(argv=None):
     args = parse_args(argv)
 
@@ -758,24 +847,8 @@ def main(argv=None):
         print(f"Wrote {Path(args.adjudicate_only) / 'adjudication.json'}")
         return res
 
-    confirmatory = (not args.smoke and args.n_trials == N_TRIALS_POWERED
-                    and args.only is None)
-    if args.smoke:
-        seed = SMOKE_SEED
-        if _is_under(args.out_dir, RESULTS_ROOT):
-            sys.exit("--smoke refuses to write under results/; pass --out-dir elsewhere")
-    else:
-        if MASTER_SEED is None:
-            sys.exit("MASTER_SEED is not pinned; refusing to run")
-        seed = MASTER_SEED
-        if args.only is not None:
-            sys.exit("--only is a smoke-test option")
-        if _is_under(args.out_dir, RESULTS_ROOT):
-            if not confirmatory:
-                sys.exit("only a full n_trials=1635 run may write under results/")
-            if not script_is_committed_clean():
-                sys.exit("A3 workflow: commit this runner before a confirmatory run "
-                         "(working copy differs from HEAD or is untracked)")
+    run = resolve_run(args)
+    seed, confirmatory = run["seed"], run["confirmatory"]
 
     b3 = b3_reading()
     if args.b6a_nsnap == B6A_NSNAP_PINNED and b3["procedure_result"] != B6A_NSNAP_PINNED:
@@ -783,10 +856,7 @@ def main(argv=None):
                  f"pinned {B6A_NSNAP_PINNED}; stop and report")
     b6a_confirmatory = args.b6a_nsnap == b3["procedure_result"]
 
-    plan = build_plan(args.b6a_nsnap)
-    if args.only:
-        roles = set(args.only.split(","))
-        plan = [c for c in plan if c.role in roles]
+    plan = [c for c in build_plan(args.b6a_nsnap) if c.role in run["roles"]]
     out_dir = Path(args.out_dir)
     out_dir.mkdir(parents=True, exist_ok=True)
 
@@ -833,7 +903,7 @@ def main(argv=None):
                  b3_reading=b3),
         preregistration=("SPEC_experiment_B.md S.1, S.2-B2, S.2-B6, S.3 (as amended by "
                          "S.11/S.12), S.5, S.6, S.7, S.12, S.13; ROADMAP.md S5-D2, "
-                         "S8-ii..viii; proposed S.14 items P1..P14 pending ratification"),
+                         "S8-ii..viii; proposed S.14 items P1..P15 + O1 pending ratification"),
         adjudication="NOT applied by this run; use --adjudicate-only after review",
         cells=cell_summaries,
         timing_s=timings,
@@ -888,6 +958,10 @@ def _csv_row(cell, arm_key, s):
         row[f"{k}_mean"], row[f"{k}_ci_lo"], row[f"{k}_ci_hi"] = mean, lo, hi
     for k in ("niter_gibf_mean", "niter_mmv_mean", "niter_gibf_max", "niter_mmv_max"):
         row[k] = s[k]
+    for m in METHODS:
+        if f"miss_rate_{m}" in s:
+            row[f"miss_rate_{m}"] = s[f"miss_rate_{m}"][0]
+            row[f"matched_err_nonmiss_mean_{m}"] = s[f"matched_err_nonmiss_mean_{m}"]
     return row
 
 

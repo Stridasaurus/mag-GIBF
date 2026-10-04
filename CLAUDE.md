@@ -13,9 +13,9 @@ below — read them, don't duplicate them here.
 3. **`ROADMAP.md`** — **canonical, live source of truth.** If any other doc disagrees
    with it, the roadmap wins. §0 rename map, §2 invariants, §5 decision tree, §8
    append-only experiment log, §9 current frontier.
-4. **`handoff.md`** — **if a task is assigned, this is it.** It is written to be run cold
-   and names its own gates and stop rule. As of 2026-07-12 it is the Experiment-B
-   kickoff, triple-gated (PR #1 merged, ratification §8 entry appended, assignee named).
+4. **`handoff.md`** — historical Experiment-B kickoff assignment, completed and superseded.
+   Do not treat it as the current task. For current research state and next action, use
+   `ROADMAP.md` §9 and `viability-test/SPEC_experiment_B.md` §S.14.
 5. Experiment designs when you need that depth: `EXPERIMENT_CARD_A.md`,
    `viability-test/SPEC_experiment_B.md`.
 
@@ -24,7 +24,7 @@ below — read them, don't duplicate them here.
 ```bash
 conda activate mhd-env          # python 3.11; if absent, see README
 pip install -e ./secsy          # secsy submodule is load-bearing, editable-installed
-python -m pytest -q             # the gate — expect all green (22 passed as of 2026-07-12)
+python -m pytest -q             # the gate — run it and report the result for this checkout
 python viability-test/gateV_kernel_validation.py   # -> GATE V: PASS
 ```
 

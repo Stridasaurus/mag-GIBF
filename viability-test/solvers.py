@@ -44,6 +44,7 @@ class SolverConfig:
     tol: float = 1e-4
     min_active_factor: int = 2
     grid_reduction: bool = True
+    stop_early: bool = True
 
 
 # The one shared literal config object (SPEC §S.6.1). A pytest asserts both
@@ -58,7 +59,8 @@ def with_reduction(cfg, grid_reduction):
                          weight_floor=cfg.weight_floor, beta=cfg.beta,
                          max_iter=cfg.max_iter, tol=cfg.tol,
                          min_active_factor=cfg.min_active_factor,
-                         grid_reduction=grid_reduction)
+                         grid_reduction=grid_reduction,
+                         stop_early=cfg.stop_early)
 
 
 def _max_eig_psd(M):
@@ -91,6 +93,7 @@ def _irls_gibf_mode(A, v, cfg):
     realized_eps = eps0
     prev_cost = np.inf
     n_iter = 0
+    stop_reason = "max_iter"
 
     for it in range(cfg.max_iter):
         n_iter = it + 1
@@ -113,20 +116,24 @@ def _irls_gibf_mode(A, v, cfg):
 
         cost = float(np.sum(np.abs(a)))
         converged = False
-        if it > 0:
+        if cfg.stop_early and it > 0:
             if cost > prev_cost * (1 + 1e-12):
                 converged = True
+                stop_reason = "cost_increase"
             elif abs(prev_cost - cost) < cfg.tol * (abs(prev_cost) + 1e-300):
                 converged = True
-        if cfg.grid_reduction and len(cols) < cfg.min_active_factor * n_channels:
+                stop_reason = "relative_tolerance"
+        if (cfg.stop_early and cfg.grid_reduction
+                and len(cols) < cfg.min_active_factor * n_channels):
             converged = True
+            stop_reason = "active_set_floor"
         prev_cost = cost
         if converged:
             break
 
     a_full = np.zeros(n_grid_full, dtype=complex)
     a_full[cols] = a
-    return a_full, realized_eps, n_iter
+    return a_full, realized_eps, n_iter, stop_reason
 
 
 def gibf_irls(A, V, cfg=FAIRNESS_CONFIG):
@@ -139,12 +146,15 @@ def gibf_irls(A, V, cfg=FAIRNESS_CONFIG):
     I_full = np.zeros(n_grid_full)
     eps_per_mode = []
     iters_per_mode = []
+    stop_reasons = []
     for k in range(K):
-        a_full, eps, n_iter = _irls_gibf_mode(A, V[:, k], cfg)
+        a_full, eps, n_iter, stop_reason = _irls_gibf_mode(A, V[:, k], cfg)
         I_full += np.abs(a_full) ** 2
         eps_per_mode.append(eps)
         iters_per_mode.append(n_iter)
-    return dict(I=I_full, realized_eps=eps_per_mode, n_iter=iters_per_mode)
+        stop_reasons.append(stop_reason)
+    return dict(I=I_full, realized_eps=eps_per_mode, n_iter=iters_per_mode,
+                stop_reason=stop_reasons)
 
 
 def mmv_l1(A, V, cfg=FAIRNESS_CONFIG):
@@ -164,6 +174,7 @@ def mmv_l1(A, V, cfg=FAIRNESS_CONFIG):
     realized_eps = eps0
     prev_cost = np.inf
     n_iter = 0
+    stop_reason = "max_iter"
 
     for it in range(cfg.max_iter):
         n_iter = it + 1
@@ -182,18 +193,25 @@ def mmv_l1(A, V, cfg=FAIRNESS_CONFIG):
 
         if cfg.grid_reduction:
             n_keep = max(1, int(cfg.beta * n_active))
-            keep = np.argsort(rownorm)[::-1][:n_keep]
+            # Rank on the freshly solved coefficients. The previous iterate's
+            # row norms create a one-iteration pruning lag (A5 ruling).
+            fresh_rownorm = np.linalg.norm(Abar, axis=1)
+            keep = np.argsort(fresh_rownorm)[::-1][:n_keep]
             cols, Ak, Abar = cols[keep], Ak[:, keep], Abar[keep, :]
 
         cost = float(np.sum(np.linalg.norm(Abar, axis=1)))
         converged = False
-        if it > 0:
+        if cfg.stop_early and it > 0:
             if cost > prev_cost * (1 + 1e-12):
                 converged = True
+                stop_reason = "cost_increase"
             elif abs(prev_cost - cost) < cfg.tol * (abs(prev_cost) + 1e-300):
                 converged = True
-        if cfg.grid_reduction and len(cols) < cfg.min_active_factor * n_channels:
+                stop_reason = "relative_tolerance"
+        if (cfg.stop_early and cfg.grid_reduction
+                and len(cols) < cfg.min_active_factor * n_channels):
             converged = True
+            stop_reason = "active_set_floor"
         prev_cost = cost
         if converged:
             break
@@ -201,7 +219,8 @@ def mmv_l1(A, V, cfg=FAIRNESS_CONFIG):
     Abar_full = np.zeros((n_grid_full, K), dtype=complex)
     Abar_full[cols, :] = Abar
     I_full = np.sum(np.abs(Abar_full) ** 2, axis=1)
-    return dict(I=I_full, realized_eps=realized_eps, support=cols, n_iter=n_iter)
+    return dict(I=I_full, realized_eps=realized_eps, support=cols, n_iter=n_iter,
+                stop_reason=stop_reason)
 
 
 def solve_all(A, V, cfg=FAIRNESS_CONFIG):

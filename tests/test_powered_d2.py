@@ -35,14 +35,14 @@ def tm():
 
 def test_pins_unmoved():
     assert R.D_CONFIRM == 2                       # SPEC S.12
-    assert R.N_TRIALS_POWERED == 1635             # SPEC S.12 power calc
+    assert R.N_TRIALS_POWERED == 10_000           # ratified 2026-09-23 ruling
     assert R.PHI_WIN_DEG == 90.0 and R.PHI_NULL_DEGS == (0.0, 180.0)
     assert R.SNR_PAIR == (5.0, 10.0) and R.N_SNAP == 64 and R.ABS_RHO == 0.85
     assert R.EPS_BAND == (0.1, 0.3, 1.0, 3.0, 10.0)
     assert R.EPS_BAND[R.HEADLINE_BAND_INDEX] == 1.0
     assert R.N_BOOT == 2000 and R.D_AXIS == (1, 2, 3, 5, 8)
     assert R.B6A_NSNAP_PINNED == 64
-    assert R.parse_args([]).n_trials == 1635 and R.parse_args([]).b6a_nsnap == 64
+    assert R.parse_args([]).n_trials == 10_000 and R.parse_args([]).b6a_nsnap == 64
 
 
 def test_master_seed_pinned_and_distinct_from_smoke():
@@ -57,7 +57,7 @@ def test_master_seed_pinned_and_distinct_from_smoke():
 def test_plan_structure():
     plan = R.build_plan()
     b2 = [c for c in plan if c.family == "B2"]
-    assert len(b2) == 3 * 2 * 5 and len(plan) == 31
+    assert len(b2) == 3 * 2 * 5 and len(plan) == 33
     ids = [c.cell_id for c in plan]
     assert len(set(ids)) == len(ids)              # the d=2 axis point is not duplicated
     conf = [c for c in plan if c.confirmatory]
@@ -66,9 +66,11 @@ def test_plan_structure():
         assert len(c.panel_arms) == 5
         assert c.panel_arms[R.HEADLINE_BAND_INDEX] == R.headline_arm(c)
         assert any(not a.reduction for a in c.arms)          # S.6(2) OFF pair
-    for c in plan:
-        if not c.confirmatory:
-            assert c.arms == (R.Arm("oracle", True, 1.0),)
+    assert [c.family for c in plan if c.role == "descriptive_b6a_underspecified"] == ["B6a128"]
+    assert len([c for c in plan if c.role == "descriptive_forced_k"]) == 1
+    assert all(any(a.no_early_exit for a in c.arms)
+               for c in plan if c.family == "B2" and c.d == R.D_CONFIRM)
+    assert all(not c.confirmatory for c in plan if c.family in ("B6a128", "B6a_forced10"))
     b6 = [c for c in plan if c.family == "B6a"][0]
     assert R.headline_arm(b6) == R.Arm("mdl", True, 1.0)
     assert R.Arm("oracle", True, 1.0) in b6.arms
@@ -83,6 +85,10 @@ def test_arm_uses():
     assert uses["oracle_on_x1"] == "b6a_oracle_reference"
     assert uses["mdl_off_x1"] == uses["oracle_off_x1"] == "descriptive_reduction_off"
     assert uses["mdl_on_x0.1"] == "sensitivity_panel"
+    b6128 = next(c for c in R.build_plan() if c.family == "B6a128")
+    assert R.arm_use(b6128, R.headline_arm(b6128)) == "descriptive_under_specified_b6a"
+    assert all(R.arm_use(c, a) == "descriptive_forced_k"
+               for c in R.build_plan() if c.family == "B6a_forced10" for a in c.arms)
 
 
 def test_arm_config_only_changes_eps_and_reduction():
@@ -144,6 +150,22 @@ def test_every_arm_of_a_trial_gets_the_same_data(tm):
     assert list(arrays["oracle_on_x1"]["k_used"]) == [2, 2, 2]
 
 
+def test_b6a_fixed_k_and_aic_lookup_reuse_the_same_trials(tm):
+    b6 = next(c for c in R.build_plan() if c.family == "B6a")
+    arrays, _ = R.run_data_cell(tm, b6, 3, TEST_SEED,
+                                solve_fn=_fake_solver([]))
+    for label, counts in (("lookup_mdl", arrays["_data"]["khat_mdl"]),
+                          ("lookup_aic", arrays["_data"]["khat_aic"])):
+        for method in R.METHODS:
+            expected = np.asarray([
+                arrays[R.Arm(f"k{int(k)}", True, 1.0).key][f"dr_{method}"][i]
+                for i, k in enumerate(counts)])
+            assert np.array_equal(arrays[label][f"dr_{method}"], expected)
+    summ = R.summarize_cell(b6, arrays)
+    assert all(summ["direct_mdl_matches_forced_k_lookup"].values())
+    assert set(summ["forced_k_sweep"]) == set(range(1, R.K_MAX + 1))
+
+
 def test_generate_trial_is_deterministic_and_cell_keyed(tm):
     plan = R.build_plan()
     win5 = [c for c in plan if c.role == "win" and c.snr_db == 5.0][0]
@@ -165,7 +187,7 @@ def test_real_solver_record_shapes(tm):
     assert np.all(rec["niter_gibf"][:, :2] >= 1) and np.all(rec["niter_gibf"][:, 2:] == -1)
     assert np.all(np.isnan(rec["eps_gibf"][:, 2:])) and np.all(rec["eps_gibf"][:, :2] > 0)
     assert np.all(rec["niter_mmv"] >= 1) and np.all(rec["eps_mmv"] > 0)
-    assert set(timing) == {"oracle_on_x1", "_data"}
+    assert set(timing) == {a.key for a in cell.arms} | {"_data"}
 
 
 # ------------------------------------------------------------ fragility ----
@@ -319,6 +341,10 @@ def test_adjudicate_win_loss_b6():
     assert not R.adjudicate(_view(null_mmv_better_at=()))["loss"]["met"]
     both = R.adjudicate(_view(null_mmv_better_at=(0.0, 180.0)))["loss"]
     assert both["met_at_phi"] == [0.0, 180.0]
+    v = _view()
+    v["B6a"]["summary"] = _summary(2.0, (1.8, 2.2), 1.0, (0.9, 1.1))
+    b6 = R.adjudicate(v)["b6"]
+    assert b6["met"] and b6["winner"] == "mmv" and b6["by_favored"]["mmv"]["met"]
 
 
 def test_adjudicate_fragile_cell_blocks_its_rule():
@@ -344,6 +370,17 @@ def test_win_can_be_met_by_the_d_axis_arm_alone():
     r = R.adjudicate(v)
     assert r["win"]["met"]
     assert not r["win"]["per_snr"][5.0]["delta_r_arm"]["met"]
+
+
+def test_snr_may_use_different_win_arms_and_is_flagged_mixed():
+    v = _view(win_gibf_better=False)
+    v[(R.PHI_WIN_DEG, 5.0)]["summary"] = _summary(
+        1.0, (0.9, 1.1), 2.0, (1.8, 2.2))
+    v[(R.PHI_WIN_DEG, 10.0)]["psep_trials"] = _psep_trials(1, 3)
+    result = R.adjudicate(v)["win"]
+    assert result["met"] and result["mixed_arm"]
+    assert result["per_snr"][5.0]["satisfying_arms"] == ["delta_r"]
+    assert result["per_snr"][10.0]["satisfying_arms"] == ["d_axis"]
 
 
 # ------------------------------------------------------------- B6a bits ----
@@ -455,16 +492,21 @@ def test_nondefault_b6a_nsnap_is_a_descriptive_b6a_only_run():
     out = R.RESULTS_ROOT / "B_viability" / "_never_created_b6a_n128"
     run = R.resolve_run(R.parse_args(["--b6a-nsnap", "128", "--out-dir", str(out)]),
                         clean=True)
-    assert run["confirmatory"] is False and run["roles"] == ("b6a",)
+    assert run["confirmatory"] is False and run["roles"] == ("descriptive_b6a_underspecified",)
     assert run["seed"] == R.MASTER_SEED
     assert not out.exists()          # resolve_run never creates anything
+    plan = R.build_plan(128)
+    descriptive = [c for c in plan if c.role == "descriptive_b6a_underspecified"]
+    assert len(descriptive) == 1 and descriptive[0].n_snap == 128
+    assert descriptive[0].confirmatory is False and descriptive[0].panel_arms == ()
+    assert len(descriptive[0].arms) == 1 and all(a.reduction for a in descriptive[0].arms)
 
 
 def test_default_run_is_the_confirmatory_run():
     if (R.DEFAULT_OUT / "manifest.json").exists():
         pytest.skip("the confirmatory run already exists")
-    run = R.resolve_run(R.parse_args([]), clean=True)
-    assert run["confirmatory"] is True and set(run["roles"]) == set(R.ALL_ROLES)
+    with pytest.raises(SystemExit, match="off-grid specification.*d=1 panel"):
+        R.resolve_run(R.parse_args([]), clean=True)
 
 
 def test_smoke_run_is_never_confirmatory(tmp_path):
@@ -480,7 +522,7 @@ def test_d_axis_arm_both_infinite_is_no_effect():
 
 
 def test_miss_and_matched_error_decomposes_delta_r_bar():
-    from metrics import delta_r_bar
+    from metrics import delta_r_bar, p_sep
     true_cells = [(16, 7), (16, 9)]
     I = np.zeros(GRID_SHAPE)
     I[16, 7] = 1.0
@@ -492,9 +534,71 @@ def test_miss_and_matched_error_decomposes_delta_r_bar():
     I2 = np.zeros(GRID_SHAPE)
     I2[16, 7] = 1.0                   # only one detected peak -> miss
     miss, err = R.miss_and_matched_error(I2, true_cells)
-    assert miss is True and np.isnan(err)
+    assert miss is True and err == pytest.approx(0.0)  # found-source error survives miss
+    comp = R.matched_error_components(I2, true_cells)
+    assert comp == dict(miss=True, found_sum=0.0, n_matched=1, found_mean=0.0)
     diag = float(np.hypot(GRID_SHAPE[0] - 1, GRID_SHAPE[1] - 1))
     assert delta_r_bar(I2, true_cells) == pytest.approx(diag / 2)   # penalty applied
+    assert p_sep(I2, true_cells) is False
+
+
+def test_peak_cap_is_two_primary_with_eight_peak_supplement():
+    from metrics import delta_r_bar, find_peaks_2d, p_sep
+    true_cells = [(10, 10), (10, 14)]
+    image = np.zeros(GRID_SHAPE)
+    image[10, 10] = 1.0
+    image[10, 14] = 0.9
+    image[2, 2] = 0.8
+    image[28, 14] = 0.7
+    assert len(find_peaks_2d(image)) == 2
+    assert len(find_peaks_2d(image, max_peaks=8)) == 4
+    assert p_sep(image, true_cells)
+    assert p_sep(image, true_cells, max_peaks=8)
+    assert delta_r_bar(image, true_cells) == delta_r_bar(image, true_cells, max_peaks=8)
+
+
+def test_threshold_outcomes_and_conditional_ci_are_reported():
+    n = 20
+    rec = {f"dr_{m}": np.ones(n) for m in R.METHODS}
+    rec.update({f"psep_{m}": np.ones(n, dtype=bool) for m in R.METHODS})
+    rec.update({f"miss_{m}": np.zeros(n, dtype=bool) for m in R.METHODS})
+    rec.update({f"outcome_{m}": np.array(["correct"] * 15 + ["mislocated"] * 5)
+                for m in R.METHODS})
+    rec["niter_gibf"] = np.ones((n, 1))
+    rec["niter_mmv"] = np.ones(n)
+    for tag in ("05", "20"):
+        for m in R.METHODS:
+            rec[f"dr_{tag}_{m}"] = np.ones(n)
+            rec[f"psep_{tag}_{m}"] = np.array([True] * 12 + [False] * 8)
+            rec[f"miss_{tag}_{m}"] = np.array([False] * 18 + [True] * 2)
+            rec[f"outcome_{tag}_{m}"] = np.array(
+                ["correct"] * 12 + ["mislocated"] * 6 + ["miss"] * 2)
+            rec[f"matched_err_{tag}_{m}"] = np.arange(n, dtype=float)
+    for m in R.METHODS:
+        rec[f"matched_err_{m}"] = np.arange(n, dtype=float)
+        rec[f"matched_err_sum_{m}"] = np.arange(n, dtype=float)
+        rec[f"matched_n_{m}"] = np.ones(n, dtype=int)
+        rec[f"dr_8peak_{m}"] = np.ones(n)
+        rec[f"psep_8peak_{m}"] = np.ones(n, dtype=bool)
+    idx = R.boot_indices(n, R.boot_rng("summary-test"))
+    result = R.summarize_arm(rec, idx, "summary-test")
+    assert result["threshold_20_outcome_counts_gibf"] == {
+        "miss": 2, "correct": 12, "mislocated": 6}
+    assert result["threshold_20_conditional_correct_error_gibf"]["n"] == 12
+    assert result["supplementary_8peak_psep_gibf"][0] == 1.0
+
+
+def test_no_early_exit_preserves_trial_arm_and_runs_full_iteration_budget(tm):
+    cell = next(c for c in R.build_plan() if c.family == "B2" and c.d == R.D_CONFIRM)
+    arm = next(a for a in cell.arms if a.no_early_exit)
+    cfg = R.arm_config(arm)
+    assert cfg.stop_early is False and cfg.grid_reduction is True
+    arrays, _ = R.run_data_cell(tm, cell, 1, TEST_SEED, solve_fn=solve_all)
+    rec = arrays[arm.key]
+    assert np.all(rec["niter_gibf"][:, :2] == FAIRNESS_CONFIG.max_iter)
+    assert np.all(rec["niter_mmv"] == FAIRNESS_CONFIG.max_iter)
+    assert np.all(rec["stop_gibf"][:, :2] == "max_iter")
+    assert np.all(rec["stop_mmv"] == "max_iter")
 
 
 def test_real_solver_records_miss_fields(tm):
@@ -504,6 +608,8 @@ def test_real_solver_records_miss_fields(tm):
     for m in R.METHODS:
         miss = rec[f"miss_{m}"]
         assert miss.dtype == bool and miss.shape == (2,)
-        assert np.all(np.isnan(rec[f"matched_err_{m}"][miss]))
+        assert np.all(np.isfinite(rec[f"matched_err_{m}"][miss]))
+        assert np.allclose(rec[f"matched_err_sum_{m}"] / np.maximum(
+            rec[f"matched_n_{m}"], 1), rec[f"matched_err_{m}"])
         assert np.allclose(rec[f"matched_err_{m}"][~miss], rec[f"dr_{m}"][~miss])
         assert np.all((rec[f"npeaks_{m}"] < 2) == miss)

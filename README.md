@@ -35,37 +35,26 @@ names. `ROADMAP.md` §0 has the full rename map; the short version:
 
 ## Where the project stands right now
 
-*(Refreshed 2026-08-28 — the section below was six weeks and three merged PRs stale;
-`ROADMAP.md` §8/§9 is and remains the canonical detail, this is just a current summary.)*
+*(Refreshed 2026-10-03. `ROADMAP.md` §9 is the current frontier; `ROADMAP.md` §8 and
+`viability-test/SPEC_experiment_B.md` §S.14 preserve the decision record.)*
 
-- **Validation Gate V: PASSED** (2026-07-07). Confirms the `secsy` library implements
-  the Fukushima/Amm theorem correctly — curl-free (CF) current produces exactly zero
-  ground field for radial FACs — and pins the exact adapter contract (`secsy` keyword
-  map, `(Ge, Gn, Gr)` return order, a coincidence/NaN guard) that `transfer.py` must
-  satisfy.
-- **Card A Tier 1: complete** (2026-07-06); **Card A Tier 2: COMPLETE — H-A HOLDS**
-  (2026-07-12, PR #1 ratified + merged 2026-07-19). 80/81 realistic FLR cells hold;
-  inter-source phase survives ionospheric integration to the ground CSM.
-- **`transfer.py`: built and pytest-gated** (2026-07-10) — the real, DF-only transfer
-  matrix adapter, built against the contract Gate V pinned.
-- **Experiment B: solver stack + B1 + B3 + mini-pilot built and run** (PR #2, merged
-  2026-07-21), **geometry rescaled and the mode-selection floor unit bug fixed**
-  (PR #3, merged 2026-07-30). Two confirmatory-coordinate attempts have since
-  **ceiling-adjudicated** — `d=3` (190.4 km) and `d=8` (508 km, PR #4) both saturate:
-  every solver exact-recovers, so the pre-registered win/loss rule can't fire at
-  either coordinate at any sample size. Reported as findings, not comparative results.
-- **Frontier, as of 2026-08-28: `d=2` (127 km) accepted as the confirmatory coordinate**
-  — the one point in the original blind-draw pool `{1,2,5,8}` never already knowable
-  as degenerate from existing data (Strider's ruling, 2026-08-16). The `d=2` pilot
-  pass (branch `b2b6-confirmatory-d2`) came back **ADJUDICABLE** — neither solver
-  saturates, and the S8-ii power calc produced a real number for the first time in
-  this project: **n = 1635 trials**. **Next: build the powered B2/B6 runner** (SPEC
-  §S.2-B2 win/null cells, §S.6.5 regularization-sensitivity panel, §S.3 B6a paired
-  oracle/K̂ arm) — no confirmatory coordinate has reached this step before, so this is
-  new code, not a parameter swap on an existing runner.
-- **Team, as of the 2026-08-28 restart:** solo — Strider, agent-assisted for
-  mechanical build/doc work. `handoff.md`'s Shane-Gilbertie assignment (2026-07-11,
-  Card A Tier 2) is historical, not current.
+- **Validation Gate V, Card A Tier 1 and Tier 2, `transfer.py`, and the Experiment-B
+  pilot stack** remain complete as recorded in the historical entries below.
+- **Powered Experiment B at `d=2`:** Strider selected 10,000 trials per cell, replacing
+  the historical 1,635 estimate. The candidate runner implements the recovered §S.14
+  decisions: symmetric win/null d-axes, peak/threshold scoring, stop-reason and
+  no-early-exit comparisons, B6a `n_snap=64` plus descriptive `n_snap=128`, fixed-K/AIC
+  lookup, and miss/error decomposition. The 64-snapshot B6a row is intentionally
+  overspecified; the 128-snapshot row is descriptive and under-specified.
+- **Current implementation state:** the powered runner and its SPEC/status repairs are
+  on the `b2b6-powered-runner-d2` candidate branch. The confirmatory/master-seed run
+  has **not** been executed and is blocked by two unresolved design details in SPEC
+  §S.14: the exact off-grid offset/cells and whether the descriptive `d=1` regularization
+  panel binds a d-min verdict. Do not infer either choice.
+- **Next valid action:** finish review and land the candidate, then resolve those two
+  pre-run details. Only after the design is complete and the runner is committed clean
+  may the master-seed experiment run. The old Shane-Gilbertie Card-A assignment in
+  `handoff.md` is historical.
 
 Full experiment-by-experiment detail: `ROADMAP.md` §8 (append-only log) and §9
 (status). Do not re-derive from this summary — it is intentionally short.

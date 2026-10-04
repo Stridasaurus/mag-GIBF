@@ -15,7 +15,7 @@ from scipy.optimize import linear_sum_assignment
 TAU_R = 1.0  # pinned ROADMAP §8-v
 
 
-def find_peaks_2d(I2d, rel_thresh=0.10, max_peaks=8):
+def find_peaks_2d(I2d, rel_thresh=0.10, max_peaks=2):
     """Local maxima (8-connected) at or above rel_thresh * global max,
     sorted by intensity descending."""
     max_val = I2d.max()
@@ -59,13 +59,13 @@ def _matched_assignment(true_cells, det_cells):
     return row_ind, col_ind, cost
 
 
-def delta_r_bar(I2d, true_cells, rel_thresh=0.10):
+def delta_r_bar(I2d, true_cells, rel_thresh=0.10, max_peaks=2):
     """Mean matched localisation error, in grid cells. Unmatched true
     sources (fewer detections than true sources) penalised at the grid
     diagonal (archived brief §6.6)."""
     grid_diag = _grid_diag(I2d.shape)
     n_true = len(true_cells)
-    det_cells = [(p[0], p[1]) for p in find_peaks_2d(I2d, rel_thresh)]
+    det_cells = [(p[0], p[1]) for p in find_peaks_2d(I2d, rel_thresh, max_peaks)]
     if not det_cells:
         return grid_diag
     row_ind, col_ind, cost = _matched_assignment(true_cells, det_cells)
@@ -75,13 +75,13 @@ def delta_r_bar(I2d, true_cells, rel_thresh=0.10):
     return (matched_cost + penalty) / n_true
 
 
-def p_sep(I2d, true_cells, rel_thresh=0.10, tau_r=TAU_R):
+def p_sep(I2d, true_cells, rel_thresh=0.10, tau_r=TAU_R, max_peaks=2):
     """True iff every true source has a matched detected peak within
     tau_r grid cells AND the matched peaks are pairwise distinct grid
     cells (structural for a one-to-one assignment onto distinct detections).
     """
     n_true = len(true_cells)
-    det_cells = [(p[0], p[1]) for p in find_peaks_2d(I2d, rel_thresh)]
+    det_cells = [(p[0], p[1]) for p in find_peaks_2d(I2d, rel_thresh, max_peaks)]
     if len(det_cells) < n_true:
         return False
     row_ind, col_ind, cost = _matched_assignment(true_cells, det_cells)

@@ -183,102 +183,42 @@ Runners record `simulate.geometry_record()` structurally in every manifest (`scr
 
 **Disposition:** characterized and documented, not fixed — there is nothing pinned to fix; the absolute‑threshold rule itself remains §S.6(1) as pinned. Reduction‑OFF context rows (§S.6(2)) show real GIBF/MMV divergence (GIBF mean 26.6 iters, MMV mean 33.9, wide per‑trial spread) but those rows are descriptive, never adjudicating, per the same section. **Open, low‑cost follow‑up:** future runner scripts should log `n_iter` into their manifests (neither `run_experiment_B.py` nor the `d=8`/`d=2` confirmatory scripts currently do) so this stays auditable without re‑deriving it by hand each time.
 
-## S.14 Powered d=2 runner: unpinned implementation decisions (2026‑09‑23) — **PROPOSED — pending Strider's ratification**
+## S.14 Powered d=2 runner: recovered rulings and remaining pre-run gates (2026-09-29)
 
-> **Status: PROPOSED, not pinned.** Written the same sitting that `viability-test/run_experiment_B2B6_powered_d2.py` was built (branch `b2b6-powered-runner-d2`), **before any confirmatory execution**. No confirmatory trial has been computed; the only executions were smoke tests at `n_trials ∈ {3, 20}` under a separate smoke seed, written outside `results/`, and no gap, `P_sep` or verdict from them was read or reported. Each item below is either a place where the SPEC/ROADMAP does not pin a choice the code must make, or a pinned reading that needs Strider's attention. The runner implements the reading written here and cites the item number (`S.14 Pn`, `On` for observations) in its comments. Ratify, amend or strike each item before the confirmatory run; an amended item means a runner edit and a re‑commit before the run (A3 workflow).
+> **Status: ratified decisions recovered from direct Strider turns in saved Claude Code sessions.** Primary records: “GIBF work status review” (30b0e266-f149-482c-a532-57f9b769ec23, 2026-09-23) and “Graduate school applications review” (161cb51f-537d-49ca-9fc6-4722a5c95238, 2026-09-29). The vault debrief 20260929-gibf-paper-and-rulings-debrief.md is secondary and was checked against those transcripts. The 2026-09-23 decision packet is 20260923-gibf-power-decision-packet.md. No confirmatory/master-seed run has been performed.
 
-**Pinned inputs the runner consumes unchanged** (for the record, not for ratification): `d = 2` (§S.12); φ = 90° win / φ ∈ {0°, 180°} null; `snr_db ∈ {5, 10}`; `|ρ| = 0.85`; `n_snap = 64`; oracle `K = 2`; reduction ON (§S.6(2)); `n_trials = 1635` — **the §S.12 value, under audit** (the §8‑ii power calc may not match the per‑method‑CI non‑overlap criterion; see O1 — not described anywhere in the runner as adequately powered; a CLI argument; provenance copied into the manifest from `results/B_viability/confirmatory_d2_manifest.json`, commit `a42a873`); `eps_frac × {0.1, 0.3, 1, 3, 10}` (§S.6(5)); 2000‑resample percentile bootstrap (§S.1); `τ_r = 1` cell (§8‑v). **Master seed `2250821694`**: `secrets.randbits(32)` in an isolated interpreter (`python -I`, scratch cwd, no repo import, no result opened), drawn 2026‑09‑23T07:38:11Z, committed in the runner (commit `0008332`) before any execution of it.
+The 2026-08-28 n_trials = 1635 recorded in §S.12 is historical: it came from a paired signed-gap sizing calculation. Strider later ruled “10000 sounds good” and selected **10,000 trials per cell**, replacing that count. This does not relax or change the pre-registered observed ≥20% point rule. Because that point rule caps detection near 50% per SNR and 25% jointly for a true 20% effect, the project does **not** claim 80% power to detect exactly a 20% effect. The runner manifest records the selected count, the CI-nonoverlap sizing formula, its provenance, the cap, and the runtime estimate. The exact experimental decision rule remains unchanged.
 
-**P1 — B6a `n_snap` and the MDL clip. NEEDS A RULING BEFORE THE CONFIRMATORY RUN.** The §8‑vii procedure, applied mechanically to `results/B_viability/b3_results.json`, gives **`n_snap = 64`**. That matches the kickoff manifest's `b6a_nsnap_candidate`, and the runner uses it. The B3 row behind it (5 dB, incoherent, **B3 was run at `d = 3`** per `run_experiment_B.py` `D_B3 = 3`) is not a graded error curve:
-- MDL `K̂ = 6`, the `K_MAX` clip, on 50/50 trials at each of `n_snap ∈ {8, 16, 32, 64}`.
-- MDL `K̂ = 2` on 50/50 trials at 128.
+### Recovered decisions
 
-The "error" is a systematic clip, not mode‑count noise. The mechanism is rank deficiency. At `n_snap = 64 < 75` channels the sample CSM has rank ≤ 64. A mechanics‑only check (4 trials per `n_snap`, throwaway seed, at the B6a physics: `d = 2`, φ = 90°, 5 dB, `|ρ| = 0.85`; no solver run) found:
+1. **B6a bracket (2026-09-28).** Keep the pinned n_snap=64 row and describe it as an intentionally overspecified test: the rank-deficient 64-snapshot CSM leads the pinned MDL estimator to K̂=6 (the existing clip). Add a separate descriptive under-specified row at n_snap=128, where the recorded mechanics check gives K̂=1. Do not alter the estimator or K_MAX.
+2. **P2 — symmetric d-axis (ratified 2026-09-29).** Run the full d∈{1,2,3,5,8} axis at φ=90° and both null phases φ∈{0°,180°}, for both SNRs. This lets the loss rule use the same two routes as the win rule.
+3. **P3 — d-min reading and diagnostics (ratified 2026-09-29).** d_min is the smallest axis value with P_sep≥0.8, read literally even when non-monotone; it is +∞ if none qualifies, and both-infinite is not an effect. Use the 2,000-resample cell-seeded bootstrap, with independent resampling across d cells, to form each method’s d-min interval; strict interval non-overlap is required. Also report the uneven d spacing, descriptive d-min results at thresholds 0.7 and 0.9, and whether P_sep is monotone. Only d=1 or 2 can distinguish the known floor/ceiling pattern. The d-min arm’s inferential d=1 interval remains subject to the open panel-binding question below.
+4. **P4 — combining arms (ratified 2026-09-29).** Within each SNR, OR the Δr̄ and d-min arms. Both SNRs must pass; the passing arm may differ by SNR. Apply the same reading to loss. Report the arm that fires at each SNR and flag a mixed-arm result.
+5. **P5 — B6a win and loss (ratified 2026-09-29).** At the pinned 5 dB, n_snap=64 B6a row, use the Δr̄ arm only. Apply it symmetrically: either GIBF or MMV must have mean Δr̄ at least 20% lower than the other with strict non-overlapping per-method CIs. The n_snap=128 row is descriptive only.
+6. **20% margin (ratified 2026-09-29).** Keep the threshold unchanged; it is the smallest practically meaningful margin for adopting the more complex method, not a Suzuki parameter. Report the signed gap and CI, the threshold range over which each verdict holds, and the approximately 23% smallest reliably detectable effect. Do not add verdict rules from that bracket.
+7. **P6 — independent B6a trials (ratified 2026-09-29).** B6a retains its own cell identity and seeds, independent of the B2 φ=90°/5 dB win cell; the B6a oracle reference uses those same B6a trials.
+8. **P7 — boundary conventions (ratified 2026-09-29).** “At least 20% lower” is inclusive (mean_favored≤0.8×mean_other); CI non-overlap is strict (favored.hi<other.lo); touching intervals overlap, and degenerate intervals are ordinary intervals. One tested adjudication path applies these conventions to every rule and cell.
+9. **P8 — resampling (ratified 2026-09-29).** Keep 2,000 resamples and the pinned seed derivation (per-cell crc32(cell_id); panel (cell_id,band)). Per-cell intervals adjudicate. Report whether the panel ×1 interval agrees; any disagreement is flagged as borderline.
+10. **Stop behavior (ratified 2026-09-29).** Preserve the existing ordinary stopping behavior for confirmatory solves and record a stop reason for every GIBF mode and MMV solve: cost increase, relative tolerance, active-set floor, or max_iter=50. Report counts/rates and whether any solve reaches max_iter. Add a descriptive no-early-exit arm for both sparse solvers on the same B2 trials at the d=2 confirmatory cells. The closed-form Tikhonov solve itself is not an iterative convergence claim.
+11. **P9 — fragility (ratified with amendment 2026-09-29).** Keep the exact-zero headline-sign, attenuation, and fragility exclusion cases. Add the regularization panel at d=1 as a descriptive check because d-min can decide there. **Still unresolved:** whether the d=1 panel must be binding when the d-min arm decides a verdict.
+12. **P10 — reduction OFF (ratified 2026-09-29).** Same-trial OFF twins for every confirmatory cell; at B6a, both K̂ and oracle arms. These are descriptive only. New rows (off-grid, no-early-exit, under-specified B6a) have no OFF twins.
+13. **P11 — run guard (ratified with amendments 2026-09-29).** Retain no-overwrite, smoke-seed isolation, committed-and-clean runner, results-directory, no --only, and separate descriptive-run guards. Master-seed runs use 10,000 trials and include all ruled descriptive rows, threshold scoring, fixed-K sweeps, and d=1 panel. Non-default B6a n_snap runs remain descriptive only. The runner blocks master-seed execution while the two exact pre-run details below remain unresolved.
+14. **P12 (ratified 2026-09-29).** The B6a regularization panel uses the MDL-fed adjudicated arm; no panel on the oracle reference. L2 is re-solved at band points but remains a context row.
+15. **P13 — fixed-K and AIC lookup (ratified with additions 2026-09-29).** Record AIC K̂ per trial, but do not run an AIC-fed solver arm. Add a fixed-K=1…6 sweep and form AIC-fed comparisons by selecting the corresponding fixed-K results. The 5 dB sweep shares B6a’s independent trials; the 10 dB sweep uses its own trials. Keep the direct, pinned MDL-fed B6a solve; verify trial-by-trial that it matches the fixed-K lookup.
+16. **P14 — complete trial count and labels (ratified 2026-09-29).** All cells and OFF twins run at the full 10,000. Every new descriptive result is explicitly labelled (off-grid, no-early-exit, under-specified B6a, fixed-K, threshold sensitivity, d-min sensitivity, supplementary 8-peak scoring, and d=1 panel). The expected run is about 5–7 hours; remeasure in a separately seeded smoke test.
+17. **P15 — descriptive error decomposition (ratified with additions 2026-09-29).** Under the primary ≤2-peak/10% scoring and the 5%/20% sensitivity scores, record miss, correct (P_sep), and mislocated outcomes; bootstrap CIs for conditional correct-trial error; and the found-source matched-error sum and count even on misses, so Δr̄ can be recomputed under another miss penalty. This decomposition is descriptive; Δr̄ remains the adjudicated statistic.
+18. **Peak scoring (ratified 2026-09-28 after re-scoring).** Primary scoring uses at most the two strongest local maxima and a threshold of 10% of map maximum. Compute 5% and 20% sensitivity from the same maps. The 8-peak version is supplementary only. Historical result files remain unchanged; re-scored outputs and a reproducible script are added separately. Re-scoring changed 3/55 examined cells, all d=3 at low SNR; it changed none of the d=2 or d=8 mini-pilot findings. The d=2 choice, ceiling calls, and power sizing were made on original scoring and remain unchanged.
 
-| `n_snap` | CSM rank | eigenvalues floored at `1e‑18` (trace‑normalized) | raw MDL argmin | `K̂` after clip | clipped? |
-|---|---|---|---|---|---|
-| 64 | 64 | 5 to 7 | 68 to 70 | 6 | yes, every trial |
-| 128 | 75 | 0 | 1 | 1 | never |
+### Implementation status (2026-10-03)
 
-So at the pinned cell B6a will almost certainly feed `K̂ = 6` to all solvers on nearly every trial. That tests "over‑specified K by +4, a clip artefact". It does not test the realistic mode‑count noise §8‑vii's rationale describes. §S.4 assumed the floor alone handles the rank‑deficient case, and for keeping `ln` finite it does, but it does not yield a meaningful `K̂` there. **The runner does not change `modeselect`, `K_MAX`, the floor or the pin.** It records per trial `K̂`, the raw MDL argmin, the clip flag and AIC `K̂`, and it exposes `--b6a-nsnap` (default 64). Any non‑default value stamps B6a DESCRIPTIVE. Options for Strider, none chosen:
-- (a) run B6a as pinned and report the clip as the finding;
-- (b) amend §8‑vii's procedure, for example to restrict the B3 grid to `n_snap ≥ n_channels`;
-- (c) amend `estimate_n_sources` for `N < M`, for example by evaluating only the `min(N, M)` non‑degenerate eigenvalues;
-- (d) keep (a) and add a descriptive B6a row at another `n_snap`;
-- (e) re‑read B3 at the B6a physics (coherent, `d = 2`) before choosing.
+The powered runner now implements the settled decisions above. Its 33-cell plan contains the full B2 `d` axis for the win phase and both null phases, the confirmatory B6a `n_snap=64` cell, a descriptive `n_snap=128` comparison, and the separate descriptive 10 dB fixed-K sweep. Confirmatory cells use same-trial OFF twins; no-early-exit arms apply only to the six B2 `d=2` cells; the d=1 panel is descriptive; the under-specified B6a row has only its MDL reduction-ON arm. Stop reasons and iterations are recorded for each GIBF mode and MMV solve. Threshold scores, found-source error sums/counts, and conditional-correct-trial intervals are recorded descriptively. A6 rescore outputs remain separate from original artifacts.
 
-**P2 — The d axis is also run at both null φ.** §8‑vi and the §S.3 loss row require the loss rule to use "the same d reading", which §8‑iii defines as including the full‑d‑axis `P_sep` arm. Applying the loss rule as pinned therefore needs `d ∈ {1, 3, 5, 8}` at φ ∈ {0°, 180°} × `snr ∈ {5, 10}`, which is 16 cells, in addition to the 8 at φ = 90°. The build brief listed the d axis at φ = 90° only; the pin was followed. The cells are cheap (about 1 minute each at full n). If Strider strikes them, the loss rule reduces to its Δr̄ arm.
+The implementation and its current-state documentation are on the `b2b6-powered-runner-d2` branch. No master-seed/confirmatory run has occurred. The run guard intentionally rejects it until the two unresolved details below are decided. The older §S.12 `n_trials=1635` and §S.13 note about adding iteration logging to future runners are historical; this runner uses the selected 10,000 trials and records iteration/stop data.
 
-**P3 — Reading and CI of the "smallest d with `P_sep ≥ 0.8` is ≥ 1 cell smaller" arm. No CI for `P_sep` is pinned anywhere; this is a proposal.**
-- `d_min` is the smallest `d` on {1, 2, 3, 5, 8} with the cell's `P_sep` rate ≥ 0.8 (inclusive).
-- It is read literally even if `P_sep` is non‑monotone in `d`.
-- It is `+∞` if no `d` reaches 0.8.
-- "≥ 1 grid cell smaller" means favored `d_min ≤` other `d_min − 1`, **and the favored `d_min` must be finite**. With both `d_min = +∞`, "∞ ≤ ∞ − 1" is true in IEEE arithmetic but is not an effect; this case is excluded and pytest‑pinned. On this axis, "≥ 1 cell smaller" is the same as strictly smaller.
-- **Proposed per‑cell `P_sep` CI:** a percentile bootstrap of the success rate over trials, with 2000 resamples seeded from the cell id (the §S.1 convention, the same resample indices as that cell's Δr̄ CIs, shared by both methods). It is reported per method per cell for every `d`.
-- **Proposed arm CI:** "non‑overlapping 95% CIs" is applied to the **bootstrap distribution of `d_min` per method**. This distribution is built by pushing each `d` cell's own resampled `P_sep` rates (the draws above, independent across `d` cells, since each is its own Monte‑Carlo cell) through the `d_min` rule. The arm is met iff the effect holds and `CI_hi(d_min, favored) < CI_lo(d_min, other)`. Quantiles use the inverted‑CDF rule, because `d_min` is discrete and can be `+∞`.
-- **Alternatives, not chosen:**
-  - (i) non‑overlapping per‑method `P_sep` CIs at the favored method's `d_min`;
-  - (ii) the same, but with Wilson or Clopper–Pearson binomial intervals instead of the bootstrap;
-  - (iii) requiring the favored method's `P_sep` CI lower bound to be ≥ 0.8 at its `d_min`, and the other's upper bound to be < 0.8 there.
+### Pre-run details still unresolved
 
-**P4 — Combining the two arms across SNRs.** Within each SNR level the Δr̄ arm and the `d`‑axis arm are OR'd. The win rule, and the loss rule at a given null, requires **both** SNR levels to meet the rule; the arm that satisfies it may differ between the two SNRs. Alternative: require the same arm at both SNRs.
+- **Off-grid row (A4):** the descriptive inversion-crime check is authorized, but the exact offset and exact cells are not yet fixed. Do not guess them or run the master seed.
+- **d=1 panel binding:** the panel is required descriptively, but it is unresolved whether it must be binding when the d-min arm decides a verdict.
 
-**P5 — The B6 rule is the Δr̄ arm only, at a single SNR.** "Win‑rule standard at the B6a cell" (§8‑vii) is applied as: GIBF `K̂`‑fed Δr̄ ≥ 20% lower than MMV `K̂`‑fed, with non‑overlapping per‑method CIs, at the one pinned cell (5 dB). There is no `d` axis at a single cell, and no mirrored "B6 loss" rule is pinned: an MMV advantage at B6a is reported descriptively, not adjudicated. A non‑default `--b6a-nsnap` makes the B6 rule unsatisfiable, because the cell is then descriptive.
-
-**P6 — B6a draws its own trials.** At `n_snap = 64` the B6a physics coincides with the φ = 90°/5 dB win cell. The runner nevertheless gives B6a its own cell id, and so independent seeds, so that the win and B6 verdicts rest on independent data. The paired oracle‑`K = 2` arm is on B6a's own trials, as §S.2‑B6 requires. Alternative: share the win cell's trials, which is cheaper and makes the oracle arm literally the win headline.
-
-**P7 — Inequalities.**
-- "≥ 20% lower" means `mean_favored ≤ 0.8 × mean_other` (inclusive).
-- "Non‑overlapping" is strict: `CI_favored.hi < CI_other.lo`. CIs that touch count as overlapping.
-- A degenerate `[x, x]` CI, from all‑identical trials, is treated as an ordinary interval.
-
-**P8 — Bootstrap seeding and pairing.**
-- Per‑cell CIs use `default_rng([crc32(cell_id)])`, the literal "seeded from the cell id" of §S.1. The master seed is not included, so CIs are a function of the data and the cell id only.
-- Panel CIs use `default_rng([crc32(cell_id), band_index])` (§S.6(5)).
-- Within a cell, one resample‑index matrix is shared by every method and every arm, so all per‑cell CIs are paired.
-- The cell id excludes the reduction setting and `eps`, because those are solver arms, not data.
-- The headline gap therefore has two CIs: the per‑cell one and the panel's ×1 point. The two use different seeds, as pinned, and both are reported. Fragility uses the panel's.
-
-**P9 — Fragility edge cases** (§S.6(5) is otherwise implemented verbatim).
-- The "headline" is the ×1 panel point's signed mean gap.
-- A headline mean of exactly 0 has no sign, so nothing can be "opposite‑signed" to it. It is not fragile, and it is flagged `headline_sign_undefined`.
-- "Attenuated at band edge(s)" is evaluated only when the headline's own CI excludes zero, because otherwise there is no significance to lose.
-- A fragile cell cannot satisfy its rule. The win rule then fails, because it needs both SNR cells. The loss rule needs a non‑fragile null φ with both SNRs meeting the rule.
-- The panel runs only at the `d = 2` confirmatory cells and B6a. The `d`‑axis points at `d ≠ 2` are not fragility‑tested, since §S.6(5) does not list them.
-
-**P10 — Reduction‑OFF pairs.**
-- Each confirmatory cell's OFF pair is run on the **same trials** as its ON cell, so they are paired.
-- At B6a both the `K̂` and the oracle arms get an OFF pair.
-- OFF rows are labelled `descriptive_reduction_off`, have no panel, and are never adjudicated.
-
-**P11 — Smoke and run guards** (`resolve_run()`, evaluated before any computation, pytest‑pinned).
-- **Any run** refuses an output directory that already holds a `manifest.json`. No run ever overwrites another run's record.
-- **Smoke runs** (`--smoke`) use `SMOKE_SEED = 1`, never the master seed, so no confirmatory trial is computed before the real run. Smoke output never goes under `results/`, and a smoke run is never `confirmatory_run`.
-- **Every master‑seed run** requires:
-  - the runner committed and clean against `HEAD` (A3);
-  - `n_trials = 1635` (other `n` only via `--smoke`);
-  - an output directory under `results/`, so the blind trials are never computed somewhere unrecorded;
-  - no `--only`.
-- **A master‑seed run is exactly one of these:**
-  - the **confirmatory run**: default `--b6a-nsnap`, the full plan, `confirmatory_run: true`;
-  - a **descriptive B6a row** (see P1(d)): a non‑default `--b6a-nsnap`, the B6a cell only, into an output directory other than the confirmatory `results/B_viability/powered_d2/`, with `confirmatory_run: false`.
-- The manifest records `script_sha256`, which hashes the working‑copy bytes and so depends on CRLF, and also the line‑ending‑normalized git blob id.
-
-**P12 — What the panel re‑solves.**
-- At B6a the panel runs on the `K̂` arm, the confirmatory statistic. The oracle reference arm has no panel.
-- `solve_all` also re‑solves L2 at each band point. That output is recorded but never read: L2 is a context row (§S.6(3)).
-
-**P13 — AIC.** AIC `K̂` is recorded per trial at every cell as a sensitivity record (§8‑viii). No AIC‑fed solver arm is run; §S.2‑B6 says one "may appear", not that it must.
-
-**P14 — Trial counts and labels.**
-- Every cell, including the `d`‑axis cells and every OFF pair, runs at the full `n_trials`.
-- Arms are labelled `headline` (this includes the `d`‑axis points that feed the second rule arm), `sensitivity_panel`, `descriptive_reduction_off` or `b6a_oracle_reference`.
-
-**P15 — Miss‑rate / conditional‑precision decomposition (descriptive; added at the coordinator's request, 2026‑09‑23).** Per trial, per method, per arm, the runner also records three things:
-- the detected‑peak count, from `metrics.find_peaks_2d` at its pinned `rel_thresh = 0.10`;
-- a **miss** flag: fewer detected peaks than true sources, which is exactly when `delta_r_bar` applies its grid‑diagonal penalty;
-- the **unpenalized** mean matched error (grid cells, `metrics._matched_assignment`) on non‑miss trials, `NaN` on miss trials. On a non‑miss trial it equals Δr̄ exactly (pytest‑pinned).
-
-Summaries give the miss rate with a bootstrap CI and the mean non‑miss error, which has no CI because its `n` varies by method. None of this is adjudicated; it lets a miss‑rate vs conditional‑precision reading of Δr̄ come from the same run.
-
-**O1 — `n_trials = 1635` is under audit (observation, no proposal).** The §8‑ii power calc sized `n_trials` for a **paired one‑sample test on the signed gap** at α = 0.006. The pinned rules adjudicate by **non‑overlap of the two per‑method CIs** (§S.1). §5‑D2 names the α ≈ 0.006 equivalence as the intended approximation, but whether 1635 gives ≥ 80% power under the per‑method‑CI criterion has not been shown, and a methodology audit is open on it. The runner therefore labels 1635 as "the §S.12 value, under audit", never as adequately powered, and keeps it a CLI argument. Any change is a runner edit plus re‑commit before the confirmatory run.
+Until both details are specified, do not execute the master-seed run. The implementation may proceed on all independently settled requirements.

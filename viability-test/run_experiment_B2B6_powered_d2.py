@@ -16,12 +16,9 @@ Pins implemented here (every value is cited; none is chosen in this file):
     K = 2, grid reduction ON (S.6(2)).
   * Reduction-OFF pair of every confirmatory cell at the same n_trials,
     DESCRIPTIVE only — S.6(2).
-  * n_trials = 1635 — the S.12 value, UNDER AUDIT: the S8-ii power calc that
-    produced it sized a paired signed-gap test and may not match the pinned
-    per-method-CI non-overlap criterion (S.14 observation O1). It is NOT
-    described here as adequately powered. Provenance copied into the manifest
-    from results/B_viability/confirmatory_d2_manifest.json. A CLI argument;
-    only a smoke run may use another n.
+  * n_trials = 10,000 per cell — Strider's 2026-09-23 ruling, replacing the
+    earlier 1,635 paired-gap sizing. The selected count is fixed; the power
+    cap imposed by the observed >=20% point rule is disclosed in SPEC S.14.
   * Win/loss rule second arm: "smallest d with P_sep >= 0.8 is >= 1 grid cell
     smaller along the full d axis {1,2,3,5,8}" — S.3 / ROADMAP S5-D2 / S8-iii.
     The loss rule uses the "same d reading" (S8-vi, S.3 loss row), so the d
@@ -35,16 +32,9 @@ Pins implemented here (every value is cited; none is chosen in this file):
     S.6(5): fragile iff some band point's mean gap is opposite-signed to the x1
     headline AND that point's 95% CI excludes zero. Panel CIs seeded from
     (cell id, band index).
-  * B6a (S.2-B6, S.3 B6 row, S8-vii): phi = 90, snr = 5 dB, d = 2, n_snap =
-    the largest of {8,16,32,64,128} with B3's MDL K-hat error rate >= 20% at
-    5 dB (read from results/B_viability/b3_results.json -> 64; recorded in the
-    manifest with the raw B3 row). K-hat = estimate_n_sources(lam, N, "mdl")
-    fed identically to L2/GIBF/MMV, with the paired oracle-K = 2 arm on the SAME
-    trials; per-trial paired differences and the K-hat <2 / =2 / >2 breakdown
-    recorded. B6a's n_snap is a CLI parameter (default 64 = the pin); any other
-    value stamps B6a DESCRIPTIVE. See SPEC S.14 item P1: at n_snap = 64 < 75
-    channels the sample CSM is rank-deficient and MDL K-hat clips at K_MAX = 6
-    -- flagged for Strider's ruling, NOT altered here.
+  * B6a (S.2-B6, S.3 B6 row, S8-vii): n_snap = 64 remains the intentionally
+    overspecified test (MDL K-hat clips at 6); a descriptive n_snap=128
+    under-specified comparison (K-hat=1) is also run.
   * Metrics per method per cell: Delta_r_bar and P_sep with the S8-v
     tolerance (1 grid cell, min-cost matched; metrics.py), signed GIBF-MMV
     gap, percentile-bootstrap 95% CIs, 2000 resamples, seeded from the cell id
@@ -57,8 +47,8 @@ Pins implemented here (every value is cited; none is chosen in this file):
     reachable via `--adjudicate-only DIR`. `main()` NEVER calls it: the real
     verdict is applied as a separate, deliberate step after review.
 
-Every decision the SPEC does not pin is listed in SPEC S.14 (PROPOSED — pending
-Strider's ratification) and cross-referenced in comments as "S.14 Pn".
+Recovered decisions are recorded in SPEC S.14 with provenance to the saved
+Strider/Claude decision sessions. Two pre-run details remain open there.
 
 MASTER SEED: generated with Python `secrets` in a separate process that had no
 access to any result (see MASTER_SEED_PROVENANCE), committed before any
@@ -118,7 +108,7 @@ N_SNAP = 64                         # S8-iii
 ABS_RHO = 0.85                      # SLOT-1 midpoint, SPEC S.7
 K_ORACLE = 2
 
-N_TRIALS_POWERED = 1635             # S.12 value, UNDER AUDIT (S.14 O1) -- not claimed adequately powered
+N_TRIALS_POWERED = 10_000           # Strider ruling 2026-09-23; SPEC S.14
 EPS_BAND = (0.1, 0.3, 1.0, 3.0, 10.0)   # SPEC S.6(5); x1 is the headline
 HEADLINE_BAND_INDEX = EPS_BAND.index(1.0)
 N_BOOT = 2000                       # SPEC S.1 CI convention
@@ -141,16 +131,6 @@ B3_RESULTS = RESULTS_ROOT / "B_viability" / "b3_results.json"
 B3_MANIFEST = RESULTS_ROOT / "B_viability" / "manifest.json"
 POWER_MANIFEST = RESULTS_ROOT / "B_viability" / "confirmatory_d2_manifest.json"
 
-# Hard-coded copy of the power calc so the provenance survives even if the
-# JSON moves; the runtime copy is cross-checked against it.
-POWER_CALC_EXPECTED = dict(n_trials=1635, alpha_ci=0.006, power_target=0.80,
-                           variance_input=8.306556854463883,
-                           effect_size_cells=0.7375417527999328,
-                           source_commit="a42a873c61ba598d86f713a258a60cd6449c7c28",
-                           source_script="viability-test/run_experiment_B2B6_d2.py",
-                           source_seed=20260828)
-
-
 # ------------------------------------------------------------ plan types ---
 
 @dataclasses.dataclass(frozen=True)
@@ -159,11 +139,13 @@ class Arm:
     k_source: str          # "oracle" (K=2) | "mdl" (K-hat, B6a)
     reduction: bool
     eps_mult: float = 1.0
+    no_early_exit: bool = False
 
     @property
     def key(self):
+        suffix = "_noearly" if self.no_early_exit else ""
         return (f"{self.k_source}_{'on' if self.reduction else 'off'}"
-                f"_x{self.eps_mult:g}")
+                f"_x{self.eps_mult:g}{suffix}")
 
 
 @dataclasses.dataclass(frozen=True)
@@ -193,11 +175,15 @@ class DataCell:
 
     @property
     def confirmatory(self):
-        return self.role in ("win", "null", "b6a")
+        return (self.role in ("win", "null") or
+                (self.role == "b6a" and self.family == "B6a"
+                 and self.n_snap == B6A_NSNAP_PINNED))
 
     @property
     def panel_arms(self):
         """The S.6(5) band arms in band order, or () if not a panel cell."""
+        if not self.confirmatory:
+            return ()
         k = "mdl" if self.family == "B6a" else "oracle"
         wanted = [Arm(k, True, m) for m in EPS_BAND]
         return tuple(wanted) if all(a in self.arms for a in wanted) else ()
@@ -206,7 +192,13 @@ class DataCell:
 def headline_arm(cell):
     """The adjudicating arm of a cell: reduction ON, x1 eps, oracle K for B2,
     MDL K-hat for B6a."""
-    return Arm("mdl" if cell.family == "B6a" else "oracle", True, 1.0)
+    if cell.family in ("B6a", "B6a128"):
+        k = "mdl"
+    elif cell.family == "B6a_forced10":
+        k = "k2"
+    else:
+        k = "oracle"
+    return Arm(k, True, 1.0)
 
 
 def arm_use(cell, arm):
@@ -217,8 +209,18 @@ def arm_use(cell, arm):
       sensitivity_panel          — S.6(5) band point != x1 (fragility input)
       descriptive_reduction_off  — S.6(2) OFF pair, never adjudicated
       b6a_oracle_reference       — S.2-B6 paired oracle-K reference arm"""
+    if cell.family == "B6a128" and arm == headline_arm(cell):
+        return "descriptive_under_specified_b6a"
+    if cell.role == "descriptive_b6a_underspecified" and arm == headline_arm(cell):
+        return "descriptive_under_specified_b6a"
+    if cell.family == "B6a_forced10":
+        return "descriptive_forced_k"
     if arm == headline_arm(cell):
         return "headline"
+    if arm.no_early_exit:
+        return "descriptive_no_early_exit"
+    if arm.k_source.startswith("k"):
+        return "descriptive_forced_k"
     if not arm.reduction:
         return "descriptive_reduction_off"
     if arm.eps_mult != 1.0:
@@ -235,17 +237,35 @@ def build_plan(b6a_nsnap=B6A_NSNAP_PINNED):
             for d in D_AXIS:
                 if d == D_CONFIRM:
                     arms = tuple(Arm("oracle", True, m) for m in EPS_BAND) + (
-                        Arm("oracle", False, 1.0),)          # S.6(2) OFF pair
+                        Arm("oracle", False, 1.0),           # S.6(2) OFF pair
+                        Arm("oracle", True, 1.0, True))      # A5 descriptive no-early-exit
                     role = "win" if is_win else "null"
+                elif d == 1:
+                    # P9: descriptive d=1 regularization check; whether its
+                    # panel is binding for a d_min verdict remains open.
+                    arms = tuple(Arm("oracle", True, m) for m in EPS_BAND)
+                    role = "d_axis_win" if is_win else "d_axis_null"
                 else:
                     arms = (Arm("oracle", True, 1.0),)
                     role = "d_axis_win" if is_win else "d_axis_null"
                 cells.append(DataCell("B2", phi, snr, d, N_SNAP, role, arms))
-    b6_arms = tuple(Arm("mdl", True, m) for m in EPS_BAND) + (
-        Arm("oracle", True, 1.0),                   # paired oracle reference (S.2-B6)
-        Arm("mdl", False, 1.0), Arm("oracle", False, 1.0))   # S.6(2) OFF pair
-    cells.append(DataCell("B6a", PHI_WIN_DEG, B6A_SNR_DB, D_CONFIRM, b6a_nsnap,
-                          "b6a", b6_arms))
+    if b6a_nsnap == B6A_NSNAP_PINNED:
+        b6_arms = tuple(Arm("mdl", True, m) for m in EPS_BAND) + (
+            Arm("oracle", True, 1.0),               # paired oracle reference (S.2-B6)
+            Arm("mdl", False, 1.0), Arm("oracle", False, 1.0)) + tuple(
+                Arm(f"k{k}", True, 1.0) for k in range(1, K_MAX + 1))
+        cells.append(DataCell("B6a", PHI_WIN_DEG, B6A_SNR_DB, D_CONFIRM,
+                              B6A_NSNAP_PINNED, "b6a", b6_arms))
+        cells.append(DataCell("B6a128", PHI_WIN_DEG, B6A_SNR_DB, D_CONFIRM, 128,
+                              "descriptive_b6a_underspecified",
+                              (Arm("mdl", True, 1.0),)))
+        cells.append(DataCell("B6a_forced10", PHI_WIN_DEG, 10.0, D_CONFIRM, N_SNAP,
+                              "descriptive_forced_k",
+                              tuple(Arm(f"k{k}", True, 1.0) for k in range(1, K_MAX + 1))))
+    else:
+        cells.append(DataCell("B6a", PHI_WIN_DEG, B6A_SNR_DB, D_CONFIRM, b6a_nsnap,
+                              "descriptive_b6a_underspecified",
+                              (Arm("mdl", True, 1.0),)))
     return cells
 
 
@@ -292,6 +312,7 @@ def generate_trial(tm, cell, seed, trial):
     k_mdl, _, mdl_arr, clipped = estimate_n_sources(lam, cell.n_snap, "mdl")
     k_aic, _, _, _ = estimate_n_sources(lam, cell.n_snap, "aic")   # sensitivity record only (S8-viii)
     V = {"oracle": eigenmodes(lam, U, K_ORACLE), "mdl": eigenmodes(lam, U, k_mdl)}
+    V.update({f"k{k}": eigenmodes(lam, U, k) for k in range(1, K_MAX + 1)})
     return dict(X=X, lam=lam, V=V, khat_mdl=int(k_mdl),
                 khat_mdl_raw_argmin=int(np.argmin(mdl_arr)),
                 khat_mdl_clipped=bool(clipped), khat_aic=int(k_aic),
@@ -304,6 +325,7 @@ def arm_config(arm):
     identical object (S.6(1)); only grid_reduction / eps_frac differ from
     FAIRNESS_CONFIG, and they differ identically for both solvers."""
     cfg = with_reduction(FAIRNESS_CONFIG, arm.reduction)
+    cfg = dataclasses.replace(cfg, stop_early=not arm.no_early_exit)
     if arm.eps_mult != 1.0:
         cfg = dataclasses.replace(cfg, eps_frac=FAIRNESS_CONFIG.eps_frac * arm.eps_mult)
     return cfg
@@ -313,16 +335,32 @@ def miss_and_matched_error(I2d, true_cells, rel_thresh=0.10):
     """Descriptive decomposition of metrics.delta_r_bar (coordinator addendum
     2026-09-23; S.14 P15), using metrics.py's own peak finder at its pinned
     rel_thresh and its own min-cost assignment -- nothing re-implemented:
-      miss      True iff fewer detected peaks than true sources, i.e. exactly
+    miss      True iff fewer detected peaks than true sources, i.e. exactly
                 when delta_r_bar applies its grid-diagonal penalty;
-      matched   the UNPENALIZED mean matched error (grid cells) on non-miss
-                trials; NaN on miss trials.
-    On a non-miss trial `matched` equals delta_r_bar exactly (pytest-pinned)."""
-    det = [(p[0], p[1]) for p in find_peaks_2d(I2d, rel_thresh)]
-    if len(det) < len(true_cells):
-        return True, float("nan")
-    row_ind, col_ind, cost = _matched_assignment(true_cells, det)
-    return False, float(cost[row_ind, col_ind].sum() / len(true_cells))
+      matched   the found-source mean error, including on a miss when at least
+                one source was matched. NaN only when no source was found."""
+    comp = matched_error_components(I2d, true_cells, rel_thresh)
+    return comp["miss"], (float("nan") if comp["found_mean"] is None
+                           else comp["found_mean"])
+
+
+def matched_error_components(I2d, true_cells, rel_thresh=0.10, max_peaks=2):
+    """Return the found-source contribution even when a map misses sources.
+
+    `found_sum` and `n_matched` let a later analysis reconstruct Delta-r-bar
+    under any chosen unmatched-source penalty without rerunning the solver.
+    """
+    det = [(p[0], p[1]) for p in find_peaks_2d(I2d, rel_thresh, max_peaks)]
+    n_true = len(true_cells)
+    if not det:
+        found_sum, n_matched = 0.0, 0
+    else:
+        row_ind, col_ind, cost = _matched_assignment(true_cells, det)
+        found_sum = float(cost[row_ind, col_ind].sum())
+        n_matched = int(len(row_ind))
+    return dict(miss=n_matched < n_true, found_sum=found_sum,
+                n_matched=n_matched,
+                found_mean=(found_sum / n_matched if n_matched else None))
 
 
 def _pad(values, fill):
@@ -350,13 +388,28 @@ def run_data_cell(tm, cell, n_trials, seed, solve_fn=solve_all, on_trial=None):
             rec[f"npeaks_{m}"] = np.empty(n_trials, dtype=int)
             rec[f"miss_{m}"] = np.empty(n_trials, dtype=bool)
             rec[f"matched_err_{m}"] = np.empty(n_trials)
+            rec[f"matched_err_sum_{m}"] = np.empty(n_trials)
+            rec[f"matched_n_{m}"] = np.empty(n_trials, dtype=int)
+            rec[f"outcome_{m}"] = np.empty(n_trials, dtype="U16")
+            rec[f"dr_8peak_{m}"] = np.empty(n_trials)
+            rec[f"psep_8peak_{m}"] = np.empty(n_trials, dtype=bool)
+            for threshold_tag in ("05", "20"):
+                rec[f"dr_{threshold_tag}_{m}"] = np.empty(n_trials)
+                rec[f"psep_{threshold_tag}_{m}"] = np.empty(n_trials, dtype=bool)
+                rec[f"miss_{threshold_tag}_{m}"] = np.empty(n_trials, dtype=bool)
+                rec[f"outcome_{threshold_tag}_{m}"] = np.empty(n_trials, dtype="U16")
+                rec[f"matched_err_{threshold_tag}_{m}"] = np.empty(n_trials)
+                rec[f"matched_err_sum_{threshold_tag}_{m}"] = np.empty(n_trials)
+                rec[f"matched_n_{threshold_tag}_{m}"] = np.empty(n_trials, dtype=int)
         rec["k_used"] = np.empty(n_trials, dtype=int)
         rec["scale_s"] = np.empty(n_trials)
         rec["eps_l2"] = np.empty(n_trials)
         rec["eps_gibf"] = np.empty((n_trials, K_MAX))      # per mode, NaN-padded
         rec["niter_gibf"] = np.empty((n_trials, K_MAX))    # per mode, -1-padded
+        rec["stop_gibf"] = np.empty((n_trials, K_MAX), dtype="U24")
         rec["eps_mmv"] = np.empty(n_trials)
         rec["niter_mmv"] = np.empty(n_trials, dtype=int)
+        rec["stop_mmv"] = np.empty(n_trials, dtype="U24")
         out[a.key] = rec
     cfgs = {a.key: arm_config(a) for a in arms}
     timing = {a.key: 0.0 for a in arms}
@@ -380,19 +433,67 @@ def run_data_cell(tm, cell, n_trials, seed, solve_fn=solve_all, on_trial=None):
                 rec[f"dr_{m}"][t] = delta_r_bar(I2d, tr["true_cells"])
                 rec[f"psep_{m}"][t] = p_sep(I2d, tr["true_cells"])
                 rec[f"npeaks_{m}"][t] = len(find_peaks_2d(I2d))
-                miss, merr = miss_and_matched_error(I2d, tr["true_cells"])
-                rec[f"miss_{m}"][t] = miss
-                rec[f"matched_err_{m}"][t] = merr
+                rec[f"dr_8peak_{m}"][t] = delta_r_bar(
+                    I2d, tr["true_cells"], max_peaks=8)
+                rec[f"psep_8peak_{m}"][t] = p_sep(
+                    I2d, tr["true_cells"], max_peaks=8)
+                comp = matched_error_components(I2d, tr["true_cells"])
+                rec[f"miss_{m}"][t] = comp["miss"]
+                rec[f"matched_err_{m}"][t] = (np.nan if comp["found_mean"] is None
+                                                else comp["found_mean"])
+                rec[f"matched_err_sum_{m}"][t] = comp["found_sum"]
+                rec[f"matched_n_{m}"][t] = comp["n_matched"]
+                rec[f"outcome_{m}"][t] = ("correct" if rec[f"psep_{m}"][t] else
+                                            "miss" if comp["miss"] else "mislocated")
+                for tag, threshold in (("05", 0.05), ("20", 0.20)):
+                    rec[f"dr_{tag}_{m}"][t] = delta_r_bar(
+                        I2d, tr["true_cells"], rel_thresh=threshold)
+                    rec[f"psep_{tag}_{m}"][t] = p_sep(
+                        I2d, tr["true_cells"], rel_thresh=threshold)
+                    tc = matched_error_components(I2d, tr["true_cells"], threshold)
+                    rec[f"miss_{tag}_{m}"][t] = tc["miss"]
+                    rec[f"outcome_{tag}_{m}"][t] = (
+                        "correct" if rec[f"psep_{tag}_{m}"][t] else
+                        "miss" if tc["miss"] else "mislocated")
+                    rec[f"matched_err_{tag}_{m}"][t] = (
+                        np.nan if tc["found_mean"] is None else tc["found_mean"])
+                    rec[f"matched_err_sum_{tag}_{m}"][t] = tc["found_sum"]
+                    rec[f"matched_n_{tag}_{m}"][t] = tc["n_matched"]
             rec["k_used"][t] = V.shape[1]
             rec["scale_s"][t] = res.get("scale_s", np.nan)
             rec["eps_l2"][t] = res["l2"]["realized_eps"]
             rec["eps_gibf"][t] = _pad(res["gibf"]["realized_eps"], np.nan)
             rec["niter_gibf"][t] = _pad(res["gibf"]["n_iter"], -1)
+            gibf_stops = res["gibf"].get("stop_reason", [])
+            rec["stop_gibf"][t] = (list(gibf_stops)
+                                     + [""] * (K_MAX - len(gibf_stops)))
             rec["eps_mmv"][t] = res["mmv"]["realized_eps"]
             rec["niter_mmv"][t] = res["mmv"]["n_iter"]
+            rec["stop_mmv"][t] = res["mmv"].get("stop_reason", "")
             timing[a.key] += time.perf_counter() - t1
         if on_trial is not None:
             on_trial(t, tr)
+    if cell.family == "B6a_forced10" or (cell.family == "B6a" and cell.confirmatory):
+        # P13: force-K sweeps are the only solver runs for these Ks. AIC and
+        # MDL estimates are evaluated by selecting the matching fixed-K result.
+        fields = [f"{prefix}_{m}" for m in METHODS
+                  for prefix in ("dr", "psep", "npeaks", "miss", "matched_err",
+                                 "matched_err_sum", "matched_n", "outcome",
+                                 "dr_05", "psep_05", "miss_05", "matched_err_05",
+                                 "matched_err_sum_05", "matched_n_05", "outcome_05",
+                                 "dr_20", "psep_20", "miss_20", "matched_err_20",
+                                 "matched_err_sum_20", "matched_n_20", "outcome_20")]
+        fields += [f"{prefix}_{m}" for m in METHODS
+                   for prefix in ("dr_8peak", "psep_8peak")]
+        for label, khats in (("lookup_mdl", data["khat_mdl"]),
+                             ("lookup_aic", data["khat_aic"])):
+            out[label] = {
+                field: np.asarray([
+                    out[Arm(f"k{k}", True, 1.0).key][field][t]
+                    for t, k in enumerate(khats)
+                ])
+                for field in fields
+            }
     out["_data"] = data
     return out, timing
 
@@ -413,7 +514,31 @@ def mean_ci(x, idx):
     return float(np.mean(x)), percentile_ci(x[idx].mean(axis=1))
 
 
-def summarize_arm(rec, idx):
+def conditional_mean_ci(values, mask, seed_parts):
+    values = np.asarray(values, dtype=float)
+    mask = np.asarray(mask, dtype=bool) & np.isfinite(values)
+    selected = values[mask]
+    if not len(selected):
+        return dict(n=0, mean=None, ci=None)
+    rng = boot_rng(tuple(seed_parts))
+    idx = boot_indices(len(selected), rng)
+    mean, ci = mean_ci(selected, idx)
+    return dict(n=int(len(selected)), mean=mean, ci=ci)
+
+
+def summarize_lookup(lookup, idx):
+    out = {}
+    for metric in ("dr", "psep"):
+        out[metric] = {
+            method: mean_ci(np.asarray(lookup[f"{metric}_{method}"]).astype(float), idx)
+            for method in METHODS
+        }
+    out["gap_gibf_minus_mmv"] = mean_ci(
+        np.asarray(lookup["dr_gibf"]) - np.asarray(lookup["dr_mmv"]), idx)
+    return out
+
+
+def summarize_arm(rec, idx, cell_id="summary"):
     s = {}
     for m in METHODS:
         s[f"dr_{m}"] = mean_ci(rec[f"dr_{m}"], idx)
@@ -421,18 +546,66 @@ def summarize_arm(rec, idx):
     s["gap_gibf_minus_mmv"] = mean_ci(rec["dr_gibf"] - rec["dr_mmv"], idx)
     # Descriptive miss-rate / conditional-precision decomposition (S.14 P15):
     # never adjudicated. Conditional error has no CI (its n varies by method).
-    if f"miss_{METHODS[0]}" in rec:
+    if f"miss_{METHODS[0]}" in rec and f"outcome_{METHODS[0]}" in rec:
         for m in METHODS:
             miss = np.asarray(rec[f"miss_{m}"], dtype=bool)
             s[f"miss_rate_{m}"] = mean_ci(miss, idx)
             s[f"n_nonmiss_{m}"] = int(np.sum(~miss))
             s[f"matched_err_nonmiss_mean_{m}"] = (
                 float(np.mean(rec[f"matched_err_{m}"][~miss])) if np.any(~miss) else None)
+            correct = rec[f"outcome_{m}"] == "correct"
+            s[f"outcome_counts_{m}"] = {
+                outcome: int(np.sum(rec[f"outcome_{m}"] == outcome))
+                for outcome in ("miss", "correct", "mislocated")
+            }
+            s[f"conditional_correct_error_{m}"] = conditional_mean_ci(
+                rec[f"matched_err_{m}"], correct, [cell_id, m, "correct"])
+            s[f"supplementary_8peak_psep_{m}"] = mean_ci(
+                rec[f"psep_8peak_{m}"].astype(float), idx)
+            s[f"supplementary_8peak_dr_{m}"] = mean_ci(
+                rec[f"dr_8peak_{m}"], idx)
+            s[f"miss_penalty_reconstruction_{m}"] = {
+                "formula": "(matched_error_sum + (n_true - n_matched) * penalty) / n_true",
+                "stored_arrays": [f"matched_err_sum_{m}", f"matched_n_{m}"],
+            }
+            for tag in ("05", "20"):
+                s[f"threshold_{tag}_dr_{m}"] = mean_ci(rec[f"dr_{tag}_{m}"], idx)
+                s[f"threshold_{tag}_psep_{m}"] = mean_ci(
+                    rec[f"psep_{tag}_{m}"].astype(float), idx)
+                s[f"threshold_{tag}_miss_rate_{m}"] = mean_ci(
+                    rec[f"miss_{tag}_{m}"].astype(float), idx)
+                s[f"threshold_{tag}_outcome_counts_{m}"] = {
+                    outcome: int(np.sum(rec[f"outcome_{tag}_{m}"] == outcome))
+                    for outcome in ("miss", "correct", "mislocated")
+                }
+                s[f"threshold_{tag}_conditional_correct_error_{m}"] = conditional_mean_ci(
+                    rec[f"matched_err_{tag}_{m}"],
+                    rec[f"outcome_{tag}_{m}"] == "correct",
+                    [cell_id, m, tag, "correct"])
     s["niter_gibf_mean"] = float(np.nanmean(np.where(rec["niter_gibf"] < 0, np.nan,
                                                       rec["niter_gibf"])))
     s["niter_mmv_mean"] = float(np.mean(rec["niter_mmv"]))
     s["niter_gibf_max"] = int(np.max(rec["niter_gibf"]))
     s["niter_mmv_max"] = int(np.max(rec["niter_mmv"]))
+    if "stop_gibf" in rec and "stop_mmv" in rec:
+        n_gibf = int(np.count_nonzero(rec["stop_gibf"] != ""))
+        n_mmv = len(rec["stop_mmv"])
+        reasons = ("cost_increase", "relative_tolerance", "active_set_floor", "max_iter")
+        s["stop_reason_gibf"] = {
+            reason: dict(count=int(np.sum(rec["stop_gibf"] == reason)),
+                         rate=float(np.sum(rec["stop_gibf"] == reason) / n_gibf)
+                         if n_gibf else 0.0)
+            for reason in reasons
+        }
+        s["stop_reason_mmv"] = {
+            reason: dict(count=int(np.sum(rec["stop_mmv"] == reason)),
+                         rate=float(np.sum(rec["stop_mmv"] == reason) / n_mmv)
+                         if n_mmv else 0.0)
+            for reason in reasons
+        }
+        s["any_max_iter"] = bool(
+            s["stop_reason_gibf"]["max_iter"]["count"]
+            or s["stop_reason_mmv"]["max_iter"]["count"])
     s["n_trials"] = int(len(rec["dr_gibf"]))
     return s
 
@@ -487,11 +660,23 @@ def sensitivity_panel(cell, arrays, n_boot=N_BOOT):
         rows.append(dict(band_index=b, eps_mult=arm.eps_mult,
                          eps_frac=FAIRNESS_CONFIG.eps_frac * arm.eps_mult,
                          gap_mean=mean, gap_ci=ci))
-    return dict(points=rows, **fragility(rows))
+    out = dict(points=rows, **fragility(rows))
+    if rows:
+        headline = rows[HEADLINE_BAND_INDEX]["gap_ci"]
+        out["x1_interval_class"] = _interval_class(headline)
+    return out
 
 
 def _ci_excludes_zero(ci):
     return ci[0] > 0.0 or ci[1] < 0.0
+
+
+def _interval_class(ci):
+    if ci[0] > 0.0:
+        return "positive"
+    if ci[1] < 0.0:
+        return "negative"
+    return "includes_zero"
 
 
 def fragility(points, headline_index=HEADLINE_BAND_INDEX):
@@ -551,7 +736,8 @@ def smallest_d(psep_by_d, d_axis=D_AXIS, threshold=PSEP_THRESHOLD):
     return math.inf
 
 
-def d_axis_arm(psep_trials, favored, cell_ids, n_boot=N_BOOT):
+def d_axis_arm(psep_trials, favored, cell_ids, n_boot=N_BOOT,
+               threshold=PSEP_THRESHOLD):
     """Second arm (S8-iii): smallest d with P_sep >= 0.8 is >= 1 grid cell
     smaller for the favored method, with non-overlapping 95% CIs.
 
@@ -568,12 +754,13 @@ def d_axis_arm(psep_trials, favored, cell_ids, n_boot=N_BOOT):
     idx_by_d = {d: boot_indices(len(psep_trials[d][favored]),
                                 boot_rng(cell_ids[d]), n_boot) for d in D_AXIS}
     for m in (favored, other):
-        point = smallest_d({d: float(np.mean(psep_trials[d][m])) for d in D_AXIS})
+        point = smallest_d({d: float(np.mean(psep_trials[d][m])) for d in D_AXIS},
+                           threshold=threshold)
         rates = {d: psep_trials[d][m].astype(float)[idx_by_d[d]].mean(axis=1)
                  for d in D_AXIS}
         bd = np.full(n_boot, math.inf)
         for d in sorted(D_AXIS, reverse=True):
-            bd = np.where(rates[d] >= PSEP_THRESHOLD, float(d), bd)
+            bd = np.where(rates[d] >= threshold, float(d), bd)
         dmins[m] = point
         boots[m] = percentile_ci(bd, method="inverted_cdf")
     # The favored method must actually reach P_sep >= 0.8 somewhere on the
@@ -582,8 +769,26 @@ def d_axis_arm(psep_trials, favored, cell_ids, n_boot=N_BOOT):
     effect = (math.isfinite(dmins[favored])
               and dmins[favored] <= dmins[other] - D_CELL_MARGIN)
     sep = ci_non_overlap(boots[favored], boots[other])
-    return dict(met=bool(effect and sep), effect_met=bool(effect),
+    return dict(met=bool(effect and sep), effect_met=bool(effect), threshold=threshold,
                 ci_non_overlap=bool(sep), d_min=dmins, d_min_ci=boots)
+
+
+def d_axis_descriptive(psep_trials, cell_ids):
+    rates = {method: {d: float(np.mean(psep_trials[d][method])) for d in D_AXIS}
+             for method in SPARSE}
+    monotone = {method: all(rates[method][a] <= rates[method][b]
+                            for a, b in zip(D_AXIS, D_AXIS[1:]))
+                for method in SPARSE}
+    out = {"psep_rates": rates, "psep_monotone_non_decreasing": monotone,
+           "d_min_thresholds": {}}
+    for threshold in (0.7, 0.9):
+        arm = d_axis_arm(psep_trials, "gibf", cell_ids, threshold=threshold)
+        out["d_min_thresholds"][str(threshold)] = {
+            "gibf": arm["d_min"]["gibf"], "mmv": arm["d_min"]["mmv"],
+            "gibf_ci": arm["d_min_ci"]["gibf"], "mmv_ci": arm["d_min_ci"]["mmv"],
+            "descriptive_only": True,
+        }
+    return out
 
 
 def _cell_rule(summary, psep_trials, cell_ids, favored, fragile):
@@ -591,7 +796,9 @@ def _cell_rule(summary, psep_trials, cell_ids, favored, fragile):
     arm2 = d_axis_arm(psep_trials, favored, cell_ids)
     # S.14 P4: per SNR level, the arms are OR'd; a regularization-fragile cell
     # cannot satisfy the rule (S.6(5): claim demoted to descriptive).
-    return dict(met=bool((arm1["met"] or arm2["met"]) and not fragile),
+    passing = [label for label, arm in (("delta_r", arm1), ("d_axis", arm2)) if arm["met"]]
+    return dict(met=bool(passing and not fragile),
+                satisfying_arms=passing,
                 fragile=bool(fragile), delta_r_arm=arm1, d_axis_arm=arm2)
 
 
@@ -616,7 +823,9 @@ def adjudicate(cells_view):
         v = cells_view[(PHI_WIN_DEG, snr)]
         win_cells[snr] = _cell_rule(v["summary"], v["psep_trials"], v["cell_ids"],
                                     "gibf", v["fragile"])
-    out["win"] = dict(met=all(c["met"] for c in win_cells.values()), per_snr=win_cells)
+    win_arm_sets = [tuple(c["satisfying_arms"]) for c in win_cells.values() if c["met"]]
+    out["win"] = dict(met=all(c["met"] for c in win_cells.values()), per_snr=win_cells,
+                       mixed_arm=bool(len(set(win_arm_sets)) > 1))
     per_null = {}
     for phi in PHI_NULL_DEGS:
         per_snr = {}
@@ -625,15 +834,29 @@ def adjudicate(cells_view):
             per_snr[snr] = _cell_rule(v["summary"], v["psep_trials"], v["cell_ids"],
                                       "mmv", v["fragile"])
         per_null[phi] = dict(met=all(c["met"] for c in per_snr.values()), per_snr=per_snr)
+    loss_arm_sets = [tuple(c["satisfying_arms"])
+                     for p in per_null.values() for c in p["per_snr"].values() if c["met"]]
     out["loss"] = dict(met=any(p["met"] for p in per_null.values()),
                        met_at_phi=[phi for phi, p in per_null.items() if p["met"]],
-                       per_null=per_null)
+                       per_null=per_null,
+                       mixed_arm=bool(len(set(loss_arm_sets)) > 1))
     b6 = cells_view.get("B6a")
     if b6 is not None:
-        arm = delta_r_arm(b6["summary"], "gibf")
-        out["b6"] = dict(met=bool(arm["met"] and not b6["fragile"] and b6["confirmatory"]),
+        by_favored = {favored: delta_r_arm(b6["summary"], favored)
+                      for favored in SPARSE}
+        winner = next((favored for favored, result in by_favored.items()
+                       if result["met"]), None)
+        out["b6"] = dict(met=bool(winner and not b6["fragile"] and b6["confirmatory"]),
+                         winner=winner if not b6["fragile"] and b6["confirmatory"] else None,
+                         by_favored=by_favored,
                          fragile=bool(b6["fragile"]), confirmatory=bool(b6["confirmatory"]),
-                         delta_r_arm=arm)
+                         delta_r_arm=by_favored["gibf"])
+    out["d_axis_diagnostics"] = {
+        f"phi={phi:g}|snr={snr:g}": v.get("d_axis_descriptive")
+        for key, v in cells_view.items() if isinstance(key, tuple)
+        for phi, snr in [key]
+        if v.get("d_axis_descriptive") is not None
+    }
     return out
 
 
@@ -663,16 +886,20 @@ def adjudicate_from_dir(out_dir):
             arrays = loaded[conf.cell_id]
             idx = boot_indices(len(arrays[head]["dr_gibf"]), boot_rng(conf.cell_id))
             view[(phi, snr)] = dict(
-                summary=summarize_arm(arrays[head], idx),
+                summary=summarize_arm(arrays[head], idx, conf.cell_id),
                 psep_trials={d: {m: loaded[c.cell_id][headline_arm(c).key][f"psep_{m}"]
                                  for m in SPARSE} for d, c in axis.items()},
                 cell_ids={d: c.cell_id for d, c in axis.items()},
-                fragile=sensitivity_panel(conf, arrays)["fragile"])
+                fragile=sensitivity_panel(conf, arrays)["fragile"],
+                d_axis_descriptive=d_axis_descriptive(
+                    {d: {m: loaded[c.cell_id][headline_arm(c).key][f"psep_{m}"]
+                         for m in SPARSE} for d, c in axis.items()},
+                    {d: c.cell_id for d, c in axis.items()}))
     b6 = [c for c in plan if c.family == "B6a"][0]
     arrays = loaded[b6.cell_id]
     head = headline_arm(b6).key
     idx = boot_indices(len(arrays[head]["dr_gibf"]), boot_rng(b6.cell_id))
-    view["B6a"] = dict(summary=summarize_arm(arrays[head], idx),
+    view["B6a"] = dict(summary=summarize_arm(arrays[head], idx, b6.cell_id),
                        fragile=sensitivity_panel(b6, arrays)["fragile"],
                        confirmatory=bool(manifest["b6a"]["confirmatory"]))
     result = adjudicate(view)
@@ -708,7 +935,9 @@ def b3_reading():
                         "n_snap in {8,16,32,64}; K-hat = 2 on 50/50 at 128. n_snap=64 "
                         "< 75 channels makes the sample CSM rank-deficient; the raw "
                         "MDL argmin falls near the rank boundary and is clipped to 6. "
-                        "Flagged for Strider's ruling (SPEC S.14 P1); not altered."))
+                        "The 64-snapshot row is retained as the intentionally "
+                        "overspecified B6a test; the 128-snapshot comparison is a "
+                        "separate descriptive under-specified row (SPEC S.14)."))
 
 
 # --------------------------------------------------------------- manifest --
@@ -729,18 +958,20 @@ def script_is_committed_clean():
 
 
 def power_provenance():
-    rec = dict(POWER_CALC_EXPECTED)
+    historical = {}
     if POWER_MANIFEST.exists():
-        m = json.loads(POWER_MANIFEST.read_text())
-        pc = m.get("power_calc", {})
-        rec["runtime_copy"] = pc
-        rec["runtime_copy_matches"] = (pc.get("n_trials") == POWER_CALC_EXPECTED["n_trials"]
-                                       and m.get("git_commit") == POWER_CALC_EXPECTED["source_commit"])
-    rec["citation"] = "SPEC_experiment_B.md S.12; ROADMAP.md S8 2026-08-28 entry"
-    rec["status"] = ("S.12 value, under audit -- the S8-ii power calc sized a paired "
-                     "signed-gap test and may not match the per-method-CI "
-                     "non-overlap criterion (SPEC S.14 O1); not claimed adequately powered")
-    return rec
+        historical = json.loads(POWER_MANIFEST.read_text()).get("power_calc", {})
+    return dict(
+        n_trials=10_000,
+        decision="Strider ruling 2026-09-23: use 10,000 trials per cell; supersedes 1,635",
+        method=("CI non-overlap sizing: n=((1.96*(sigma_G+sigma_M) + "
+                "z_target*sigma_D)/delta)^2; see the saved decision packet"),
+        source="20260923-gibf-power-decision-packet.md §5; Claude session 30b0e266-f149-482c-a532-57f9b769ec23",
+        point_rule="Retain pre-registered observed >=20% threshold; do not claim 80% power at exactly 20% true effect",
+        power_cap="Near 50% per SNR and 25% jointly at a true 20% effect",
+        runtime_estimate="about 5-7 hours; remeasure in a separately seeded smoke test",
+        historical_1635_record=historical,
+        status="fixed selected trial count; execution remains blocked by unresolved pre-run details")
 
 
 def run_config(n_trials, b6a_nsnap, seed, smoke):
@@ -773,8 +1004,7 @@ def _is_under(path, root):
 def parse_args(argv=None):
     p = argparse.ArgumentParser(description=__doc__.split("\n")[0])
     p.add_argument("--n-trials", type=int, default=N_TRIALS_POWERED,
-                   help="trials per cell (default 1635: the S.12 value, under audit -- "
-                        "see SPEC S.14 O1)")
+                   help="trials per cell (default 10000; other n only via --smoke)")
     p.add_argument("--b6a-nsnap", type=int, default=B6A_NSNAP_PINNED,
                    help="B6a n_snap (default 64 = the S8-vii pin; other values "
                         "stamp B6a DESCRIPTIVE)")
@@ -788,7 +1018,8 @@ def parse_args(argv=None):
     return p.parse_args(argv)
 
 
-ALL_ROLES = ("win", "null", "d_axis_win", "d_axis_null", "b6a")
+ALL_ROLES = ("win", "null", "d_axis_win", "d_axis_null", "b6a",
+             "descriptive_b6a_underspecified", "descriptive_forced_k")
 
 
 def resolve_run(args, clean=None):
@@ -801,7 +1032,7 @@ def resolve_run(args, clean=None):
         ever overwrites another run's record).
       * --smoke: SMOKE_SEED; never under results/; any n; --only allowed.
       * Otherwise (MASTER_SEED): the runner must be committed and clean
-        (A3), n_trials must be 1635, the out-dir must be under results/ (the
+        (A3), n_trials must be 10000, the out-dir must be under results/ (the
         blind trials are never computed somewhere unrecorded), and exactly
         one of:
           - the CONFIRMATORY run: default --b6a-nsnap, full plan, no --only;
@@ -833,8 +1064,10 @@ def resolve_run(args, clean=None):
         sys.exit("A3 workflow: commit this runner before a master-seed run "
                  "(working copy differs from HEAD or is untracked)")
     if nondefault_nsnap:
-        return dict(seed=MASTER_SEED, confirmatory=False, roles=("b6a",))
-    return dict(seed=MASTER_SEED, confirmatory=True, roles=ALL_ROLES)
+        return dict(seed=MASTER_SEED, confirmatory=False,
+                    roles=("descriptive_b6a_underspecified",))
+    sys.exit("master-seed run is blocked pending the exact off-grid specification and "
+             "the ruling on whether the descriptive d=1 panel is binding; see SPEC S.14")
 
 
 def main(argv=None):
@@ -903,7 +1136,9 @@ def main(argv=None):
                  b3_reading=b3),
         preregistration=("SPEC_experiment_B.md S.1, S.2-B2, S.2-B6, S.3 (as amended by "
                          "S.11/S.12), S.5, S.6, S.7, S.12, S.13; ROADMAP.md S5-D2, "
-                         "S8-ii..viii; proposed S.14 items P1..P15 + O1 pending ratification"),
+                         "S8-ii..viii; ratified S.14 recovered decisions P1-P15 and "
+                         "peak-scoring rulings; master-seed run remains blocked by "
+                         "the two unresolved pre-run details"),
         adjudication="NOT applied by this run; use --adjudicate-only after review",
         cells=cell_summaries,
         timing_s=timings,
@@ -921,22 +1156,56 @@ def summarize_cell(cell, arrays):
     summ = dict(cell_id=cell.cell_id, role=cell.role,
                 confirmatory=cell.confirmatory,
                 separation_km=round(cell.d * POLE_SPACING_KM, 2),
-                arms={a.key: summarize_arm(arrays[a.key], idx) for a in cell.arms},
+                arms={a.key: summarize_arm(arrays[a.key], idx, cell.cell_id)
+                      for a in cell.arms},
                 khat_mdl=khat_breakdown(arrays["_data"]["khat_mdl"]),
                 khat_mdl_clip_events=int(np.sum(arrays["_data"]["khat_mdl_clipped"])))
     for a in cell.arms:
         summ["arms"][a.key]["use"] = arm_use(cell, a)
-        summ["arms"][a.key]["descriptive"] = arm_use(cell, a) in (
-            "descriptive_reduction_off", "b6a_oracle_reference")
+        summ["arms"][a.key]["descriptive"] = arm_use(cell, a).startswith("descriptive_") or (
+            arm_use(cell, a) == "b6a_oracle_reference")
     if cell.panel_arms:
-        summ["sensitivity_panel"] = sensitivity_panel(cell, arrays)
-    if cell.family == "B6a":
+        panel = sensitivity_panel(cell, arrays)
+        headline_ci = summ["arms"][headline_arm(cell).key]["gap_gibf_minus_mmv"][1]
+        panel_ci = panel["points"][HEADLINE_BAND_INDEX]["gap_ci"]
+        panel["x1_ci_agrees_with_per_cell"] = (
+            _interval_class(headline_ci) == _interval_class(panel_ci))
+        panel["x1_borderline_disagreement"] = not panel["x1_ci_agrees_with_per_cell"]
+        summ["sensitivity_panel"] = panel
+    if cell.family == "B6a128" or (cell.family == "B6a" and cell.confirmatory):
         kh = arrays[Arm("mdl", True, 1.0).key]
-        orc = arrays[Arm("oracle", True, 1.0).key]
-        per_trial, paired = b6a_paired(kh, orc, idx)
-        arrays["b6a_paired"] = per_trial
-        summ["b6a_paired_diff_on"] = paired
-        summ["khat_breakdown_on"] = khat_breakdown(arrays["_data"]["khat_mdl"], kh, orc)
+        summ["khat_breakdown_on"] = khat_breakdown(arrays["_data"]["khat_mdl"], kh)
+        if cell.family == "B6a" and cell.confirmatory:
+            orc = arrays[Arm("oracle", True, 1.0).key]
+            per_trial, paired = b6a_paired(kh, orc, idx)
+            arrays["b6a_paired"] = per_trial
+            summ["b6a_paired_diff_on"] = paired
+            summ["mdl_lookup"] = summarize_lookup(arrays["lookup_mdl"], idx)
+            summ["aic_lookup"] = summarize_lookup(arrays["lookup_aic"], idx)
+            summ["direct_mdl_matches_forced_k_lookup"] = {
+                field: bool(np.array_equal(kh[field], arrays["lookup_mdl"][field]))
+                for field in [f"{prefix}_{method}" for method in METHODS
+                              for prefix in ("dr", "psep")]
+            }
+            summ["forced_k_sweep"] = {
+                k: {method: dict(
+                    dr_mean=float(np.mean(arrays[Arm(f"k{k}", True, 1.0).key][f"dr_{method}"])),
+                    psep_rate=float(np.mean(arrays[Arm(f"k{k}", True, 1.0).key][f"psep_{method}"])))
+                    for method in METHODS}
+                for k in range(1, K_MAX + 1)
+            }
+    if cell.family == "B2" and cell.d == 1:
+        summ["d1_panel_role"] = "descriptive_only; binding status unresolved"
+    elif cell.family == "B6a_forced10":
+        summ["mdl_lookup"] = summarize_lookup(arrays["lookup_mdl"], idx)
+        summ["aic_lookup"] = summarize_lookup(arrays["lookup_aic"], idx)
+        summ["forced_k_sweep"] = {
+            k: {method: dict(
+                dr_mean=float(np.mean(arrays[Arm(f"k{k}", True, 1.0).key][f"dr_{method}"])),
+                psep_rate=float(np.mean(arrays[Arm(f"k{k}", True, 1.0).key][f"psep_{method}"])))
+                for method in METHODS}
+            for k in range(1, K_MAX + 1)
+        }
     return summ
 
 

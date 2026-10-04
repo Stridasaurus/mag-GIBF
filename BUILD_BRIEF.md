@@ -1,4 +1,4 @@
-# SECS-GIBF Viability Test — Build Brief (onboarding, current)
+# SECS-GIBF Viability Test — Build Brief (onboarding, current as of 2026-10-03)
 
 **This is the current, self-consistent onboarding brief for the `viability-test/` build.**
 It **replaces** the archived `docs/archive/GIBF_viability_BUILD_BRIEF.md` (June 2026,
@@ -7,8 +7,9 @@ It does **not** re-derive the full method — it reconciles the four live source
 (`ROADMAP.md`, `viability-test/SPEC_experiment_B.md`, `EXPERIMENT_CARD_A.md`, and the built
 `viability-test/transfer.py`) into one place and points to them for depth.
 
-Written 2026-07-12 (Fable session), reconciling: SPEC §S.9 supersessions · the Gate-V pins ·
-the audit A1 amendments · the `transfer.py` DF-only adapter contract.
+Originally written 2026-07-12 and refreshed 2026-10-03. Current project state is reconciled
+against ROADMAP §9 and SPEC §S.14; the Gate-V pins, Audit-A1 amendments, and `transfer.py`
+DF-only adapter contract remain as recorded below.
 
 ## Reading order (authority)
 
@@ -51,28 +52,21 @@ Plus, settled since the archived brief was written:
 
 ---
 
-## Current state (what is built / passed / frozen / next)
+## Current state (refreshed 2026-10-03)
 
 | Item | State | Evidence |
 |---|---|---|
-| Rename (Card C→A; old Card A→Gate V; B5 retired; B6 added) | done 2026-07-01 | README rename map; ROADMAP §0 |
-| Card A **Tier 1** (FLR κ/φ calibration, threshold pinning) | **complete** 2026-07-06 | `results/A_flr_coherence/`; ROADMAP §8 |
-| **Gate V** (secsy CF-pair probe + DF validation) | **PASSED** 2026-07-07 | `results/V_kernel_validation/`; ROADMAP §8 |
-| Repository audit (14/14 numeric checks; 4 semantic-drift defects D1–D4) | done 2026-07-07 | ROADMAP §8 |
-| Audit **A1** (κ=top-1; permutation floor test; gap-conditioning; \|ρ\|=0.95 co-primary pin) | **signed off** 2026-07-10 | ROADMAP §8 |
-| Audit **A2** (per-trial floor distributions, bit-exact replay) + **A3** (provenance workflow) | **complete** 2026-07-10 | `floor_distributions.py`; ROADMAP §8 |
-| **`transfer.py`** (DF-only real-`A` adapter, pytest-gated) | **built** 2026-07-10 | `viability-test/transfer.py`; `tests/test_transfer.py` |
-| Experiment-B design SPEC (B1–B4, B6) | **frozen** except 2 Card-A slots | `SPEC_experiment_B.md` |
-| **Card A Tier 2** (the H-A hinge adjudication) | **NEXT — handed to Shane Gilbertie** (see below) | ROADMAP §9 |
-| Experiment B (B1 pilot → powered B2/B6, B3/B4 alongside) | blocked behind Tier 2 | SPEC §S.7 sequencing gate |
+| Card A Tier 1 / Tier 2; Gate V; `transfer.py` | complete | `results/`; ROADMAP §8 |
+| Experiment-B pilot stack (B1, B3, d=3/d=8/d=2 pilots) | completed; old results preserved | ROADMAP §8; SPEC §§S.11–S.12 |
+| Powered d=2 design | settled except two pre-run details | SPEC §S.14; direct Claude decision sessions cited there |
+| Selected trial count | 10,000 per cell; historical 1,635 superseded | SPEC §S.14; `run_experiment_B2B6_powered_d2.py` |
+| Powered runner / decision-state repair | implemented on `b2b6-powered-runner-d2`; confirmatory run not executed | candidate runner, tests, and current branch |
+| Remaining scientific choices | exact off-grid offset/cells; whether the d=1 panel binds a d-min verdict | SPEC §S.14 |
 
-**Sequencing gate:** ~~Gate V~~ → ~~`transfer.py`~~ → **Card A Tier 2** → fill SPEC Card-A slots
-→ Experiment B → `DECISION_MEMO.md` → paper. Timeline: 11 weeks, build + paper in parallel.
-
-> **Do NOT execute Card A Tier 2 from this brief.** Its design is pinned and its execution is
-> **handed off to Shane Gilbertie** (branch+PR workflow; four design params + verdict-aggregation
-> rule pre-registered). Strider reviews the PR when it lands (verdict + SPEC §S.7 slot fill).
-> Experiment B does not start before that review. This brief is onboarding, not the run.
+The master-seed run is blocked until those two details are resolved. No confirmatory
+result exists. The fresh next action is to resolve the two details, then review/land the
+runner before any master-seed execution. The old Shane-Gilbertie Card-A assignment in
+`handoff.md` is historical.
 
 ---
 
@@ -112,7 +106,7 @@ at high-latitude geometry (a documented constant, not a silent pass).
 
 ---
 
-## Audit A1 amendments — the pinned pre-registration for Card A Tier 2 (do not re-open)
+## Audit A1 amendments — ratified design and completed Tier-2 work (do not re-open)
 
 Signed off 2026-07-10 (ROADMAP §8), resolving audit-D1/D3/D4. Carry these verbatim into Tier 2:
 
@@ -158,39 +152,24 @@ B2 **φ=90°, snr∈{5,10} dB, d=3, N=64**; loss rule mirrored at **φ∈{0°,18
 
 ---
 
-## AIC→MDL switch — code-check verdict (2026-07-12)
+## AIC→MDL implementation status
 
-**Verdict: decided at the design layer, not yet implemented; no code conflict.** The switch
-flagged in `[[wax-kailath-1985-notes]]` (MDL is consistent, AIC over-estimates source count even
-asymptotically — Wax & Kailath 1985) is resolved to **MDL-primary** across ROADMAP §8-viii and
-SPEC §S.4/§S.8/§S.9-4: `estimate_n_sources(eigvals, n_snapshots, criterion="mdl")` defaults to
-MDL; `criterion` stays an argument so B3 scores **both** AIC and MDL; `K̂` clipped to `[1, 6]`.
-
-Checked against the actual code: **there is no `modeselect.py` and no `estimate_n_sources`
-implementation anywhere in the repo** — Experiment B is unbuilt (blocked behind Card A Tier 2), so
-there is nothing to contradict the decision. (A grep for `AIC|MDL|estimate_n_sources|criterion`
-over the codebase returns a single incidental hit — the word "criterion" in a comment in
-`floor_distributions.py` about the gap-conditioning criterion, unrelated to mode selection.) The
-only extant mode-selection artifact is `legacy_mhd_notebook.ipynb`'s MDL-13 cutoff, which is
-consistent prior practice. **Action:** when `modeselect.py` is written, it must default
-`criterion="mdl"` per SPEC §S.4; no change is needed now.
+MDL remains the solver-fed mode-count estimator, clipped to `[1, 6]`; B3 records both MDL and
+AIC. The current powered runner records AIC per trial and derives its descriptive AIC-fed
+comparison by lookup over the fixed-K=1…6 runs. It does not add an AIC-fed solver arm. See SPEC
+§S.14 P13 and `viability-test/run_experiment_B2B6_powered_d2.py`.
 
 ---
 
-## What NOT to do (traps)
+## Current run guardrails
 
-- **Do NOT run Card A Tier 2** — handed to Shane Gilbertie (above). This brief onboards; it is not
-  the run.
-- **Do NOT over-build.** Only Gate V, Card A, and Experiment B1–B4/B6. No robustness sweeps beyond
-  B6, no real-data demo (synthetic-only paper confirmed), no CF claims of any kind (theorem cited;
-  Stub X′ parked).
-- **Do NOT trust the archived brief's stale sections** (the §S.9 list above; its pre-rename
-  terminology throughout).
-- **Do NOT introduce a complex `A`** outside Experiment B4. **Do NOT build the CSM from real time
-  samples.** **Do NOT drop the `√λ`.** **Do NOT feed GIBF and MMV different inputs.**
-- **Do NOT re-open the audit A1 pre-registrations** (κ=top-1, the permutation test + α, the
-  gap-conditioning rule, the `|ρ|=0.95` pin) — they are signed off before any Tier-2 number exists;
-  reopening them post-hoc breaks the pre-registration discipline the whole project rests on.
+- Do not run the powered/master-seed experiment while either SPEC §S.14 pre-run detail remains
+  unresolved: the exact off-grid offset/cells, and whether the descriptive d=1 regularization
+  panel is binding when d-min decides a verdict.
+- Do not alter original result artifacts when applying the separately recorded peak rescoring.
+- Preserve the two core invariants above: real DF-only `A` outside B4, complex frequency-bin
+  phasor snapshots, eigenmodes weighted by `√λ`, and identical GIBF/MMV inputs.
+- Do not reopen the ratified Card-A/Audit-A1 rulings or treat old 1,635-trial text as current.
 
 ---
 

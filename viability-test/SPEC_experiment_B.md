@@ -214,7 +214,7 @@ The 2026-08-28 n_trials = 1635 recorded in §S.12 is historical: it came from a 
 
 The powered runner now implements the settled decisions above. Its 33-cell plan contains the full B2 `d` axis for the win phase and both null phases, the confirmatory B6a `n_snap=64` cell, a descriptive `n_snap=128` comparison, and the separate descriptive 10 dB fixed-K sweep. Confirmatory cells use same-trial OFF twins; no-early-exit arms apply only to the six B2 `d=2` cells; the d=1 panel is descriptive; the under-specified B6a row has only its MDL reduction-ON arm. Stop reasons and iterations are recorded for each GIBF mode and MMV solve. Threshold scores, found-source error sums/counts, and conditional-correct-trial intervals are recorded descriptively. A6 rescore outputs remain separate from original artifacts.
 
-The implementation and its current-state documentation are on the `b2b6-powered-runner-d2` branch. No master-seed/confirmatory run has occurred. The run guard intentionally rejects it until the two unresolved details below are decided. The older §S.12 `n_trials=1635` and §S.13 note about adding iteration logging to future runners are historical; this runner uses the selected 10,000 trials and records iteration/stop data.
+The implementation and its current-state documentation are on the `b2b6-powered-runner-d2` branch. No master-seed/confirmatory run has occurred. The run guard intentionally rejects it until the pre-run obligations below are complete. The older §S.12 `n_trials=1635` and §S.13 note about adding iteration logging to future runners are historical; this runner uses the selected 10,000 trials and records iteration/stop data.
 
 ### Pre-run details and obligations (reconciled 2026-10-05 against the primary session record)
 

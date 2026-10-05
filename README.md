@@ -47,14 +47,14 @@ names. `ROADMAP.md` §0 has the full rename map; the short version:
   lookup, and miss/error decomposition. The 64-snapshot B6a row is intentionally
   overspecified; the 128-snapshot row is descriptive and under-specified.
 - **Current implementation state:** the powered runner and its SPEC/status repairs are
-  on the `b2b6-powered-runner-d2` candidate branch. The confirmatory/master-seed run
-  has **not** been executed and is blocked by two unresolved design details in SPEC
-  §S.14: the exact off-grid offset/cells and whether the descriptive `d=1` regularization
-  panel binds a d-min verdict. Do not infer either choice.
-- **Next valid action:** finish review and land the candidate, then resolve those two
-  pre-run details. Only after the design is complete and the runner is committed clean
-  may the master-seed experiment run. The old Shane-Gilbertie Card-A assignment in
-  `handoff.md` is historical.
+  merged (PR #6, `37b4e21`). The confirmatory/master-seed run has **not** been executed.
+  Per the 2026-10-05 reconciliation (SPEC §S.14, ROADMAP §8/§9): the off-grid row is ruled
+  but not yet implemented, the `d=1` panel is descriptive, and two of Strider's pre-run
+  requirements, an airtightness review of all rulings and an agent-chosen-values sweep,
+  are still open.
+- **Next valid action:** implement the off-grid row, do those two reviews, then confirm the
+  runner is committed clean and run the master seed. The old Shane-Gilbertie Card-A
+  assignment in `handoff.md` is historical.
 
 Full experiment-by-experiment detail: `ROADMAP.md` §8 (append-only log) and §9
 (status). Do not re-derive from this summary — it is intentionally short.

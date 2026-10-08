@@ -64,31 +64,6 @@ the submodule's own scripts. Never report tests green without running them in-se
   do not improvise a pre-registered value. That is the exact semantic-drift failure the
   2026-07-07 repository audit found and fixed.
 
-## Git and execution-workspace safety
-
-This repository contains active research whose unpublished state may exist only in a
-local checkout. Protect that state before optimizing agent isolation.
-
-- Before any Git mutation, fetch the remote and inspect `git status`, the current branch
-  and upstream relation, and `git worktree list --porcelain`. Preserve unrelated human
-  changes; a dirty or diverged checkout is evidence to understand, not a reason to hide
-  the problem in another worktree.
-- **Do not create a branch, worktree, clone, or other execution workspace merely to get
-  away from existing state.** If isolation is genuinely required, record its purpose,
-  starting ref/commit, and intended retirement condition before using it.
-- If Claude/Codex or another provider starts the session inside an automatically-created
-  worktree, treat that worktree as runtime state, not as the authoritative project
-  checkout. Verify its base and freshness before changing files. Never compensate for a
-  stale filesystem by silently reasoning from a different Git ref while continuing to
-  mutate the stale checkout.
-- Never `reset --hard`, `clean`, drop a stash, rebase over, force-remove, or otherwise
-  destroy a checkout/worktree/branch containing unknown or unrelated work. Preserve and
-  independently verify every unique commit and meaningful uncommitted artifact first;
-  destructive cleanup requires authority for the exact named target.
-- A temporary execution workspace is part of the task lifecycle. Work is not complete
-  until its useful state is integrated or durably preserved, the result is verified, and
-  the temporary workspace is retired or explicitly handed to a new owner.
-
 ## Collaboration
 
 Card A Tier 2 was executed by **Shane Gilbertie** on a branch+PR (`tier2-flr-coherence`).

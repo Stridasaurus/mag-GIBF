@@ -52,21 +52,23 @@ Plus, settled since the archived brief was written:
 
 ---
 
-## Current state (refreshed 2026-10-03)
+## Current state (refreshed 2026-10-05)
 
 | Item | State | Evidence |
 |---|---|---|
 | Card A Tier 1 / Tier 2; Gate V; `transfer.py` | complete | `results/`; ROADMAP §8 |
 | Experiment-B pilot stack (B1, B3, d=3/d=8/d=2 pilots) | completed; old results preserved | ROADMAP §8; SPEC §§S.11–S.12 |
-| Powered d=2 design | settled except two pre-run details | SPEC §S.14; direct Claude decision sessions cited there |
+| Powered d=2 design | settled; pre-run obligations below | SPEC §S.14 ("Pre-run details and obligations"); saved decision sessions cited there |
 | Selected trial count | 10,000 per cell; historical 1,635 superseded | SPEC §S.14; `run_experiment_B2B6_powered_d2.py` |
-| Powered runner / decision-state repair | implemented on `b2b6-powered-runner-d2`; confirmatory run not executed | candidate runner, tests, and current branch |
-| Remaining scientific choices | exact off-grid offset/cells; whether the d=1 panel binds a d-min verdict | SPEC §S.14 |
+| Powered runner | merged to `main` (PR #6, `37b4e21`); confirmatory run not executed | `viability-test/run_experiment_B2B6_powered_d2.py` |
+| Off-grid row (A4) | ruled (descriptive, never adjudicated); not implemented | SPEC §S.14; ROADMAP §8 2026-10-05 |
+| d=1 regularization panel | descriptive (binding never ruled; input to the airtightness review) | SPEC §S.14 P9 |
+| Airtightness review; agent-chosen-values sweep | required by Strider before the run; not done | SPEC §S.14; ROADMAP §9 |
 
-The master-seed run is blocked until those two details are resolved. No confirmatory
-result exists. The fresh next action is to resolve the two details, then review/land the
-runner before any master-seed execution. The old Shane-Gilbertie Card-A assignment in
-`handoff.md` is historical.
+The master-seed run is blocked until the off-grid row is implemented and the airtightness
+review and agent-chosen-values sweep are done and recorded, after which the runner must be
+committed clean and smoke-tested under the separate smoke seed. No confirmatory result
+exists. The old Shane-Gilbertie Card-A assignment in `handoff.md` is historical.
 
 ---
 
@@ -163,9 +165,9 @@ comparison by lookup over the fixed-K=1…6 runs. It does not add an AIC-fed sol
 
 ## Current run guardrails
 
-- Do not run the powered/master-seed experiment while either SPEC §S.14 pre-run detail remains
-  unresolved: the exact off-grid offset/cells, and whether the descriptive d=1 regularization
-  panel is binding when d-min decides a verdict.
+- Do not run the powered/master-seed experiment until the SPEC §S.14 pre-run obligations are
+  complete: off-grid row implemented, airtightness review and agent-chosen-values sweep recorded
+  (the descriptive d=1 panel's binding status is an input to that review).
 - Do not alter original result artifacts when applying the separately recorded peak rescoring.
 - Preserve the two core invariants above: real DF-only `A` outside B4, complex frequency-bin
   phasor snapshots, eigenmodes weighted by `√λ`, and identical GIBF/MMV inputs.

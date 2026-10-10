@@ -35,7 +35,7 @@ names. `ROADMAP.md` §0 has the full rename map; the short version:
 
 ## Where the project stands right now
 
-*(Refreshed 2026-10-03. `ROADMAP.md` §9 is the current frontier; `ROADMAP.md` §8 and
+*(Refreshed 2026-10-05. `ROADMAP.md` §9 is the current frontier; `ROADMAP.md` §8 and
 `viability-test/SPEC_experiment_B.md` §S.14 preserve the decision record.)*
 
 - **Validation Gate V, Card A Tier 1 and Tier 2, `transfer.py`, and the Experiment-B

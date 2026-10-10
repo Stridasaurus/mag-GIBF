@@ -1,8 +1,8 @@
 # Handoff — Experiment B kickoff: solver stack + B1 (cost/pilot/floor) + B3 (mode-selection surfaces)
 
 > **Status 2026-10-03 — completed and superseded.** This historical kickoff assignment was
-> discharged. Do not rerun it as a current task. The powered d=2 runner and its two unresolved
-> pre-run design details are recorded in `README.md`, `BUILD_BRIEF.md`, `ROADMAP.md` §9, and
+> discharged. Do not rerun it as a current task. The powered d=2 runner and its remaining pre-run
+> obligations are recorded in `README.md`, `BUILD_BRIEF.md`, `ROADMAP.md` §9, and
 > `viability-test/SPEC_experiment_B.md` §S.14.
 
 > **Assigned to:** a standard-tier Claude Code session (Strider's call, confirmed 2026-07-20).

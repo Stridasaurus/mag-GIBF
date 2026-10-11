@@ -50,10 +50,10 @@ names. `ROADMAP.md` §0 has the full rename map; the short version:
   merged (PR #6, `37b4e21`). The confirmatory/master-seed run has **not** been executed.
   Per the 2026-10-05 reconciliation and the 2026-10-11 off-grid specification (SPEC §S.14,
   ROADMAP §8/§9): the off-grid row is specified and implemented (descriptive, never
-  adjudicated), the `d=1` panel is descriptive, and two of Strider's pre-run requirements,
-  an airtightness review of all rulings and an agent-chosen-values sweep, are still open.
-- **Next valid action:** do those two reviews and record them, then confirm the runner is
-  committed clean, smoke-test, and run the master seed. The old Shane-Gilbertie Card-A
+  adjudicated), the `d=1` panel is descriptive, and Strider's two pre-run requirements,
+  an airtightness review and an agent-chosen-values sweep, are recorded (SPEC §S.14).
+- **Next valid action:** Strider's go-ahead, then confirm the runner is committed clean,
+  smoke-test, and run the master seed. The old Shane-Gilbertie Card-A
   assignment in `handoff.md` is historical.
 
 Full experiment-by-experiment detail: `ROADMAP.md` §8 (append-only log) and §9

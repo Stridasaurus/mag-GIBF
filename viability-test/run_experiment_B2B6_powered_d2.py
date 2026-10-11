@@ -1359,6 +1359,14 @@ def summarize_cell(cell, arrays):
     if cell.family == "B2" and cell.d == 1:
         summ["d1_panel_role"] = ("descriptive_only (SPEC S.14 P9 item 4); binding was "
                                   "never ruled")
+        # The d_min arm reads P_sep(d=1) >= 0.8, not the Delta r-bar gap the
+        # panel's fragility rule reads, so report P_sep across the band too.
+        summ["d1_psep_by_eps"] = {
+            f"x{a.eps_mult:g}": {m: summ["arms"][a.key][f"psep_{m}"][0] for m in SPARSE}
+            for a in cell.panel_arms}
+        summ["d1_psep_meets_threshold_by_eps"] = {
+            eps: {m: bool(p >= PSEP_THRESHOLD) for m, p in by_m.items()}
+            for eps, by_m in summ["d1_psep_by_eps"].items()}
     elif cell.family == "B6a_forced10":
         summ["mdl_lookup"] = summarize_lookup(arrays["lookup_mdl"], idx)
         summ["aic_lookup"] = summarize_lookup(arrays["lookup_aic"], idx)

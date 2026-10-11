@@ -844,6 +844,10 @@ def test_d1_cells_carry_the_descriptive_panel(tm):
     panel = summ["sensitivity_panel"]
     assert panel["descriptive"] is True and len(panel["points"]) == 5
     assert "never ruled" in summ["d1_panel_role"]
+    assert set(summ["d1_psep_by_eps"]) == {f"x{m:g}" for m in R.EPS_BAND}
+    assert all(set(v) == set(R.SPARSE) for v in summ["d1_psep_by_eps"].values())
+    assert all(isinstance(b, bool) for v in summ["d1_psep_meets_threshold_by_eps"].values()
+               for b in v.values())
     # the descriptive panel arms are labelled descriptive; the headline arm is not
     flags = {k: a["descriptive"] for k, a in summ["arms"].items()}
     assert flags[R.headline_arm(d1[0]).key] is False

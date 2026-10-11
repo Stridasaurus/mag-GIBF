@@ -48,7 +48,11 @@ Pins implemented here (every value is cited; none is chosen in this file):
     verdict is applied as a separate, deliberate step after review.
 
 Recovered decisions are recorded in SPEC S.14 with provenance to the saved
-Strider/Claude decision sessions. Two pre-run details remain open there.
+Strider/Claude decision sessions. The pre-run obligations listed there
+(airtightness review, agent-chosen-values sweep) gate the master-seed run via
+PRE_RUN_GATES_COMPLETE. The off-grid row (A4) is specified there and
+implemented here as family B2offgrid: six descriptive cells, a per-trial rigid
+offset of the pair, paired with the on-grid sibling's random draws.
 
 MASTER SEED: generated with Python `secrets` in a separate process that had no
 access to any result (see MASTER_SEED_PROVENANCE), committed before any
@@ -74,7 +78,8 @@ from metrics import _matched_assignment, delta_r_bar, find_peaks_2d, p_sep
 from modeselect import K_MAX, estimate_n_sources
 from simulate import (GRID_SHAPE, POLE_SPACING_KM, build_array_and_grid,
                       build_csm, eigendecompose, eigenmodes, geometry_record,
-                      row_center_cols, simulate_snapshots)
+                      grid_rc, offgrid_columns, row_center_cols,
+                      simulate_snapshots)
 from solvers import FAIRNESS_CONFIG, solve_all, with_reduction
 
 # ----------------------------------------------------------------- seeds ---
@@ -109,6 +114,20 @@ ABS_RHO = 0.85                      # SLOT-1 midpoint, SPEC S.7
 K_ORACLE = 2
 
 N_TRIALS_POWERED = 10_000           # Strider ruling 2026-09-23; SPEC S.14
+
+# The master-seed run stays blocked until the SPEC S.14 pre-run obligations
+# (airtightness review; agent-chosen-values sweep) are recorded complete in
+# ROADMAP S8. Flipping this is a deliberate, committed act.
+PRE_RUN_GATES_COMPLETE = False
+
+# Off-grid row (A4), SPEC S.14 "Off-grid row (A4): specification".
+OFFGRID_FAMILY = "B2offgrid"
+OFFGRID_ROLE = "descriptive_offgrid"
+OFFGRID_HALF_RANGE = 0.5            # u, v ~ U[-0.5, +0.5) in pole steps
+OFFGRID_R_BINS = (("r_0_0.25", 0.0, 0.25), ("r_0.25_0.5", 0.25, 0.5),
+                  ("r_0.5_max", 0.5, 1.0))
+OFFGRID_AXIS_BINS = (("0_0.25", 0.0, 0.25), ("0.25_0.5", 0.25, 0.5000001))
+OFFGRID_MAX_REDRAW = 10
 EPS_BAND = (0.1, 0.3, 1.0, 3.0, 10.0)   # SPEC S.6(5); x1 is the headline
 HEADLINE_BAND_INDEX = EPS_BAND.index(1.0)
 N_BOOT = 2000                       # SPEC S.1 CI convention
@@ -132,6 +151,13 @@ B3_MANIFEST = RESULTS_ROOT / "B_viability" / "manifest.json"
 POWER_MANIFEST = RESULTS_ROOT / "B_viability" / "confirmatory_d2_manifest.json"
 
 # ------------------------------------------------------------ plan types ---
+
+def _cell_id(family, phi_deg, snr_db, d, n_snap):
+    # Seed-bearing identity. Excludes reduction and eps (they are solver
+    # arms, not data), so ON/OFF pairs and panel points share trials.
+    return (f"{family}|phi={phi_deg:g}|snr={snr_db:g}"
+            f"|d={d}|nsnap={n_snap}")
+
 
 @dataclasses.dataclass(frozen=True)
 class Arm:
@@ -163,10 +189,18 @@ class DataCell:
 
     @property
     def cell_id(self):
-        # Seed-bearing identity. Excludes reduction and eps (they are solver
-        # arms, not data), so ON/OFF pairs and panel points share trials.
-        return (f"{self.family}|phi={self.phi_deg:g}|snr={self.snr_db:g}"
-                f"|d={self.d}|nsnap={self.n_snap}")
+        return _cell_id(self.family, self.phi_deg, self.snr_db, self.d,
+                        self.n_snap)
+
+    @property
+    def data_cell_id(self):
+        """Key of the per-trial data draws. An off-grid cell is paired with
+        its on-grid sibling (SPEC S.14, off-grid specification item 5), so it
+        shares the sibling's id; every other cell is its own key."""
+        if self.family == OFFGRID_FAMILY:
+            return _cell_id("B2", self.phi_deg, self.snr_db, self.d,
+                            self.n_snap)
+        return self.cell_id
 
     @property
     def file_stem(self):
@@ -182,7 +216,8 @@ class DataCell:
     @property
     def panel_arms(self):
         """The S.6(5) band arms in band order, or () if not a panel cell."""
-        if not self.confirmatory:
+        # The d=1 B2 cells carry the descriptive panel (SPEC S.14 P9 item 4).
+        if not (self.confirmatory or (self.family == "B2" and self.d == 1)):
             return ()
         k = "mdl" if self.family == "B6a" else "oracle"
         wanted = [Arm(k, True, m) for m in EPS_BAND]
@@ -208,7 +243,10 @@ def arm_use(cell, arm):
                                    second rule arm, and B6a's K-hat arm)
       sensitivity_panel          — S.6(5) band point != x1 (fragility input)
       descriptive_reduction_off  — S.6(2) OFF pair, never adjudicated
-      b6a_oracle_reference       — S.2-B6 paired oracle-K reference arm"""
+      b6a_oracle_reference       — S.2-B6 paired oracle-K reference arm
+      descriptive_offgrid        — A4 off-grid row (its only arm)"""
+    if cell.family == OFFGRID_FAMILY:
+        return "descriptive_offgrid"
     if cell.family == "B6a128" and arm == headline_arm(cell):
         return "descriptive_under_specified_b6a"
     if cell.role == "descriptive_b6a_underspecified" and arm == headline_arm(cell):
@@ -262,6 +300,11 @@ def build_plan(b6a_nsnap=B6A_NSNAP_PINNED):
         cells.append(DataCell("B6a_forced10", PHI_WIN_DEG, 10.0, D_CONFIRM, N_SNAP,
                               "descriptive_forced_k",
                               tuple(Arm(f"k{k}", True, 1.0) for k in range(1, K_MAX + 1))))
+        # A4: six descriptive off-grid cells, paired with the d=2 B2 siblings.
+        for phi in (PHI_WIN_DEG,) + PHI_NULL_DEGS:
+            for snr in SNR_PAIR:
+                cells.append(DataCell(OFFGRID_FAMILY, phi, snr, D_CONFIRM, N_SNAP,
+                                      OFFGRID_ROLE, (Arm("oracle", True, 1.0),)))
     else:
         cells.append(DataCell("B6a", PHI_WIN_DEG, B6A_SNR_DB, D_CONFIRM, b6a_nsnap,
                               "descriptive_b6a_underspecified",
@@ -282,6 +325,13 @@ def trial_rng(seed, cell_id, trial):
     return np.random.default_rng([int(seed), _seed_component(cell_id), int(trial)])
 
 
+def offgrid_rng(seed, data_cell_id, trial):
+    """Own stream for the off-grid offsets, keyed by the on-grid sibling and
+    the trial. Never touches the data stream (SPEC S.14, item 5)."""
+    return np.random.default_rng([int(seed), _seed_component("offgrid-offset"),
+                                  _seed_component(data_cell_id), int(trial)])
+
+
 def boot_rng(cell_id, band_index=None):
     """S.1: bootstrap 'seeded from the cell id'; S.6(5): panel CIs 'seeded from
     (cell id, band index)'. Master seed deliberately NOT included (literal
@@ -298,15 +348,45 @@ def boot_indices(n, rng, n_boot=N_BOOT):
 
 # --------------------------------------------------------- data + solve ----
 
-def generate_trial(tm, cell, seed, trial):
+def generate_trial(tm, cell, seed, trial, offset=None):
     """Everything that does not depend on the solver: X, S, eigendecomposition,
-    MDL/AIC K-hat. Called ONCE per (cell, trial); every arm consumes it."""
+    MDL/AIC K-hat. Called ONCE per (cell, trial); every arm consumes it.
+
+    An off-grid cell (family B2offgrid) draws the same source phasors and noise
+    as its on-grid sibling (`cell.data_cell_id`) and moves the pair rigidly by
+    a per-trial offset (u rows north, v columns east) drawn from its own
+    stream; `offset` overrides the draw (tests only)."""
     idx_a, idx_b = row_center_cols(cell.d)
     rho = ABS_RHO * np.exp(1j * np.deg2rad(cell.phi_deg))
-    rng = trial_rng(seed, cell.cell_id, trial)
+    rng = trial_rng(seed, cell.data_cell_id, trial)
+    offset_used = None
+    if cell.family == OFFGRID_FAMILY:
+        if offset is not None:
+            u, v = float(offset[0]), float(offset[1])
+            A_active = offgrid_columns(tm, (idx_a, idx_b), u, v)
+        else:
+            orng = offgrid_rng(seed, cell.data_cell_id, trial)
+            for _ in range(OFFGRID_MAX_REDRAW):
+                u, v = (float(x) for x in orng.uniform(
+                    -OFFGRID_HALF_RANGE, OFFGRID_HALF_RANGE, size=2))
+                try:      # a station-pole coincidence is a measure-zero redraw
+                    A_active = offgrid_columns(tm, (idx_a, idx_b), u, v)
+                    break
+                except ValueError:
+                    continue
+            else:
+                raise RuntimeError("off-grid offset: repeated coincidence")
+        row, col_a = grid_rc(idx_a)
+        _, col_b = grid_rc(idx_b)
+        true_cells = [(row + u, col_a + v), (row + u, col_b + v)]
+        offset_used = (u, v)
+    else:
+        A_active = None
+        true_cells = [np.unravel_index(idx_a, GRID_SHAPE),
+                      np.unravel_index(idx_b, GRID_SHAPE)]
     X, _ = simulate_snapshots(tm, [idx_a, idx_b], [1.0, 1.0], rng,
                               n_snap=cell.n_snap, snr_db=cell.snr_db,
-                              coherence=rho)
+                              coherence=rho, A_active=A_active)
     S = build_csm(X)
     lam, U = eigendecompose(S)
     k_mdl, _, mdl_arr, clipped = estimate_n_sources(lam, cell.n_snap, "mdl")
@@ -316,8 +396,7 @@ def generate_trial(tm, cell, seed, trial):
     return dict(X=X, lam=lam, V=V, khat_mdl=int(k_mdl),
                 khat_mdl_raw_argmin=int(np.argmin(mdl_arr)),
                 khat_mdl_clipped=bool(clipped), khat_aic=int(k_aic),
-                true_cells=[np.unravel_index(idx_a, GRID_SHAPE),
-                            np.unravel_index(idx_b, GRID_SHAPE)])
+                true_cells=true_cells, offset=offset_used)
 
 
 def arm_config(arm):
@@ -378,6 +457,9 @@ def run_data_cell(tm, cell, n_trials, seed, solve_fn=solve_all, on_trial=None):
     data = {k: np.empty(n_trials, dtype=int) for k in
             ("khat_mdl", "khat_mdl_raw_argmin", "khat_aic")}
     data["khat_mdl_clipped"] = np.empty(n_trials, dtype=bool)
+    if cell.family == OFFGRID_FAMILY:
+        data["offset_u"] = np.empty(n_trials)
+        data["offset_v"] = np.empty(n_trials)
     data["lam_tracenorm_top8"] = np.empty((n_trials, 8))
     out = {}
     for a in arms:
@@ -423,6 +505,8 @@ def run_data_cell(tm, cell, n_trials, seed, solve_fn=solve_all, on_trial=None):
             data[k][t] = tr[k]
         lam = tr["lam"]
         data["lam_tracenorm_top8"][t] = (lam * 2.0 / lam.sum())[:8]
+        if tr["offset"] is not None:
+            data["offset_u"][t], data["offset_v"][t] = tr["offset"]
         for a in arms:
             t1 = time.perf_counter()
             V = tr["V"][a.k_source]
@@ -608,6 +692,69 @@ def summarize_arm(rec, idx, cell_id="summary"):
             or s["stop_reason_mmv"]["max_iter"]["count"])
     s["n_trials"] = int(len(rec["dr_gibf"]))
     return s
+
+
+def _in_bin(x, lo, hi):
+    return (x >= lo) & (x < hi)
+
+
+def offgrid_summary(cell, arrays, sibling_rec):
+    """Pre-specified reporting for the off-grid row (SPEC S.14 off-grid
+    specification, item 8). Descriptive; never adjudicated.
+
+    `sibling_rec` is the headline arm of the paired on-grid d=2 cell. Returns
+    the paired off-minus-on contrast, the per-trial outcome transitions, and
+    results in offset-magnitude and per-axis bins fixed in advance."""
+    data = arrays["_data"]
+    u, v = data["offset_u"], data["offset_v"]
+    rec = arrays[headline_arm(cell).key]
+    n = len(u)
+    r = np.hypot(u, v)
+    idx = boot_indices(n, boot_rng(cell.cell_id))
+    on, off = sibling_rec, rec
+    diffs = {}
+    for m in METHODS:
+        for metric in ("dr", "psep", "miss"):
+            diffs[f"{metric}_{m}"] = (np.asarray(off[f"{metric}_{m}"], dtype=float)
+                                      - np.asarray(on[f"{metric}_{m}"], dtype=float))
+    gap_off = np.asarray(off["dr_gibf"], dtype=float) - np.asarray(off["dr_mmv"], dtype=float)
+    gap_diff = gap_off - (np.asarray(on["dr_gibf"], dtype=float)
+                          - np.asarray(on["dr_mmv"], dtype=float))
+    out = dict(sibling=cell.data_cell_id, n_trials=int(n), descriptive=True,
+               offset_u_mean=float(np.mean(u)), offset_v_mean=float(np.mean(v)),
+               contrast_off_minus_on={k: mean_ci(x, idx) for k, x in diffs.items()},
+               contrast_gap_gibf_minus_mmv=mean_ci(gap_diff, idx))
+    out["transitions_on_to_off"] = {
+        m: {f"{a}->{b}": int(np.sum((np.asarray(on[f"outcome_{m}"]) == a)
+                                    & (np.asarray(off[f"outcome_{m}"]) == b)))
+            for a in ("correct", "miss", "mislocated")
+            for b in ("correct", "miss", "mislocated")}
+        for m in METHODS}
+
+    def block(mask, tag):
+        blk = dict(n=int(np.sum(mask)))
+        for m in METHODS:
+            for metric in ("dr", "psep", "miss"):
+                blk[f"off_{metric}_{m}"] = conditional_mean_ci(
+                    np.asarray(off[f"{metric}_{m}"], dtype=float), mask,
+                    [cell.cell_id, tag, m, metric])
+                blk[f"contrast_{metric}_{m}"] = conditional_mean_ci(
+                    diffs[f"{metric}_{m}"], mask, [cell.cell_id, tag, m, metric, "contrast"])
+        blk["off_gap_gibf_minus_mmv"] = conditional_mean_ci(
+            gap_off, mask, [cell.cell_id, tag, "gap"])
+        blk["contrast_gap_gibf_minus_mmv"] = conditional_mean_ci(
+            gap_diff, mask, [cell.cell_id, tag, "gap", "contrast"])
+        return blk
+
+    out["by_offset_magnitude"] = {
+        name: block(_in_bin(r, lo, hi), name) for name, lo, hi in OFFGRID_R_BINS}
+    out["by_axis_north"] = {
+        f"abs_u_{name}": block(_in_bin(np.abs(u), lo, hi), f"u_{name}")
+        for name, lo, hi in OFFGRID_AXIS_BINS}
+    out["by_axis_east"] = {
+        f"abs_v_{name}": block(_in_bin(np.abs(v), lo, hi), f"v_{name}")
+        for name, lo, hi in OFFGRID_AXIS_BINS}
+    return out
 
 
 def khat_breakdown(khat, arm_rec=None, oracle_rec=None):
@@ -971,7 +1118,7 @@ def power_provenance():
         power_cap="Near 50% per SNR and 25% jointly at a true 20% effect",
         runtime_estimate="about 5-7 hours; remeasure in a separately seeded smoke test",
         historical_1635_record=historical,
-        status="fixed selected trial count; execution remains blocked by unresolved pre-run details")
+        status="fixed selected trial count; master-seed execution gated by the SPEC S.14 pre-run obligations")
 
 
 def run_config(n_trials, b6a_nsnap, seed, smoke):
@@ -1019,7 +1166,8 @@ def parse_args(argv=None):
 
 
 ALL_ROLES = ("win", "null", "d_axis_win", "d_axis_null", "b6a",
-             "descriptive_b6a_underspecified", "descriptive_forced_k")
+             "descriptive_b6a_underspecified", "descriptive_forced_k",
+             OFFGRID_ROLE)
 
 
 def resolve_run(args, clean=None):
@@ -1066,8 +1214,11 @@ def resolve_run(args, clean=None):
     if nondefault_nsnap:
         return dict(seed=MASTER_SEED, confirmatory=False,
                     roles=("descriptive_b6a_underspecified",))
-    sys.exit("master-seed run is blocked pending the exact off-grid specification and "
-             "the ruling on whether the descriptive d=1 panel is binding; see SPEC S.14")
+    if not PRE_RUN_GATES_COMPLETE:
+        sys.exit("master-seed run is blocked: the SPEC S.14 pre-run obligations "
+                 "(airtightness review; agent-chosen-values sweep) are not recorded "
+                 "complete in this runner (PRE_RUN_GATES_COMPLETE)")
+    return dict(seed=MASTER_SEED, confirmatory=True, roles=ALL_ROLES)
 
 
 def main(argv=None):
@@ -1099,11 +1250,19 @@ def main(argv=None):
 
     t_start = time.time()
     timings, cell_summaries, csv_rows = {}, {}, []
+    siblings = {}        # headline arm of each on-grid d=2 B2 cell, for the A4 contrast
     for ci, cell in enumerate(plan):
         tc = time.time()
         arrays, timing = run_data_cell(tm, cell, args.n_trials, seed)
         timings[cell.cell_id] = timing
         summ = summarize_cell(cell, arrays)
+        if cell.family == "B2" and cell.d == D_CONFIRM:
+            siblings[cell.cell_id] = arrays[headline_arm(cell).key]
+        if cell.family == OFFGRID_FAMILY:
+            sib = siblings.get(cell.data_cell_id)
+            summ["offgrid"] = (offgrid_summary(cell, arrays, sib) if sib is not None
+                               else dict(contrast="skipped: on-grid sibling not run "
+                                                  "in this invocation"))
         cell_summaries[cell.cell_id] = summ
         save_cell(out_dir, cell, arrays, summ)
         for arm_key, s in summ["arms"].items():
@@ -1137,8 +1296,9 @@ def main(argv=None):
         preregistration=("SPEC_experiment_B.md S.1, S.2-B2, S.2-B6, S.3 (as amended by "
                          "S.11/S.12), S.5, S.6, S.7, S.12, S.13; ROADMAP.md S5-D2, "
                          "S8-ii..viii; ratified S.14 recovered decisions P1-P15 and "
-                         "peak-scoring rulings; master-seed run remains blocked by "
-                         "the two unresolved pre-run details"),
+                         "peak-scoring rulings; off-grid row per SPEC S.14 "
+                         "specification (2026-10-11); master-seed run gated by the "
+                         "SPEC S.14 pre-run obligations"),
         adjudication="NOT applied by this run; use --adjudicate-only after review",
         cells=cell_summaries,
         timing_s=timings,
@@ -1163,7 +1323,8 @@ def summarize_cell(cell, arrays):
     for a in cell.arms:
         summ["arms"][a.key]["use"] = arm_use(cell, a)
         summ["arms"][a.key]["descriptive"] = arm_use(cell, a).startswith("descriptive_") or (
-            arm_use(cell, a) == "b6a_oracle_reference")
+            arm_use(cell, a) == "b6a_oracle_reference") or (
+            arm_use(cell, a) == "sensitivity_panel" and not cell.confirmatory)
     if cell.panel_arms:
         panel = sensitivity_panel(cell, arrays)
         headline_ci = summ["arms"][headline_arm(cell).key]["gap_gibf_minus_mmv"][1]
@@ -1171,6 +1332,7 @@ def summarize_cell(cell, arrays):
         panel["x1_ci_agrees_with_per_cell"] = (
             _interval_class(headline_ci) == _interval_class(panel_ci))
         panel["x1_borderline_disagreement"] = not panel["x1_ci_agrees_with_per_cell"]
+        panel["descriptive"] = not cell.confirmatory   # d=1 panel (P9 item 4)
         summ["sensitivity_panel"] = panel
     if cell.family == "B6a128" or (cell.family == "B6a" and cell.confirmatory):
         kh = arrays[Arm("mdl", True, 1.0).key]
@@ -1195,7 +1357,8 @@ def summarize_cell(cell, arrays):
                 for k in range(1, K_MAX + 1)
             }
     if cell.family == "B2" and cell.d == 1:
-        summ["d1_panel_role"] = "descriptive_only; binding status unresolved"
+        summ["d1_panel_role"] = ("descriptive_only (SPEC S.14 P9 item 4); binding was "
+                                  "never ruled")
     elif cell.family == "B6a_forced10":
         summ["mdl_lookup"] = summarize_lookup(arrays["lookup_mdl"], idx)
         summ["aic_lookup"] = summarize_lookup(arrays["lookup_aic"], idx)

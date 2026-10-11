@@ -61,7 +61,7 @@ Plus, settled since the archived brief was written:
 | Powered d=2 design | settled; pre-run obligations below | SPEC §S.14 ("Pre-run details and obligations"); saved decision sessions cited there |
 | Selected trial count | 10,000 per cell; historical 1,635 superseded | SPEC §S.14; `run_experiment_B2B6_powered_d2.py` |
 | Powered runner | merged to `main` (PR #6, `37b4e21`); confirmatory run not executed | `viability-test/run_experiment_B2B6_powered_d2.py` |
-| Off-grid row (A4) | ruled (descriptive, never adjudicated); not implemented | SPEC §S.14; ROADMAP §8 2026-10-05 |
+| Off-grid row (A4) | specified 2026-10-11 and implemented (descriptive, never adjudicated; family `B2offgrid`) | SPEC §S.14; ROADMAP §8 2026-10-11 |
 | d=1 regularization panel | descriptive (binding never ruled; input to the airtightness review) | SPEC §S.14 P9 |
 | Airtightness review; agent-chosen-values sweep | required by Strider before the run; not done | SPEC §S.14; ROADMAP §9 |
 

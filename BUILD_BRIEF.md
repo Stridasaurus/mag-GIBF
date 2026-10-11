@@ -180,7 +180,7 @@ comparison by lookup over the fixed-K=1…6 runs. It does not add an AIC-fed sol
 - Frozen Experiment-B design: `viability-test/SPEC_experiment_B.md`.
 - Frozen Card A: `EXPERIMENT_CARD_A.md`.
 - Built adapter + tests: `viability-test/transfer.py`, `tests/test_transfer.py`.
-- Gate V artifacts + paper paragraph: `results/V_kernel_validation/` (`PARAGRAPH.md`).
+- Gate V artifacts: `results/V_kernel_validation/`. Paper prose is not kept in this public repository.
 - Card A Tier 1 artifacts: `results/A_flr_coherence/`.
 - Vault: `[[secs-gibf-viability]]` (project note), `[[wax-kailath-1985-notes]]` (the AIC/MDL basis).
 - Archived (history only): `docs/archive/GIBF_viability_BUILD_BRIEF.md`.

@@ -23,7 +23,11 @@ GATEV = ROOT / "results" / "V_kernel_validation"
 
 # Paths cited in docs that are allowed to not exist: historical quotes in the
 # append-only §8 log (the audit entry quotes the broken pointer it found).
-CITED_PATH_ALLOWLIST = {"viability-test/PLAN.md"}
+# Historical citations in append-only ROADMAP §8 entries that cannot be edited:
+# PLAN.md never existed (corrected in §8 2026-07-07); PARAGRAPH.md was relocated
+# out of the public repo on 2026-10-11 (§8 2026-10-11).
+CITED_PATH_ALLOWLIST = {"viability-test/PLAN.md",
+                        "results/V_kernel_validation/PARAGRAPH.md"}
 
 
 def test_tier1_pins_recompute_from_npz():

@@ -118,7 +118,11 @@ N_TRIALS_POWERED = 10_000           # Strider ruling 2026-09-23; SPEC S.14
 # The master-seed run stays blocked until the SPEC S.14 pre-run obligations
 # (airtightness review; agent-chosen-values sweep) are recorded complete in
 # ROADMAP S8. Flipping this is a deliberate, committed act.
-PRE_RUN_GATES_COMPLETE = False
+#
+# Set True on 2026-10-11 on Strider's explicit go-ahead ("All right, you have my
+# go ahead"), after the off-grid row was implemented and both obligations were
+# recorded (SPEC S.14 "Pre-run review record"; ROADMAP S8 2026-10-11).
+PRE_RUN_GATES_COMPLETE = True
 
 # Off-grid row (A4), SPEC S.14 "Off-grid row (A4): specification".
 OFFGRID_FAMILY = "B2offgrid"

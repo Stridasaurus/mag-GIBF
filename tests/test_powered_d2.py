@@ -502,9 +502,10 @@ def test_nondefault_b6a_nsnap_is_a_descriptive_b6a_only_run():
     assert len(descriptive[0].arms) == 1 and all(a.reduction for a in descriptive[0].arms)
 
 
-def test_default_run_is_the_confirmatory_run():
+def test_default_run_is_blocked_while_the_gates_are_unset(monkeypatch):
     if (R.DEFAULT_OUT / "manifest.json").exists():
         pytest.skip("the confirmatory run already exists")
+    monkeypatch.setattr(R, "PRE_RUN_GATES_COMPLETE", False)
     with pytest.raises(SystemExit, match="airtightness review.*agent-chosen-values sweep"):
         R.resolve_run(R.parse_args([]), clean=True)
 
@@ -854,11 +855,10 @@ def test_d1_cells_carry_the_descriptive_panel(tm):
     assert flags[R.Arm("oracle", True, 0.1).key] is True
 
 
-def test_master_seed_run_is_allowed_once_the_gates_are_recorded(monkeypatch):
+def test_master_seed_run_is_allowed_with_the_recorded_go_ahead():
     if (R.DEFAULT_OUT / "manifest.json").exists():
         pytest.skip("the confirmatory run already exists")
-    assert R.PRE_RUN_GATES_COMPLETE is False          # the committed default
-    monkeypatch.setattr(R, "PRE_RUN_GATES_COMPLETE", True)
+    assert R.PRE_RUN_GATES_COMPLETE is True           # recorded 2026-10-11
     run = R.resolve_run(R.parse_args([]), clean=True)
     assert run["confirmatory"] is True and run["seed"] == R.MASTER_SEED
     assert R.OFFGRID_ROLE in run["roles"]

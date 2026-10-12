@@ -52,7 +52,7 @@ Plus, settled since the archived brief was written:
 
 ---
 
-## Current state (refreshed 2026-10-05)
+## Current state (refreshed 2026-10-12)
 
 | Item | State | Evidence |
 |---|---|---|
@@ -60,14 +60,14 @@ Plus, settled since the archived brief was written:
 | Experiment-B pilot stack (B1, B3, d=3/d=8/d=2 pilots) | completed; old results preserved | ROADMAP §8; SPEC §§S.11–S.12 |
 | Powered d=2 design | settled; pre-run obligations below | SPEC §S.14 ("Pre-run details and obligations"); saved decision sessions cited there |
 | Selected trial count | 10,000 per cell; historical 1,635 superseded | SPEC §S.14; `run_experiment_B2B6_powered_d2.py` |
-| Powered runner | merged to `main` (PR #6, `37b4e21`); confirmatory run not executed | `viability-test/run_experiment_B2B6_powered_d2.py` |
+| Powered runner and run | merged to `main`; confirmatory run executed 2026-10-11/12 from `b235a16`, adjudication applied | `results/B_viability/powered_d2/`; ROADMAP §8 2026-10-12 |
 | Off-grid row (A4) | specified 2026-10-11 and implemented (descriptive, never adjudicated; family `B2offgrid`) | SPEC §S.14; ROADMAP §8 2026-10-11 |
 | d=1 regularization panel | descriptive (binding never ruled; input to the airtightness review) | SPEC §S.14 P9 |
 | Airtightness review; agent-chosen-values sweep | recorded 2026-10-11; no pre-registered value changed | SPEC §S.14 "Pre-run review record"; ROADMAP §8 2026-10-11 |
 
-The master-seed run is blocked by `PRE_RUN_GATES_COMPLETE` until Strider's go-ahead, after
-which the runner must be committed clean and smoke-tested under the separate smoke seed.
-No confirmatory result exists. The old Shane-Gilbertie Card-A assignment in `handoff.md` is historical.
+The master-seed run has been executed once and its pre-registered adjudication applied
+(`results/B_viability/powered_d2/adjudication.json`). It is not to be rerun: the master
+seed is spent, and the output directory refuses a second manifest. The old Shane-Gilbertie Card-A assignment in `handoff.md` is historical.
 
 ---
 

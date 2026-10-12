@@ -1,0 +1,629 @@
+{
+  "win": {
+    "met": false,
+    "per_snr": {
+      "5.0": {
+        "met": false,
+        "satisfying_arms": [],
+        "fragile": false,
+        "delta_r_arm": {
+          "met": false,
+          "effect_met": false,
+          "ci_non_overlap": false,
+          "favored_mean": 6.735738611601376,
+          "other_mean": 3.3649474804076895,
+          "favored_ci": [
+            6.57150612543494,
+            6.898940920060013
+          ],
+          "other_ci": [
+            3.2324756231172525,
+            3.502651593563226
+          ]
+        },
+        "d_axis_arm": {
+          "met": false,
+          "effect_met": false,
+          "threshold": 0.8,
+          "ci_non_overlap": false,
+          "d_min": {
+            "gibf": 3.0,
+            "mmv": 2.0
+          },
+          "d_min_ci": {
+            "gibf": [
+              3.0,
+              3.0
+            ],
+            "mmv": [
+              2.0,
+              2.0
+            ]
+          }
+        }
+      },
+      "10.0": {
+        "met": false,
+        "satisfying_arms": [],
+        "fragile": false,
+        "delta_r_arm": {
+          "met": false,
+          "effect_met": false,
+          "ci_non_overlap": false,
+          "favored_mean": 6.517775775199395,
+          "other_mean": 1.2786200480738812,
+          "favored_ci": [
+            6.35638061477451,
+            6.6893832958713775
+          ],
+          "other_ci": [
+            1.191602816378339,
+            1.3715025929154223
+          ]
+        },
+        "d_axis_arm": {
+          "met": false,
+          "effect_met": false,
+          "threshold": 0.8,
+          "ci_non_overlap": false,
+          "d_min": {
+            "gibf": 3.0,
+            "mmv": 2.0
+          },
+          "d_min_ci": {
+            "gibf": [
+              3.0,
+              3.0
+            ],
+            "mmv": [
+              2.0,
+              2.0
+            ]
+          }
+        }
+      }
+    },
+    "mixed_arm": false
+  },
+  "loss": {
+    "met": true,
+    "met_at_phi": [
+      180.0
+    ],
+    "per_null": {
+      "0.0": {
+        "met": false,
+        "per_snr": {
+          "5.0": {
+            "met": false,
+            "satisfying_arms": [],
+            "fragile": true,
+            "delta_r_arm": {
+              "met": false,
+              "effect_met": false,
+              "ci_non_overlap": true,
+              "favored_mean": 18.348638713032322,
+              "other_mean": 18.37328840247032,
+              "favored_ci": [
+                18.33551673235832,
+                18.36067656068387
+              ],
+              "other_ci": [
+                18.365440380560322,
+                18.37905593697587
+              ]
+            },
+            "d_axis_arm": {
+              "met": false,
+              "effect_met": false,
+              "threshold": 0.8,
+              "ci_non_overlap": false,
+              "d_min": {
+                "mmv": 3.0,
+                "gibf": 3.0
+              },
+              "d_min_ci": {
+                "mmv": [
+                  3.0,
+                  3.0
+                ],
+                "gibf": [
+                  3.0,
+                  5.0
+                ]
+              }
+            }
+          },
+          "10.0": {
+            "met": false,
+            "satisfying_arms": [],
+            "fragile": false,
+            "delta_r_arm": {
+              "met": false,
+              "effect_met": false,
+              "ci_non_overlap": true,
+              "favored_mean": 18.36109381999832,
+              "other_mean": 18.38665496561632,
+              "favored_ci": [
+                18.35894381999832,
+                18.36334381999832
+              ],
+              "other_ci": [
+                18.38302725685232,
+                18.38849381999832
+              ]
+            },
+            "d_axis_arm": {
+              "met": false,
+              "effect_met": false,
+              "threshold": 0.8,
+              "ci_non_overlap": false,
+              "d_min": {
+                "mmv": 3.0,
+                "gibf": 3.0
+              },
+              "d_min_ci": {
+                "mmv": [
+                  3.0,
+                  3.0
+                ],
+                "gibf": [
+                  3.0,
+                  3.0
+                ]
+              }
+            }
+          }
+        }
+      },
+      "180.0": {
+        "met": true,
+        "per_snr": {
+          "5.0": {
+            "met": true,
+            "satisfying_arms": [
+              "delta_r",
+              "d_axis"
+            ],
+            "fragile": false,
+            "delta_r_arm": {
+              "met": true,
+              "effect_met": true,
+              "ci_non_overlap": true,
+              "favored_mean": 0.67815,
+              "other_mean": 0.9453273982019982,
+              "favored_ci": [
+                0.6738,
+                0.6828012499999999
+              ],
+              "other_ci": [
+                0.934181876291999,
+                0.9582230555501972
+              ]
+            },
+            "d_axis_arm": {
+              "met": true,
+              "effect_met": true,
+              "threshold": 0.8,
+              "ci_non_overlap": true,
+              "d_min": {
+                "mmv": 1.0,
+                "gibf": 2.0
+              },
+              "d_min_ci": {
+                "mmv": [
+                  1.0,
+                  1.0
+                ],
+                "gibf": [
+                  2.0,
+                  2.0
+                ]
+              }
+            }
+          },
+          "10.0": {
+            "met": true,
+            "satisfying_arms": [
+              "delta_r",
+              "d_axis"
+            ],
+            "fragile": false,
+            "delta_r_arm": {
+              "met": true,
+              "effect_met": true,
+              "ci_non_overlap": true,
+              "favored_mean": 0.6655,
+              "other_mean": 1.2495578674099572,
+              "favored_ci": [
+                0.6608487500000001,
+                0.67010125
+              ],
+              "other_ci": [
+                1.198674704893762,
+                1.3009284954206026
+              ]
+            },
+            "d_axis_arm": {
+              "met": true,
+              "effect_met": true,
+              "threshold": 0.8,
+              "ci_non_overlap": true,
+              "d_min": {
+                "mmv": 1.0,
+                "gibf": 2.0
+              },
+              "d_min_ci": {
+                "mmv": [
+                  1.0,
+                  1.0
+                ],
+                "gibf": [
+                  2.0,
+                  2.0
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "mixed_arm": false
+  },
+  "b6": {
+    "met": false,
+    "winner": null,
+    "by_favored": {
+      "gibf": {
+        "met": false,
+        "effect_met": false,
+        "ci_non_overlap": false,
+        "favored_mean": 6.531848066435395,
+        "other_mean": 5.456546272291495,
+        "favored_ci": [
+          6.36703085890941,
+          6.698215273961379
+        ],
+        "other_ci": [
+          5.29977639395641,
+          5.6202303181545785
+        ]
+      },
+      "mmv": {
+        "met": false,
+        "effect_met": false,
+        "ci_non_overlap": true,
+        "favored_mean": 5.456546272291495,
+        "other_mean": 6.531848066435395,
+        "favored_ci": [
+          5.29977639395641,
+          5.6202303181545785
+        ],
+        "other_ci": [
+          6.36703085890941,
+          6.698215273961379
+        ]
+      }
+    },
+    "fragile": true,
+    "confirmatory": true,
+    "delta_r_arm": {
+      "met": false,
+      "effect_met": false,
+      "ci_non_overlap": false,
+      "favored_mean": 6.531848066435395,
+      "other_mean": 5.456546272291495,
+      "favored_ci": [
+        6.36703085890941,
+        6.698215273961379
+      ],
+      "other_ci": [
+        5.29977639395641,
+        5.6202303181545785
+      ]
+    }
+  },
+  "d_axis_diagnostics": {
+    "phi=90|snr=5": {
+      "psep_rates": {
+        "gibf": {
+          "1": 0.0,
+          "2": 0.6289,
+          "3": 1.0,
+          "5": 1.0,
+          "8": 1.0
+        },
+        "mmv": {
+          "1": 0.0,
+          "2": 0.8156,
+          "3": 1.0,
+          "5": 1.0,
+          "8": 1.0
+        }
+      },
+      "psep_monotone_non_decreasing": {
+        "gibf": true,
+        "mmv": true
+      },
+      "d_min_thresholds": {
+        "0.7": {
+          "gibf": 3.0,
+          "mmv": 2.0,
+          "gibf_ci": [
+            3.0,
+            3.0
+          ],
+          "mmv_ci": [
+            2.0,
+            2.0
+          ],
+          "descriptive_only": true
+        },
+        "0.9": {
+          "gibf": 3.0,
+          "mmv": 3.0,
+          "gibf_ci": [
+            3.0,
+            3.0
+          ],
+          "mmv_ci": [
+            3.0,
+            3.0
+          ],
+          "descriptive_only": true
+        }
+      }
+    },
+    "phi=90|snr=10": {
+      "psep_rates": {
+        "gibf": {
+          "1": 0.0,
+          "2": 0.64,
+          "3": 1.0,
+          "5": 1.0,
+          "8": 1.0
+        },
+        "mmv": {
+          "1": 0.0,
+          "2": 0.9293,
+          "3": 1.0,
+          "5": 1.0,
+          "8": 1.0
+        }
+      },
+      "psep_monotone_non_decreasing": {
+        "gibf": true,
+        "mmv": true
+      },
+      "d_min_thresholds": {
+        "0.7": {
+          "gibf": 3.0,
+          "mmv": 2.0,
+          "gibf_ci": [
+            3.0,
+            3.0
+          ],
+          "mmv_ci": [
+            2.0,
+            2.0
+          ],
+          "descriptive_only": true
+        },
+        "0.9": {
+          "gibf": 3.0,
+          "mmv": 2.0,
+          "gibf_ci": [
+            3.0,
+            3.0
+          ],
+          "mmv_ci": [
+            2.0,
+            2.0
+          ],
+          "descriptive_only": true
+        }
+      }
+    },
+    "phi=0|snr=5": {
+      "psep_rates": {
+        "gibf": {
+          "1": 0.0,
+          "2": 0.0002,
+          "3": 0.8041,
+          "5": 1.0,
+          "8": 1.0
+        },
+        "mmv": {
+          "1": 0.0,
+          "2": 0.0013,
+          "3": 0.8496,
+          "5": 1.0,
+          "8": 1.0
+        }
+      },
+      "psep_monotone_non_decreasing": {
+        "gibf": true,
+        "mmv": true
+      },
+      "d_min_thresholds": {
+        "0.7": {
+          "gibf": 3.0,
+          "mmv": 3.0,
+          "gibf_ci": [
+            3.0,
+            3.0
+          ],
+          "mmv_ci": [
+            3.0,
+            3.0
+          ],
+          "descriptive_only": true
+        },
+        "0.9": {
+          "gibf": 5.0,
+          "mmv": 5.0,
+          "gibf_ci": [
+            5.0,
+            5.0
+          ],
+          "mmv_ci": [
+            5.0,
+            5.0
+          ],
+          "descriptive_only": true
+        }
+      }
+    },
+    "phi=0|snr=10": {
+      "psep_rates": {
+        "gibf": {
+          "1": 0.0,
+          "2": 0.0001,
+          "3": 0.9545,
+          "5": 1.0,
+          "8": 1.0
+        },
+        "mmv": {
+          "1": 0.0,
+          "2": 0.0,
+          "3": 0.9955,
+          "5": 1.0,
+          "8": 1.0
+        }
+      },
+      "psep_monotone_non_decreasing": {
+        "gibf": true,
+        "mmv": true
+      },
+      "d_min_thresholds": {
+        "0.7": {
+          "gibf": 3.0,
+          "mmv": 3.0,
+          "gibf_ci": [
+            3.0,
+            3.0
+          ],
+          "mmv_ci": [
+            3.0,
+            3.0
+          ],
+          "descriptive_only": true
+        },
+        "0.9": {
+          "gibf": 3.0,
+          "mmv": 3.0,
+          "gibf_ci": [
+            3.0,
+            3.0
+          ],
+          "mmv_ci": [
+            3.0,
+            3.0
+          ],
+          "descriptive_only": true
+        }
+      }
+    },
+    "phi=180|snr=5": {
+      "psep_rates": {
+        "gibf": {
+          "1": 0.058,
+          "2": 0.9989,
+          "3": 1.0,
+          "5": 1.0,
+          "8": 1.0
+        },
+        "mmv": {
+          "1": 0.9559,
+          "2": 1.0,
+          "3": 1.0,
+          "5": 1.0,
+          "8": 1.0
+        }
+      },
+      "psep_monotone_non_decreasing": {
+        "gibf": true,
+        "mmv": true
+      },
+      "d_min_thresholds": {
+        "0.7": {
+          "gibf": 2.0,
+          "mmv": 1.0,
+          "gibf_ci": [
+            2.0,
+            2.0
+          ],
+          "mmv_ci": [
+            1.0,
+            1.0
+          ],
+          "descriptive_only": true
+        },
+        "0.9": {
+          "gibf": 2.0,
+          "mmv": 1.0,
+          "gibf_ci": [
+            2.0,
+            2.0
+          ],
+          "mmv_ci": [
+            1.0,
+            1.0
+          ],
+          "descriptive_only": true
+        }
+      }
+    },
+    "phi=180|snr=10": {
+      "psep_rates": {
+        "gibf": {
+          "1": 0.0037,
+          "2": 0.9745,
+          "3": 1.0,
+          "5": 1.0,
+          "8": 1.0
+        },
+        "mmv": {
+          "1": 0.9614,
+          "2": 1.0,
+          "3": 1.0,
+          "5": 1.0,
+          "8": 1.0
+        }
+      },
+      "psep_monotone_non_decreasing": {
+        "gibf": true,
+        "mmv": true
+      },
+      "d_min_thresholds": {
+        "0.7": {
+          "gibf": 2.0,
+          "mmv": 1.0,
+          "gibf_ci": [
+            2.0,
+            2.0
+          ],
+          "mmv_ci": [
+            1.0,
+            1.0
+          ],
+          "descriptive_only": true
+        },
+        "0.9": {
+          "gibf": 2.0,
+          "mmv": 1.0,
+          "gibf_ci": [
+            2.0,
+            2.0
+          ],
+          "mmv_ci": [
+            1.0,
+            1.0
+          ],
+          "descriptive_only": true
+        }
+      }
+    }
+  },
+  "confirmatory_run": true
+}

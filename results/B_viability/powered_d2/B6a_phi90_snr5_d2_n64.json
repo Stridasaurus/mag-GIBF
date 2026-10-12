@@ -1,0 +1,6201 @@
+{
+  "cell_id": "B6a|phi=90|snr=5|d=2|nsnap=64",
+  "role": "b6a",
+  "confirmatory": true,
+  "separation_km": 126.91,
+  "arms": {
+    "mdl_on_x0.1": {
+      "dr_l2": [
+        18.16127707376235,
+        [
+          18.143019223143252,
+          18.178555599109238
+        ]
+      ],
+      "psep_l2": [
+        0.0,
+        [
+          0.0,
+          0.0
+        ]
+      ],
+      "dr_gibf": [
+        0.08323730157199226,
+        [
+          0.06137104898799429,
+          0.1081837629199899
+        ]
+      ],
+      "psep_gibf": [
+        0.9953,
+        [
+          0.9939,
+          0.9966
+        ]
+      ],
+      "dr_mmv": [
+        0.9736744780188538,
+        [
+          0.8991584417433204,
+          1.052122236219424
+        ]
+      ],
+      "psep_mmv": [
+        0.9454,
+        [
+          0.941,
+          0.9497049999999999
+        ]
+      ],
+      "gap_gibf_minus_mmv": [
+        -0.8904371764468615,
+        [
+          -0.9671046931316801,
+          -0.8150195080733015
+        ]
+      ],
+      "miss_rate_l2": [
+        0.9953,
+        [
+          0.9939,
+          0.9965
+        ]
+      ],
+      "n_nonmiss_l2": 47,
+      "matched_err_nonmiss_mean_l2": 5.087108450643567,
+      "outcome_counts_l2": {
+        "miss": 9953,
+        "correct": 0,
+        "mislocated": 47
+      },
+      "conditional_correct_error_l2": {
+        "n": 0,
+        "mean": null,
+        "ci": null
+      },
+      "supplementary_8peak_psep_l2": [
+        0.0,
+        [
+          0.0,
+          0.0
+        ]
+      ],
+      "supplementary_8peak_dr_l2": [
+        18.16127707376235,
+        [
+          18.143019223143252,
+          18.178555599109238
+        ]
+      ],
+      "miss_penalty_reconstruction_l2": {
+        "formula": "(matched_error_sum + (n_true - n_matched) * penalty) / n_true",
+        "stored_arrays": [
+          "matched_err_sum_l2",
+          "matched_n_l2"
+        ]
+      },
+      "threshold_05_dr_l2": [
+        5.507449462924859,
+        [
+          5.428731681036863,
+          5.586870699373537
+        ]
+      ],
+      "threshold_05_psep_l2": [
+        0.0,
+        [
+          0.0,
+          0.0
+        ]
+      ],
+      "threshold_05_miss_rate_l2": [
+        0.0759,
+        [
+          0.0705975,
+          0.0812
+        ]
+      ],
+      "threshold_05_outcome_counts_l2": {
+        "miss": 759,
+        "correct": 0,
+        "mislocated": 9241
+      },
+      "threshold_05_conditional_correct_error_l2": {
+        "n": 0,
+        "mean": null,
+        "ci": null
+      },
+      "threshold_20_dr_l2": [
+        18.223193819998322,
+        [
+          18.21854256999832,
+          18.22784381999832
+        ]
+      ],
+      "threshold_20_psep_l2": [
+        0.0,
+        [
+          0.0,
+          0.0
+        ]
+      ],
+      "threshold_20_miss_rate_l2": [
+        1.0,
+        [
+          1.0,
+          1.0
+        ]
+      ],
+      "threshold_20_outcome_counts_l2": {
+        "miss": 10000,
+        "correct": 0,
+        "mislocated": 0
+      },
+      "threshold_20_conditional_correct_error_l2": {
+        "n": 0,
+        "mean": null,
+        "ci": null
+      },
+      "miss_rate_gibf": [
+        0.0046,
+        [
+          0.0034,
+          0.006
+        ]
+      ],
+      "n_nonmiss_gibf": 9954,
+      "matched_err_nonmiss_mean_gibf": 0.0008539280691179425,
+      "outcome_counts_gibf": {
+        "miss": 46,
+        "correct": 9953,
+        "mislocated": 1
+      },
+      "conditional_correct_error_gibf": {
+        "n": 9953,
+        "mean": 0.0006028333165879634,
+        "ci": [
+          0.0003014166582939817,
+          0.0009544860845976088
+        ]
+      },
+      "supplementary_8peak_psep_gibf": [
+        0.9953,
+        [
+          0.9939,
+          0.9966
+        ]
+      ],
+      "supplementary_8peak_dr_gibf": [
+        0.08323730157199226,
+        [
+          0.06137104898799429,
+          0.1081837629199899
+        ]
+      ],
+      "miss_penalty_reconstruction_gibf": {
+        "formula": "(matched_error_sum + (n_true - n_matched) * penalty) / n_true",
+        "stored_arrays": [
+          "matched_err_sum_gibf",
+          "matched_n_gibf"
+        ]
+      },
+      "threshold_05_dr_gibf": [
+        0.0744584484289155,
+        [
+          0.05373573839880526,
+          0.09800513621709721
+        ]
+      ],
+      "threshold_05_psep_gibf": [
+        0.9953,
+        [
+          0.9939,
+          0.9966
+        ]
+      ],
+      "threshold_05_miss_rate_gibf": [
+        0.004,
+        [
+          0.0028,
+          0.0053
+        ]
+      ],
+      "threshold_05_outcome_counts_gibf": {
+        "miss": 40,
+        "correct": 9953,
+        "mislocated": 7
+      },
+      "threshold_05_conditional_correct_error_gibf": {
+        "n": 9953,
+        "mean": 0.0006028333165879634,
+        "ci": [
+          0.0003014166582939817,
+          0.0009544860845976088
+        ]
+      },
+      "threshold_20_dr_gibf": [
+        0.16149689437998485,
+        [
+          0.12929751550398788,
+          0.19717523201998147
+        ]
+      ],
+      "threshold_20_psep_gibf": [
+        0.991,
+        [
+          0.989,
+          0.9928
+        ]
+      ],
+      "threshold_20_miss_rate_gibf": [
+        0.009,
+        [
+          0.0072,
+          0.011
+        ]
+      ],
+      "threshold_20_outcome_counts_gibf": {
+        "miss": 90,
+        "correct": 9910,
+        "mislocated": 0
+      },
+      "threshold_20_conditional_correct_error_gibf": {
+        "n": 9910,
+        "mean": 0.0004036326942482341,
+        "ci": [
+          0.0001513622603430878,
+          0.0007063572149344097
+        ]
+      },
+      "miss_rate_mmv": [
+        0.0539,
+        [
+          0.0497,
+          0.0583
+        ]
+      ],
+      "n_nonmiss_mmv": 9461,
+      "matched_err_nonmiss_mean_mmv": 0.009546523751130374,
+      "outcome_counts_mmv": {
+        "miss": 539,
+        "correct": 9454,
+        "mislocated": 7
+      },
+      "conditional_correct_error_mmv": {
+        "n": 9454,
+        "mean": 0.006082081658557225,
+        "ci": [
+          0.004918552993441929,
+          0.007298497990268669
+        ]
+      },
+      "supplementary_8peak_psep_mmv": [
+        0.9454,
+        [
+          0.941,
+          0.9497049999999999
+        ]
+      ],
+      "supplementary_8peak_dr_mmv": [
+        0.9736744780188538,
+        [
+          0.8991584417433204,
+          1.052122236219424
+        ]
+      ],
+      "miss_penalty_reconstruction_mmv": {
+        "formula": "(matched_error_sum + (n_true - n_matched) * penalty) / n_true",
+        "stored_arrays": [
+          "matched_err_sum_mmv",
+          "matched_n_mmv"
+        ]
+      },
+      "threshold_05_dr_mmv": [
+        0.814595126039337,
+        [
+          0.746682653995342,
+          0.8835906214724472
+        ]
+      ],
+      "threshold_05_psep_mmv": [
+        0.9455,
+        [
+          0.9411,
+          0.9499
+        ]
+      ],
+      "threshold_05_miss_rate_mmv": [
+        0.0426,
+        [
+          0.0387,
+          0.0465
+        ]
+      ],
+      "threshold_05_outcome_counts_mmv": {
+        "miss": 426,
+        "correct": 9455,
+        "mislocated": 119
+      },
+      "threshold_05_conditional_correct_error_mmv": {
+        "n": 9455,
+        "mean": 0.006081438392384982,
+        "ci": [
+          0.004970914859862507,
+          0.007191961924907456
+        ]
+      },
+      "threshold_20_dr_mmv": [
+        1.28025317436588,
+        [
+          1.1875289965018887,
+          1.3699521434658717
+        ]
+      ],
+      "threshold_20_psep_mmv": [
+        0.9287,
+        [
+          0.9237,
+          0.9339
+        ]
+      ],
+      "threshold_20_miss_rate_mmv": [
+        0.0713,
+        [
+          0.0661,
+          0.0763
+        ]
+      ],
+      "threshold_20_outcome_counts_mmv": {
+        "miss": 713,
+        "correct": 9287,
+        "mislocated": 0
+      },
+      "threshold_20_conditional_correct_error_mmv": {
+        "n": 9287,
+        "mean": 0.004630128136104232,
+        "ci": [
+          0.003607192850220739,
+          0.005599224722730699
+        ]
+      },
+      "niter_gibf_mean": 5.770466666666667,
+      "niter_mmv_mean": 11.8579,
+      "niter_gibf_max": 13,
+      "niter_mmv_max": 13,
+      "stop_reason_gibf": {
+        "cost_increase": {
+          "count": 40784,
+          "rate": 0.6797333333333333
+        },
+        "relative_tolerance": {
+          "count": 1198,
+          "rate": 0.019966666666666667
+        },
+        "active_set_floor": {
+          "count": 18018,
+          "rate": 0.3003
+        },
+        "max_iter": {
+          "count": 0,
+          "rate": 0.0
+        }
+      },
+      "stop_reason_mmv": {
+        "cost_increase": {
+          "count": 1930,
+          "rate": 0.193
+        },
+        "relative_tolerance": {
+          "count": 251,
+          "rate": 0.0251
+        },
+        "active_set_floor": {
+          "count": 7819,
+          "rate": 0.7819
+        },
+        "max_iter": {
+          "count": 0,
+          "rate": 0.0
+        }
+      },
+      "any_max_iter": false,
+      "n_trials": 10000,
+      "use": "sensitivity_panel",
+      "descriptive": false
+    },
+    "mdl_on_x0.3": {
+      "dr_l2": [
+        18.37339381999832,
+        [
+          18.37169381999832,
+          18.37504381999832
+        ]
+      ],
+      "psep_l2": [
+        0.0,
+        [
+          0.0,
+          0.0
+        ]
+      ],
+      "dr_gibf": [
+        0.31609951684997056,
+        [
+          0.2728132616819746,
+          0.3624109807819662
+        ]
+      ],
+      "psep_gibf": [
+        0.9825,
+        [
+          0.9799,
+          0.9849
+        ]
+      ],
+      "dr_mmv": [
+        0.8768443752699184,
+        [
+          0.8039475956079253,
+          0.9458709461679118
+        ]
+      ],
+      "psep_mmv": [
+        0.9515,
+        [
+          0.9476,
+          0.9556
+        ]
+      ],
+      "gap_gibf_minus_mmv": [
+        -0.5607448584199479,
+        [
+          -0.6308639293179413,
+          -0.48842221178040474
+        ]
+      ],
+      "miss_rate_l2": [
+        1.0,
+        [
+          1.0,
+          1.0
+        ]
+      ],
+      "n_nonmiss_l2": 0,
+      "matched_err_nonmiss_mean_l2": null,
+      "outcome_counts_l2": {
+        "miss": 10000,
+        "correct": 0,
+        "mislocated": 0
+      },
+      "conditional_correct_error_l2": {
+        "n": 0,
+        "mean": null,
+        "ci": null
+      },
+      "supplementary_8peak_psep_l2": [
+        0.0,
+        [
+          0.0,
+          0.0
+        ]
+      ],
+      "supplementary_8peak_dr_l2": [
+        18.37339381999832,
+        [
+          18.37169381999832,
+          18.37504381999832
+        ]
+      ],
+      "miss_penalty_reconstruction_l2": {
+        "formula": "(matched_error_sum + (n_true - n_matched) * penalty) / n_true",
+        "stored_arrays": [
+          "matched_err_sum_l2",
+          "matched_n_l2"
+        ]
+      },
+      "threshold_05_dr_l2": [
+        18.25828110114948,
+        [
+          18.232874545669144,
+          18.281440091352003
+        ]
+      ],
+      "threshold_05_psep_l2": [
+        0.0,
+        [
+          0.0,
+          0.0
+        ]
+      ],
+      "threshold_05_miss_rate_l2": [
+        0.9914,
+        [
+          0.9895,
+          0.9932
+        ]
+      ],
+      "threshold_05_outcome_counts_l2": {
+        "miss": 9914,
+        "correct": 0,
+        "mislocated": 86
+      },
+      "threshold_05_conditional_correct_error_l2": {
+        "n": 0,
+        "mean": null,
+        "ci": null
+      },
+      "threshold_20_dr_l2": [
+        18.37339381999832,
+        [
+          18.37169381999832,
+          18.37504381999832
+        ]
+      ],
+      "threshold_20_psep_l2": [
+        0.0,
+        [
+          0.0,
+          0.0
+        ]
+      ],
+      "threshold_20_miss_rate_l2": [
+        1.0,
+        [
+          1.0,
+          1.0
+        ]
+      ],
+      "threshold_20_outcome_counts_l2": {
+        "miss": 10000,
+        "correct": 0,
+        "mislocated": 0
+      },
+      "threshold_20_conditional_correct_error_l2": {
+        "n": 0,
+        "mean": null,
+        "ci": null
+      },
+      "miss_rate_gibf": [
+        0.0175,
+        [
+          0.0151,
+          0.0201
+        ]
+      ],
+      "n_nonmiss_gibf": 9825,
+      "matched_err_nonmiss_mean_gibf": 0.002951653944020356,
+      "outcome_counts_gibf": {
+        "miss": 175,
+        "correct": 9825,
+        "mislocated": 0
+      },
+      "conditional_correct_error_gibf": {
+        "n": 9825,
+        "mean": 0.002951653944020356,
+        "ci": [
+          0.002188295165394402,
+          0.0037659033078880407
+        ]
+      },
+      "supplementary_8peak_psep_gibf": [
+        0.9825,
+        [
+          0.9799,
+          0.9849
+        ]
+      ],
+      "supplementary_8peak_dr_gibf": [
+        0.31609951684997056,
+        [
+          0.2728132616819746,
+          0.3624109807819662
+        ]
+      ],
+      "miss_penalty_reconstruction_gibf": {
+        "formula": "(matched_error_sum + (n_true - n_matched) * penalty) / n_true",
+        "stored_arrays": [
+          "matched_err_sum_gibf",
+          "matched_n_gibf"
+        ]
+      },
+      "threshold_05_dr_gibf": [
+        0.3148696794623457,
+        [
+          0.2715716905555872,
+          0.36092087639996634
+        ]
+      ],
+      "threshold_05_psep_gibf": [
+        0.9825,
+        [
+          0.9799,
+          0.9849
+        ]
+      ],
+      "threshold_05_miss_rate_gibf": [
+        0.0174,
+        [
+          0.015,
+          0.02
+        ]
+      ],
+      "threshold_05_outcome_counts_gibf": {
+        "miss": 174,
+        "correct": 9825,
+        "mislocated": 1
+      },
+      "threshold_05_conditional_correct_error_gibf": {
+        "n": 9825,
+        "mean": 0.002951653944020356,
+        "ci": [
+          0.002188295165394402,
+          0.0037150127226463106
+        ]
+      },
+      "threshold_20_dr_gibf": [
+        0.44434703235395845,
+        [
+          0.39206900527596333,
+          0.5036354769599529
+        ]
+      ],
+      "threshold_20_psep_gibf": [
+        0.9753,
+        [
+          0.972,
+          0.9782
+        ]
+      ],
+      "threshold_20_miss_rate_gibf": [
+        0.0247,
+        [
+          0.0218,
+          0.028
+        ]
+      ],
+      "threshold_20_outcome_counts_gibf": {
+        "miss": 247,
+        "correct": 9753,
+        "mislocated": 0
+      },
+      "threshold_20_conditional_correct_error_gibf": {
+        "n": 9753,
+        "mean": 0.0024095150210191735,
+        "ci": [
+          0.0017430534194606787,
+          0.0030759766225776685
+        ]
+      },
+      "miss_rate_mmv": [
+        0.0485,
+        [
+          0.0444,
+          0.0524
+        ]
+      ],
+      "n_nonmiss_mmv": 9515,
+      "matched_err_nonmiss_mean_mmv": 0.009406200735680504,
+      "outcome_counts_mmv": {
+        "miss": 485,
+        "correct": 9515,
+        "mislocated": 0
+      },
+      "conditional_correct_error_mmv": {
+        "n": 9515,
+        "mean": 0.009406200735680504,
+        "ci": [
+          0.008039936941671046,
+          0.010825013137151866
+        ]
+      },
+      "supplementary_8peak_psep_mmv": [
+        0.9515,
+        [
+          0.9476,
+          0.9556
+        ]
+      ],
+      "supplementary_8peak_dr_mmv": [
+        0.8768443752699184,
+        [
+          0.8039475956079253,
+          0.9458709461679118
+        ]
+      ],
+      "miss_penalty_reconstruction_mmv": {
+        "formula": "(matched_error_sum + (n_true - n_matched) * penalty) / n_true",
+        "stored_arrays": [
+          "matched_err_sum_mmv",
+          "matched_n_mmv"
+        ]
+      },
+      "threshold_05_dr_mmv": [
+        0.8768443752699184,
+        [
+          0.8039475956079253,
+          0.9458709461679118
+        ]
+      ],
+      "threshold_05_psep_mmv": [
+        0.9515,
+        [
+          0.9476,
+          0.9556
+        ]
+      ],
+      "threshold_05_miss_rate_mmv": [
+        0.0485,
+        [
+          0.0444,
+          0.0524
+        ]
+      ],
+      "threshold_05_outcome_counts_mmv": {
+        "miss": 485,
+        "correct": 9515,
+        "mislocated": 0
+      },
+      "threshold_05_conditional_correct_error_mmv": {
+        "n": 9515,
+        "mean": 0.009406200735680504,
+        "ci": [
+          0.008039936941671046,
+          0.010825013137151866
+        ]
+      },
+      "threshold_20_dr_mmv": [
+        1.2558203586358827,
+        [
+          1.166617639535891,
+          1.336699777185425
+        ]
+      ],
+      "threshold_20_psep_mmv": [
+        0.9302,
+        [
+          0.9256975,
+          0.9352
+        ]
+      ],
+      "threshold_20_miss_rate_mmv": [
+        0.0698,
+        [
+          0.0648,
+          0.0743025
+        ]
+      ],
+      "threshold_20_outcome_counts_mmv": {
+        "miss": 698,
+        "correct": 9302,
+        "mislocated": 0
+      },
+      "threshold_20_conditional_correct_error_mmv": {
+        "n": 9302,
+        "mean": 0.0074177596215867555,
+        "ci": [
+          0.006235218232638142,
+          0.008654052891851215
+        ]
+      },
+      "niter_gibf_mean": 5.1970833333333335,
+      "niter_mmv_mean": 12.8938,
+      "niter_gibf_max": 13,
+      "niter_mmv_max": 13,
+      "stop_reason_gibf": {
+        "cost_increase": {
+          "count": 44816,
+          "rate": 0.7469333333333333
+        },
+        "relative_tolerance": {
+          "count": 992,
+          "rate": 0.016533333333333334
+        },
+        "active_set_floor": {
+          "count": 14192,
+          "rate": 0.23653333333333335
+        },
+        "max_iter": {
+          "count": 0,
+          "rate": 0.0
+        }
+      },
+      "stop_reason_mmv": {
+        "cost_increase": {
+          "count": 271,
+          "rate": 0.0271
+        },
+        "relative_tolerance": {
+          "count": 57,
+          "rate": 0.0057
+        },
+        "active_set_floor": {
+          "count": 9672,
+          "rate": 0.9672
+        },
+        "max_iter": {
+          "count": 0,
+          "rate": 0.0
+        }
+      },
+      "any_max_iter": false,
+      "n_trials": 10000,
+      "use": "sensitivity_panel",
+      "descriptive": false
+    },
+    "mdl_on_x1": {
+      "dr_l2": [
+        18.38829381999832,
+        [
+          18.38809381999832,
+          18.38849381999832
+        ]
+      ],
+      "psep_l2": [
+        0.0,
+        [
+          0.0,
+          0.0
+        ]
+      ],
+      "dr_gibf": [
+        6.531848066435395,
+        [
+          6.36703085890941,
+          6.698215273961379
+        ]
+      ],
+      "psep_gibf": [
+        0.6402,
+        [
+          0.6308975,
+          0.6495
+        ]
+      ],
+      "dr_mmv": [
+        5.456546272291495,
+        [
+          5.29977639395641,
+          5.6202303181545785
+        ]
+      ],
+      "psep_mmv": [
+        0.6994,
+        [
+          0.6902,
+          0.7082025000000001
+        ]
+      ],
+      "gap_gibf_minus_mmv": [
+        1.0753017941439005,
+        [
+          0.9177156658088155,
+          1.2399856346923346
+        ]
+      ],
+      "miss_rate_l2": [
+        1.0,
+        [
+          1.0,
+          1.0
+        ]
+      ],
+      "n_nonmiss_l2": 0,
+      "matched_err_nonmiss_mean_l2": null,
+      "outcome_counts_l2": {
+        "miss": 10000,
+        "correct": 0,
+        "mislocated": 0
+      },
+      "conditional_correct_error_l2": {
+        "n": 0,
+        "mean": null,
+        "ci": null
+      },
+      "supplementary_8peak_psep_l2": [
+        0.0,
+        [
+          0.0,
+          0.0
+        ]
+      ],
+      "supplementary_8peak_dr_l2": [
+        18.38829381999832,
+        [
+          18.38809381999832,
+          18.38849381999832
+        ]
+      ],
+      "miss_penalty_reconstruction_l2": {
+        "formula": "(matched_error_sum + (n_true - n_matched) * penalty) / n_true",
+        "stored_arrays": [
+          "matched_err_sum_l2",
+          "matched_n_l2"
+        ]
+      },
+      "threshold_05_dr_l2": [
+        18.38829381999832,
+        [
+          18.38809381999832,
+          18.38849381999832
+        ]
+      ],
+      "threshold_05_psep_l2": [
+        0.0,
+        [
+          0.0,
+          0.0
+        ]
+      ],
+      "threshold_05_miss_rate_l2": [
+        1.0,
+        [
+          1.0,
+          1.0
+        ]
+      ],
+      "threshold_05_outcome_counts_l2": {
+        "miss": 10000,
+        "correct": 0,
+        "mislocated": 0
+      },
+      "threshold_05_conditional_correct_error_l2": {
+        "n": 0,
+        "mean": null,
+        "ci": null
+      },
+      "threshold_20_dr_l2": [
+        18.38829381999832,
+        [
+          18.38809381999832,
+          18.38849381999832
+        ]
+      ],
+      "threshold_20_psep_l2": [
+        0.0,
+        [
+          0.0,
+          0.0
+        ]
+      ],
+      "threshold_20_miss_rate_l2": [
+        1.0,
+        [
+          1.0,
+          1.0
+        ]
+      ],
+      "threshold_20_outcome_counts_l2": {
+        "miss": 10000,
+        "correct": 0,
+        "mislocated": 0
+      },
+      "threshold_20_conditional_correct_error_l2": {
+        "n": 0,
+        "mean": null,
+        "ci": null
+      },
+      "miss_rate_gibf": [
+        0.3598,
+        [
+          0.3505,
+          0.36910249999999994
+        ]
+      ],
+      "n_nonmiss_gibf": 6402,
+      "matched_err_nonmiss_mean_gibf": 0.14628241174632928,
+      "outcome_counts_gibf": {
+        "miss": 3598,
+        "correct": 6402,
+        "mislocated": 0
+      },
+      "conditional_correct_error_gibf": {
+        "n": 6402,
+        "mean": 0.14628241174632928,
+        "ci": [
+          0.14065916900968448,
+          0.15198375507653858
+        ]
+      },
+      "supplementary_8peak_psep_gibf": [
+        0.6402,
+        [
+          0.6308975,
+          0.6495
+        ]
+      ],
+      "supplementary_8peak_dr_gibf": [
+        6.531848066435395,
+        [
+          6.36703085890941,
+          6.698215273961379
+        ]
+      ],
+      "miss_penalty_reconstruction_gibf": {
+        "formula": "(matched_error_sum + (n_true - n_matched) * penalty) / n_true",
+        "stored_arrays": [
+          "matched_err_sum_gibf",
+          "matched_n_gibf"
+        ]
+      },
+      "threshold_05_dr_gibf": [
+        6.52713461617681,
+        [
+          6.363227459760955,
+          6.69443445464461
+        ]
+      ],
+      "threshold_05_psep_gibf": [
+        0.6403,
+        [
+          0.6309,
+          0.6496025
+        ]
+      ],
+      "threshold_05_miss_rate_gibf": [
+        0.3595,
+        [
+          0.3502975,
+          0.3688025
+        ]
+      ],
+      "threshold_05_outcome_counts_gibf": {
+        "miss": 3595,
+        "correct": 6403,
+        "mislocated": 2
+      },
+      "threshold_05_conditional_correct_error_gibf": {
+        "n": 6403,
+        "mean": 0.14633765422458223,
+        "ci": [
+          0.1408714665000781,
+          0.15180774636888955
+        ]
+      },
+      "threshold_20_dr_gibf": [
+        6.842814146431365,
+        [
+          6.68018829328738,
+          7.015872433148249
+        ]
+      ],
+      "threshold_20_psep_gibf": [
+        0.6224,
+        [
+          0.612795,
+          0.6316
+        ]
+      ],
+      "threshold_20_miss_rate_gibf": [
+        0.3776,
+        [
+          0.3684,
+          0.38720499999999997
+        ]
+      ],
+      "threshold_20_outcome_counts_gibf": {
+        "miss": 3776,
+        "correct": 6224,
+        "mislocated": 0
+      },
+      "threshold_20_conditional_correct_error_gibf": {
+        "n": 6224,
+        "mean": 0.1384961439588689,
+        "ci": [
+          0.1328727506426735,
+          0.1440392030848329
+        ]
+      },
+      "miss_rate_mmv": [
+        0.3006,
+        [
+          0.2917975,
+          0.3098
+        ]
+      ],
+      "n_nonmiss_mmv": 6994,
+      "matched_err_nonmiss_mean_mmv": 0.11238204175007149,
+      "outcome_counts_mmv": {
+        "miss": 3006,
+        "correct": 6994,
+        "mislocated": 0
+      },
+      "conditional_correct_error_mmv": {
+        "n": 6994,
+        "mean": 0.11238204175007149,
+        "ci": [
+          0.10744924220760652,
+          0.11738633114097798
+        ]
+      },
+      "supplementary_8peak_psep_mmv": [
+        0.6994,
+        [
+          0.6902,
+          0.7082025000000001
+        ]
+      ],
+      "supplementary_8peak_dr_mmv": [
+        5.456546272291495,
+        [
+          5.29977639395641,
+          5.6202303181545785
+        ]
+      ],
+      "miss_penalty_reconstruction_mmv": {
+        "formula": "(matched_error_sum + (n_true - n_matched) * penalty) / n_true",
+        "stored_arrays": [
+          "matched_err_sum_mmv",
+          "matched_n_mmv"
+        ]
+      },
+      "threshold_05_dr_mmv": [
+        5.456546272291495,
+        [
+          5.29977639395641,
+          5.6202303181545785
+        ]
+      ],
+      "threshold_05_psep_mmv": [
+        0.6994,
+        [
+          0.6902,
+          0.7082025000000001
+        ]
+      ],
+      "threshold_05_miss_rate_mmv": [
+        0.3006,
+        [
+          0.2917975,
+          0.3098
+        ]
+      ],
+      "threshold_05_outcome_counts_mmv": {
+        "miss": 3006,
+        "correct": 6994,
+        "mislocated": 0
+      },
+      "threshold_05_conditional_correct_error_mmv": {
+        "n": 6994,
+        "mean": 0.11238204175007149,
+        "ci": [
+          0.10730626251072348,
+          0.11745782098941951
+        ]
+      },
+      "threshold_20_dr_mmv": [
+        5.9886580044194435,
+        [
+          5.825212429915909,
+          6.1521088575634275
+        ]
+      ],
+      "threshold_20_psep_mmv": [
+        0.669,
+        [
+          0.6598,
+          0.6782025
+        ]
+      ],
+      "threshold_20_miss_rate_mmv": [
+        0.331,
+        [
+          0.32179749999999996,
+          0.3402
+        ]
+      ],
+      "threshold_20_outcome_counts_mmv": {
+        "miss": 3310,
+        "correct": 6690,
+        "mislocated": 0
+      },
+      "threshold_20_conditional_correct_error_mmv": {
+        "n": 6690,
+        "mean": 0.1,
+        "ci": [
+          0.09544095665171898,
+          0.10463378176382661
+        ]
+      },
+      "niter_gibf_mean": 5.5925666666666665,
+      "niter_mmv_mean": 12.9996,
+      "niter_gibf_max": 13,
+      "niter_mmv_max": 13,
+      "stop_reason_gibf": {
+        "cost_increase": {
+          "count": 42014,
+          "rate": 0.7002333333333334
+        },
+        "relative_tolerance": {
+          "count": 782,
+          "rate": 0.013033333333333333
+        },
+        "active_set_floor": {
+          "count": 17204,
+          "rate": 0.28673333333333334
+        },
+        "max_iter": {
+          "count": 0,
+          "rate": 0.0
+        }
+      },
+      "stop_reason_mmv": {
+        "cost_increase": {
+          "count": 0,
+          "rate": 0.0
+        },
+        "relative_tolerance": {
+          "count": 4,
+          "rate": 0.0004
+        },
+        "active_set_floor": {
+          "count": 9996,
+          "rate": 0.9996
+        },
+        "max_iter": {
+          "count": 0,
+          "rate": 0.0
+        }
+      },
+      "any_max_iter": false,
+      "n_trials": 10000,
+      "use": "headline",
+      "descriptive": false
+    },
+    "mdl_on_x3": {
+      "dr_l2": [
+        18.388543819998322,
+        [
+          18.388543819998322,
+          18.388543819998322
+        ]
+      ],
+      "psep_l2": [
+        0.0,
+        [
+          0.0,
+          0.0
+        ]
+      ],
+      "dr_gibf": [
+        14.921593661161891,
+        [
+          14.791521306669956,
+          15.046503345076047
+        ]
+      ],
+      "psep_gibf": [
+        0.174,
+        [
+          0.1668,
+          0.1816
+        ]
+      ],
+      "dr_mmv": [
+        14.328364628134661,
+        [
+          14.188403673192678,
+          14.461812665548651
+        ]
+      ],
+      "psep_mmv": [
+        0.2052,
+        [
+          0.1975,
+          0.2133
+        ]
+      ],
+      "gap_gibf_minus_mmv": [
+        0.5932290330272298,
+        [
+          0.4608301897315918,
+          0.7243544563959363
+        ]
+      ],
+      "miss_rate_l2": [
+        1.0,
+        [
+          1.0,
+          1.0
+        ]
+      ],
+      "n_nonmiss_l2": 0,
+      "matched_err_nonmiss_mean_l2": null,
+      "outcome_counts_l2": {
+        "miss": 10000,
+        "correct": 0,
+        "mislocated": 0
+      },
+      "conditional_correct_error_l2": {
+        "n": 0,
+        "mean": null,
+        "ci": null
+      },
+      "supplementary_8peak_psep_l2": [
+        0.0,
+        [
+          0.0,
+          0.0
+        ]
+      ],
+      "supplementary_8peak_dr_l2": [
+        18.388543819998322,
+        [
+          18.388543819998322,
+          18.388543819998322
+        ]
+      ],
+      "miss_penalty_reconstruction_l2": {
+        "formula": "(matched_error_sum + (n_true - n_matched) * penalty) / n_true",
+        "stored_arrays": [
+          "matched_err_sum_l2",
+          "matched_n_l2"
+        ]
+      },
+      "threshold_05_dr_l2": [
+        18.388543819998322,
+        [
+          18.388543819998322,
+          18.388543819998322
+        ]
+      ],
+      "threshold_05_psep_l2": [
+        0.0,
+        [
+          0.0,
+          0.0
+        ]
+      ],
+      "threshold_05_miss_rate_l2": [
+        1.0,
+        [
+          1.0,
+          1.0
+        ]
+      ],
+      "threshold_05_outcome_counts_l2": {
+        "miss": 10000,
+        "correct": 0,
+        "mislocated": 0
+      },
+      "threshold_05_conditional_correct_error_l2": {
+        "n": 0,
+        "mean": null,
+        "ci": null
+      },
+      "threshold_20_dr_l2": [
+        18.388543819998322,
+        [
+          18.388543819998322,
+          18.388543819998322
+        ]
+      ],
+      "threshold_20_psep_l2": [
+        0.0,
+        [
+          0.0,
+          0.0
+        ]
+      ],
+      "threshold_20_miss_rate_l2": [
+        1.0,
+        [
+          1.0,
+          1.0
+        ]
+      ],
+      "threshold_20_outcome_counts_l2": {
+        "miss": 10000,
+        "correct": 0,
+        "mislocated": 0
+      },
+      "threshold_20_conditional_correct_error_l2": {
+        "n": 0,
+        "mean": null,
+        "ci": null
+      },
+      "miss_rate_gibf": [
+        0.8251,
+        [
+          0.8176975,
+          0.8322
+        ]
+      ],
+      "n_nonmiss_gibf": 1749,
+      "matched_err_nonmiss_mean_gibf": 0.5131855647871977,
+      "outcome_counts_gibf": {
+        "miss": 8251,
+        "correct": 1740,
+        "mislocated": 9
+      },
+      "conditional_correct_error_gibf": {
+        "n": 1740,
+        "mean": 0.5054597701149425,
+        "ci": [
+          0.5028735632183908,
+          0.5083333333333333
+        ]
+      },
+      "supplementary_8peak_psep_gibf": [
+        0.174,
+        [
+          0.1668,
+          0.1816
+        ]
+      ],
+      "supplementary_8peak_dr_gibf": [
+        14.921593661161891,
+        [
+          14.791521306669956,
+          15.046503345076047
+        ]
+      ],
+      "miss_penalty_reconstruction_gibf": {
+        "formula": "(matched_error_sum + (n_true - n_matched) * penalty) / n_true",
+        "stored_arrays": [
+          "matched_err_sum_gibf",
+          "matched_n_gibf"
+        ]
+      },
+      "threshold_05_dr_gibf": [
+        14.897688400377932,
+        [
+          14.766061017745802,
+          15.02168744041628
+        ]
+      ],
+      "threshold_05_psep_gibf": [
+        0.174,
+        [
+          0.1668,
+          0.1816
+        ]
+      ],
+      "threshold_05_miss_rate_gibf": [
+        0.8236,
+        [
+          0.8160975,
+          0.8308
+        ]
+      ],
+      "threshold_05_outcome_counts_gibf": {
+        "miss": 8236,
+        "correct": 1740,
+        "mislocated": 24
+      },
+      "threshold_05_conditional_correct_error_gibf": {
+        "n": 1740,
+        "mean": 0.5054597701149425,
+        "ci": [
+          0.5025862068965518,
+          0.5086206896551724
+        ]
+      },
+      "threshold_20_dr_gibf": [
+        15.061234710822598,
+        [
+          14.931380144768163,
+          15.183344722877237
+        ]
+      ],
+      "threshold_20_psep_gibf": [
+        0.1667,
+        [
+          0.1597,
+          0.1742
+        ]
+      ],
+      "threshold_20_miss_rate_gibf": [
+        0.8332,
+        [
+          0.8256975,
+          0.8402
+        ]
+      ],
+      "threshold_20_outcome_counts_gibf": {
+        "miss": 8332,
+        "correct": 1667,
+        "mislocated": 1
+      },
+      "threshold_20_conditional_correct_error_gibf": {
+        "n": 1667,
+        "mean": 0.5056988602279544,
+        "ci": [
+          0.502999400119976,
+          0.5086982603479304
+        ]
+      },
+      "miss_rate_mmv": [
+        0.7948,
+        [
+          0.7867,
+          0.8025
+        ]
+      ],
+      "n_nonmiss_mmv": 2052,
+      "matched_err_nonmiss_mean_mmv": 0.49171539961013644,
+      "outcome_counts_mmv": {
+        "miss": 7948,
+        "correct": 2052,
+        "mislocated": 0
+      },
+      "conditional_correct_error_mmv": {
+        "n": 2052,
+        "mean": 0.49171539961013644,
+        "ci": [
+          0.48879142300194933,
+          0.4946393762183236
+        ]
+      },
+      "supplementary_8peak_psep_mmv": [
+        0.2052,
+        [
+          0.1975,
+          0.2133
+        ]
+      ],
+      "supplementary_8peak_dr_mmv": [
+        14.328364628134661,
+        [
+          14.188403673192678,
+          14.461812665548651
+        ]
+      ],
+      "miss_penalty_reconstruction_mmv": {
+        "formula": "(matched_error_sum + (n_true - n_matched) * penalty) / n_true",
+        "stored_arrays": [
+          "matched_err_sum_mmv",
+          "matched_n_mmv"
+        ]
+      },
+      "threshold_05_dr_mmv": [
+        14.328364628134661,
+        [
+          14.188403673192678,
+          14.461812665548651
+        ]
+      ],
+      "threshold_05_psep_mmv": [
+        0.2052,
+        [
+          0.1975,
+          0.2133
+        ]
+      ],
+      "threshold_05_miss_rate_mmv": [
+        0.7948,
+        [
+          0.7867,
+          0.8025
+        ]
+      ],
+      "threshold_05_outcome_counts_mmv": {
+        "miss": 7948,
+        "correct": 2052,
+        "mislocated": 0
+      },
+      "threshold_05_conditional_correct_error_mmv": {
+        "n": 2052,
+        "mean": 0.49171539961013644,
+        "ci": [
+          0.48879142300194933,
+          0.49439571150097467
+        ]
+      },
+      "threshold_20_dr_mmv": [
+        14.639619562512634,
+        [
+          14.504905170716645,
+          14.768206036780624
+        ]
+      ],
+      "threshold_20_psep_mmv": [
+        0.1873,
+        [
+          0.1799,
+          0.1951
+        ]
+      ],
+      "threshold_20_miss_rate_mmv": [
+        0.8127,
+        [
+          0.8049,
+          0.8201
+        ]
+      ],
+      "threshold_20_outcome_counts_mmv": {
+        "miss": 8127,
+        "correct": 1873,
+        "mislocated": 0
+      },
+      "threshold_20_conditional_correct_error_mmv": {
+        "n": 1873,
+        "mean": 0.49092365189535503,
+        "ci": [
+          0.4877202349172451,
+          0.4938601174586225
+        ]
+      },
+      "niter_gibf_mean": 5.738883333333333,
+      "niter_mmv_mean": 13.0,
+      "niter_gibf_max": 13,
+      "niter_mmv_max": 13,
+      "stop_reason_gibf": {
+        "cost_increase": {
+          "count": 40492,
+          "rate": 0.6748666666666666
+        },
+        "relative_tolerance": {
+          "count": 532,
+          "rate": 0.008866666666666667
+        },
+        "active_set_floor": {
+          "count": 18976,
+          "rate": 0.31626666666666664
+        },
+        "max_iter": {
+          "count": 0,
+          "rate": 0.0
+        }
+      },
+      "stop_reason_mmv": {
+        "cost_increase": {
+          "count": 0,
+          "rate": 0.0
+        },
+        "relative_tolerance": {
+          "count": 0,
+          "rate": 0.0
+        },
+        "active_set_floor": {
+          "count": 10000,
+          "rate": 1.0
+        },
+        "max_iter": {
+          "count": 0,
+          "rate": 0.0
+        }
+      },
+      "any_max_iter": false,
+      "n_trials": 10000,
+      "use": "sensitivity_panel",
+      "descriptive": false
+    },
+    "mdl_on_x10": {
+      "dr_l2": [
+        18.388543819998322,
+        [
+          18.388543819998322,
+          18.388543819998322
+        ]
+      ],
+      "psep_l2": [
+        0.0,
+        [
+          0.0,
+          0.0
+        ]
+      ],
+      "dr_gibf": [
+        18.37776069370632,
+        [
+          18.36916642179632,
+          18.38461611123432
+        ]
+      ],
+      "psep_gibf": [
+        0.0,
+        [
+          0.0,
+          0.0
+        ]
+      ],
+      "dr_mmv": [
+        18.37114381999832,
+        [
+          18.369293819998322,
+          18.37284506999832
+        ]
+      ],
+      "psep_mmv": [
+        0.0,
+        [
+          0.0,
+          0.0
+        ]
+      ],
+      "gap_gibf_minus_mmv": [
+        0.006616873708001009,
+        [
+          -0.0026177812244479837,
+          0.014072291236000336
+        ]
+      ],
+      "miss_rate_l2": [
+        1.0,
+        [
+          1.0,
+          1.0
+        ]
+      ],
+      "n_nonmiss_l2": 0,
+      "matched_err_nonmiss_mean_l2": null,
+      "outcome_counts_l2": {
+        "miss": 10000,
+        "correct": 0,
+        "mislocated": 0
+      },
+      "conditional_correct_error_l2": {
+        "n": 0,
+        "mean": null,
+        "ci": null
+      },
+      "supplementary_8peak_psep_l2": [
+        0.0,
+        [
+          0.0,
+          0.0
+        ]
+      ],
+      "supplementary_8peak_dr_l2": [
+        18.388543819998322,
+        [
+          18.388543819998322,
+          18.388543819998322
+        ]
+      ],
+      "miss_penalty_reconstruction_l2": {
+        "formula": "(matched_error_sum + (n_true - n_matched) * penalty) / n_true",
+        "stored_arrays": [
+          "matched_err_sum_l2",
+          "matched_n_l2"
+        ]
+      },
+      "threshold_05_dr_l2": [
+        18.388543819998322,
+        [
+          18.388543819998322,
+          18.388543819998322
+        ]
+      ],
+      "threshold_05_psep_l2": [
+        0.0,
+        [
+          0.0,
+          0.0
+        ]
+      ],
+      "threshold_05_miss_rate_l2": [
+        1.0,
+        [
+          1.0,
+          1.0
+        ]
+      ],
+      "threshold_05_outcome_counts_l2": {
+        "miss": 10000,
+        "correct": 0,
+        "mislocated": 0
+      },
+      "threshold_05_conditional_correct_error_l2": {
+        "n": 0,
+        "mean": null,
+        "ci": null
+      },
+      "threshold_20_dr_l2": [
+        18.388543819998322,
+        [
+          18.388543819998322,
+          18.388543819998322
+        ]
+      ],
+      "threshold_20_psep_l2": [
+        0.0,
+        [
+          0.0,
+          0.0
+        ]
+      ],
+      "threshold_20_miss_rate_l2": [
+        1.0,
+        [
+          1.0,
+          1.0
+        ]
+      ],
+      "threshold_20_outcome_counts_l2": {
+        "miss": 10000,
+        "correct": 0,
+        "mislocated": 0
+      },
+      "threshold_20_conditional_correct_error_l2": {
+        "n": 0,
+        "mean": null,
+        "ci": null
+      },
+      "miss_rate_gibf": [
+        0.9994,
+        [
+          0.9989,
+          0.9998
+        ]
+      ],
+      "n_nonmiss_gibf": 6,
+      "matched_err_nonmiss_mean_gibf": 1.5,
+      "outcome_counts_gibf": {
+        "miss": 9994,
+        "correct": 0,
+        "mislocated": 6
+      },
+      "conditional_correct_error_gibf": {
+        "n": 0,
+        "mean": null,
+        "ci": null
+      },
+      "supplementary_8peak_psep_gibf": [
+        0.0,
+        [
+          0.0,
+          0.0
+        ]
+      ],
+      "supplementary_8peak_dr_gibf": [
+        18.37776069370632,
+        [
+          18.36916642179632,
+          18.38461611123432
+        ]
+      ],
+      "miss_penalty_reconstruction_gibf": {
+        "formula": "(matched_error_sum + (n_true - n_matched) * penalty) / n_true",
+        "stored_arrays": [
+          "matched_err_sum_gibf",
+          "matched_n_gibf"
+        ]
+      },
+      "threshold_05_dr_gibf": [
+        18.090773482755097,
+        [
+          18.045447647813297,
+          18.134525929692717
+        ]
+      ],
+      "threshold_05_psep_gibf": [
+        0.0,
+        [
+          0.0,
+          0.0
+        ]
+      ],
+      "threshold_05_miss_rate_gibf": [
+        0.9824,
+        [
+          0.9797,
+          0.985
+        ]
+      ],
+      "threshold_05_outcome_counts_gibf": {
+        "miss": 9824,
+        "correct": 0,
+        "mislocated": 176
+      },
+      "threshold_05_conditional_correct_error_gibf": {
+        "n": 0,
+        "mean": null,
+        "ci": null
+      },
+      "threshold_20_dr_gibf": [
+        18.38789381999832,
+        [
+          18.38754381999832,
+          18.388243819998323
+        ]
+      ],
+      "threshold_20_psep_gibf": [
+        0.0,
+        [
+          0.0,
+          0.0
+        ]
+      ],
+      "threshold_20_miss_rate_gibf": [
+        1.0,
+        [
+          1.0,
+          1.0
+        ]
+      ],
+      "threshold_20_outcome_counts_gibf": {
+        "miss": 10000,
+        "correct": 0,
+        "mislocated": 0
+      },
+      "threshold_20_conditional_correct_error_gibf": {
+        "n": 0,
+        "mean": null,
+        "ci": null
+      },
+      "miss_rate_mmv": [
+        1.0,
+        [
+          1.0,
+          1.0
+        ]
+      ],
+      "n_nonmiss_mmv": 0,
+      "matched_err_nonmiss_mean_mmv": null,
+      "outcome_counts_mmv": {
+        "miss": 10000,
+        "correct": 0,
+        "mislocated": 0
+      },
+      "conditional_correct_error_mmv": {
+        "n": 0,
+        "mean": null,
+        "ci": null
+      },
+      "supplementary_8peak_psep_mmv": [
+        0.0,
+        [
+          0.0,
+          0.0
+        ]
+      ],
+      "supplementary_8peak_dr_mmv": [
+        18.37114381999832,
+        [
+          18.369293819998322,
+          18.37284506999832
+        ]
+      ],
+      "miss_penalty_reconstruction_mmv": {
+        "formula": "(matched_error_sum + (n_true - n_matched) * penalty) / n_true",
+        "stored_arrays": [
+          "matched_err_sum_mmv",
+          "matched_n_mmv"
+        ]
+      },
+      "threshold_05_dr_mmv": [
+        18.37114381999832,
+        [
+          18.369293819998322,
+          18.37284506999832
+        ]
+      ],
+      "threshold_05_psep_mmv": [
+        0.0,
+        [
+          0.0,
+          0.0
+        ]
+      ],
+      "threshold_05_miss_rate_mmv": [
+        1.0,
+        [
+          1.0,
+          1.0
+        ]
+      ],
+      "threshold_05_outcome_counts_mmv": {
+        "miss": 10000,
+        "correct": 0,
+        "mislocated": 0
+      },
+      "threshold_05_conditional_correct_error_mmv": {
+        "n": 0,
+        "mean": null,
+        "ci": null
+      },
+      "threshold_20_dr_mmv": [
+        18.37114381999832,
+        [
+          18.369293819998322,
+          18.37284506999832
+        ]
+      ],
+      "threshold_20_psep_mmv": [
+        0.0,
+        [
+          0.0,
+          0.0
+        ]
+      ],
+      "threshold_20_miss_rate_mmv": [
+        1.0,
+        [
+          1.0,
+          1.0
+        ]
+      ],
+      "threshold_20_outcome_counts_mmv": {
+        "miss": 10000,
+        "correct": 0,
+        "mislocated": 0
+      },
+      "threshold_20_conditional_correct_error_mmv": {
+        "n": 0,
+        "mean": null,
+        "ci": null
+      },
+      "niter_gibf_mean": 5.375583333333333,
+      "niter_mmv_mean": 13.0,
+      "niter_gibf_max": 13,
+      "niter_mmv_max": 13,
+      "stop_reason_gibf": {
+        "cost_increase": {
+          "count": 41874,
+          "rate": 0.6979
+        },
+        "relative_tolerance": {
+          "count": 161,
+          "rate": 0.002683333333333333
+        },
+        "active_set_floor": {
+          "count": 17965,
+          "rate": 0.29941666666666666
+        },
+        "max_iter": {
+          "count": 0,
+          "rate": 0.0
+        }
+      },
+      "stop_reason_mmv": {
+        "cost_increase": {
+          "count": 0,
+          "rate": 0.0
+        },
+        "relative_tolerance": {
+          "count": 0,
+          "rate": 0.0
+        },
+        "active_set_floor": {
+          "count": 10000,
+          "rate": 1.0
+        },
+        "max_iter": {
+          "count": 0,
+          "rate": 0.0
+        }
+      },
+      "any_max_iter": false,
+      "n_trials": 10000,
+      "use": "sensitivity_panel",
+      "descriptive": false
+    },
+    "oracle_on_x1": {
+      "dr_l2": [
+        18.38839381999832,
+        [
+          18.38819381999832,
+          18.388543819998322
+        ]
+      ],
+      "psep_l2": [
+        0.0,
+        [
+          0.0,
+          0.0
+        ]
+      ],
+      "dr_gibf": [
+        6.543970047109394,
+        [
+          6.3780929439654095,
+          6.709622842972478
+        ]
+      ],
+      "psep_gibf": [
+        0.6395,
+        [
+          0.6301975,
+          0.6489
+        ]
+      ],
+      "dr_mmv": [
+        3.307904140183695,
+        [
+          3.174324399870808,
+          3.4440083232156824
+        ]
+      ],
+      "psep_mmv": [
+        0.8188,
+        [
+          0.8111975,
+          0.8263
+        ]
+      ],
+      "gap_gibf_minus_mmv": [
+        3.2360659069256985,
+        [
+          3.0775556455681636,
+          3.3907797095192334
+        ]
+      ],
+      "miss_rate_l2": [
+        1.0,
+        [
+          1.0,
+          1.0
+        ]
+      ],
+      "n_nonmiss_l2": 0,
+      "matched_err_nonmiss_mean_l2": null,
+      "outcome_counts_l2": {
+        "miss": 10000,
+        "correct": 0,
+        "mislocated": 0
+      },
+      "conditional_correct_error_l2": {
+        "n": 0,
+        "mean": null,
+        "ci": null
+      },
+      "supplementary_8peak_psep_l2": [
+        0.0,
+        [
+          0.0,
+          0.0
+        ]
+      ],
+      "supplementary_8peak_dr_l2": [
+        18.38839381999832,
+        [
+          18.38819381999832,
+          18.388543819998322
+        ]
+      ],
+      "miss_penalty_reconstruction_l2": {
+        "formula": "(matched_error_sum + (n_true - n_matched) * penalty) / n_true",
+        "stored_arrays": [
+          "matched_err_sum_l2",
+          "matched_n_l2"
+        ]
+      },
+      "threshold_05_dr_l2": [
+        18.38839381999832,
+        [
+          18.38819381999832,
+          18.388543819998322
+        ]
+      ],
+      "threshold_05_psep_l2": [
+        0.0,
+        [
+          0.0,
+          0.0
+        ]
+      ],
+      "threshold_05_miss_rate_l2": [
+        1.0,
+        [
+          1.0,
+          1.0
+        ]
+      ],
+      "threshold_05_outcome_counts_l2": {
+        "miss": 10000,
+        "correct": 0,
+        "mislocated": 0
+      },
+      "threshold_05_conditional_correct_error_l2": {
+        "n": 0,
+        "mean": null,
+        "ci": null
+      },
+      "threshold_20_dr_l2": [
+        18.38839381999832,
+        [
+          18.38819381999832,
+          18.388543819998322
+        ]
+      ],
+      "threshold_20_psep_l2": [
+        0.0,
+        [
+          0.0,
+          0.0
+        ]
+      ],
+      "threshold_20_miss_rate_l2": [
+        1.0,
+        [
+          1.0,
+          1.0
+        ]
+      ],
+      "threshold_20_outcome_counts_l2": {
+        "miss": 10000,
+        "correct": 0,
+        "mislocated": 0
+      },
+      "threshold_20_conditional_correct_error_l2": {
+        "n": 0,
+        "mean": null,
+        "ci": null
+      },
+      "miss_rate_gibf": [
+        0.3605,
+        [
+          0.3511,
+          0.3698025
+        ]
+      ],
+      "n_nonmiss_gibf": 6395,
+      "matched_err_nonmiss_mean_gibf": 0.1458952306489445,
+      "outcome_counts_gibf": {
+        "miss": 3605,
+        "correct": 6395,
+        "mislocated": 0
+      },
+      "conditional_correct_error_gibf": {
+        "n": 6395,
+        "mean": 0.1458952306489445,
+        "ci": [
+          0.14042025019546522,
+          0.1512920250195465
+        ]
+      },
+      "supplementary_8peak_psep_gibf": [
+        0.6395,
+        [
+          0.6301975,
+          0.6489
+        ]
+      ],
+      "supplementary_8peak_dr_gibf": [
+        6.543970047109394,
+        [
+          6.3780929439654095,
+          6.709622842972478
+        ]
+      ],
+      "miss_penalty_reconstruction_gibf": {
+        "formula": "(matched_error_sum + (n_true - n_matched) * penalty) / n_true",
+        "stored_arrays": [
+          "matched_err_sum_gibf",
+          "matched_n_gibf"
+        ]
+      },
+      "threshold_05_dr_gibf": [
+        6.5406423383453935,
+        [
+          6.376243396864309,
+          6.706546384208479
+        ]
+      ],
+      "threshold_05_psep_gibf": [
+        0.6396,
+        [
+          0.6302,
+          0.649
+        ]
+      ],
+      "threshold_05_miss_rate_gibf": [
+        0.3603,
+        [
+          0.351,
+          0.3697
+        ]
+      ],
+      "threshold_05_outcome_counts_gibf": {
+        "miss": 3603,
+        "correct": 6396,
+        "mislocated": 1
+      },
+      "threshold_05_conditional_correct_error_gibf": {
+        "n": 6396,
+        "mean": 0.14595059412132583,
+        "ci": [
+          0.14055659787367106,
+          0.15158106629143211
+        ]
+      },
+      "threshold_20_dr_gibf": [
+        6.860252690251364,
+        [
+          6.698553017230929,
+          7.033211948327796
+        ]
+      ],
+      "threshold_20_psep_gibf": [
+        0.6214,
+        [
+          0.6116975,
+          0.6304025
+        ]
+      ],
+      "threshold_20_miss_rate_gibf": [
+        0.3786,
+        [
+          0.36959749999999997,
+          0.38830249999999994
+        ]
+      ],
+      "threshold_20_outcome_counts_gibf": {
+        "miss": 3786,
+        "correct": 6214,
+        "mislocated": 0
+      },
+      "threshold_20_conditional_correct_error_gibf": {
+        "n": 6214,
+        "mean": 0.13807531380753138,
+        "ci": [
+          0.13244085934985517,
+          0.14338590280012875
+        ]
+      },
+      "miss_rate_mmv": [
+        0.1812,
+        [
+          0.1737,
+          0.18880249999999998
+        ]
+      ],
+      "n_nonmiss_mmv": 8188,
+      "matched_err_nonmiss_mean_mmv": 0.08048363458720079,
+      "outcome_counts_mmv": {
+        "miss": 1812,
+        "correct": 8188,
+        "mislocated": 0
+      },
+      "conditional_correct_error_mmv": {
+        "n": 8188,
+        "mean": 0.08048363458720079,
+        "ci": [
+          0.07657394968246214,
+          0.08439179286761114
+        ]
+      },
+      "supplementary_8peak_psep_mmv": [
+        0.8188,
+        [
+          0.8111975,
+          0.8263
+        ]
+      ],
+      "supplementary_8peak_dr_mmv": [
+        3.307904140183695,
+        [
+          3.174324399870808,
+          3.4440083232156824
+        ]
+      ],
+      "miss_penalty_reconstruction_mmv": {
+        "formula": "(matched_error_sum + (n_true - n_matched) * penalty) / n_true",
+        "stored_arrays": [
+          "matched_err_sum_mmv",
+          "matched_n_mmv"
+        ]
+      },
+      "threshold_05_dr_mmv": [
+        3.307904140183695,
+        [
+          3.174324399870808,
+          3.4440083232156824
+        ]
+      ],
+      "threshold_05_psep_mmv": [
+        0.8188,
+        [
+          0.8111975,
+          0.8263
+        ]
+      ],
+      "threshold_05_miss_rate_mmv": [
+        0.1812,
+        [
+          0.1737,
+          0.18880249999999998
+        ]
+      ],
+      "threshold_05_outcome_counts_mmv": {
+        "miss": 1812,
+        "correct": 8188,
+        "mislocated": 0
+      },
+      "threshold_05_conditional_correct_error_mmv": {
+        "n": 8188,
+        "mean": 0.08048363458720079,
+        "ci": [
+          0.0764533463605276,
+          0.08475970933072788
+        ]
+      },
+      "threshold_20_dr_mmv": [
+        3.847682435457644,
+        [
+          3.7073618635381065,
+          3.99313974478163
+        ]
+      ],
+      "threshold_20_psep_mmv": [
+        0.7881,
+        [
+          0.7799,
+          0.7960025000000001
+        ]
+      ],
+      "threshold_20_miss_rate_mmv": [
+        0.2119,
+        [
+          0.2039975,
+          0.2201
+        ]
+      ],
+      "threshold_20_outcome_counts_mmv": {
+        "miss": 2119,
+        "correct": 7881,
+        "mislocated": 0
+      },
+      "threshold_20_conditional_correct_error_mmv": {
+        "n": 7881,
+        "mean": 0.07169140971957873,
+        "ci": [
+          0.06788478619464534,
+          0.07549803324451211
+        ]
+      },
+      "niter_gibf_mean": 12.3667,
+      "niter_mmv_mean": 13.0,
+      "niter_gibf_max": 13,
+      "niter_mmv_max": 13,
+      "stop_reason_gibf": {
+        "cost_increase": {
+          "count": 2513,
+          "rate": 0.12565
+        },
+        "relative_tolerance": {
+          "count": 639,
+          "rate": 0.03195
+        },
+        "active_set_floor": {
+          "count": 16848,
+          "rate": 0.8424
+        },
+        "max_iter": {
+          "count": 0,
+          "rate": 0.0
+        }
+      },
+      "stop_reason_mmv": {
+        "cost_increase": {
+          "count": 0,
+          "rate": 0.0
+        },
+        "relative_tolerance": {
+          "count": 0,
+          "rate": 0.0
+        },
+        "active_set_floor": {
+          "count": 10000,
+          "rate": 1.0
+        },
+        "max_iter": {
+          "count": 0,
+          "rate": 0.0
+        }
+      },
+      "any_max_iter": false,
+      "n_trials": 10000,
+      "use": "b6a_oracle_reference",
+      "descriptive": true
+    },
+    "mdl_off_x1": {
+      "dr_l2": [
+        18.38829381999832,
+        [
+          18.38809381999832,
+          18.38849381999832
+        ]
+      ],
+      "psep_l2": [
+        0.0,
+        [
+          0.0,
+          0.0
+        ]
+      ],
+      "dr_gibf": [
+        0.19910231190798416,
+        [
+          0.16722734469488706,
+          0.23369429516598095
+        ]
+      ],
+      "psep_gibf": [
+        0.9906,
+        [
+          0.9886975,
+          0.9924
+        ]
+      ],
+      "dr_mmv": [
+        1.2279387851538912,
+        [
+          1.1490318666043489,
+          1.3131671624674335
+        ]
+      ],
+      "psep_mmv": [
+        0.9353,
+        [
+          0.9305,
+          0.9398
+        ]
+      ],
+      "gap_gibf_minus_mmv": [
+        -1.028836473245907,
+        [
+          -1.1121891888965492,
+          -0.9468515672919149
+        ]
+      ],
+      "miss_rate_l2": [
+        1.0,
+        [
+          1.0,
+          1.0
+        ]
+      ],
+      "n_nonmiss_l2": 0,
+      "matched_err_nonmiss_mean_l2": null,
+      "outcome_counts_l2": {
+        "miss": 10000,
+        "correct": 0,
+        "mislocated": 0
+      },
+      "conditional_correct_error_l2": {
+        "n": 0,
+        "mean": null,
+        "ci": null
+      },
+      "supplementary_8peak_psep_l2": [
+        0.0,
+        [
+          0.0,
+          0.0
+        ]
+      ],
+      "supplementary_8peak_dr_l2": [
+        18.38829381999832,
+        [
+          18.38809381999832,
+          18.38849381999832
+        ]
+      ],
+      "miss_penalty_reconstruction_l2": {
+        "formula": "(matched_error_sum + (n_true - n_matched) * penalty) / n_true",
+        "stored_arrays": [
+          "matched_err_sum_l2",
+          "matched_n_l2"
+        ]
+      },
+      "threshold_05_dr_l2": [
+        18.38829381999832,
+        [
+          18.38809381999832,
+          18.38849381999832
+        ]
+      ],
+      "threshold_05_psep_l2": [
+        0.0,
+        [
+          0.0,
+          0.0
+        ]
+      ],
+      "threshold_05_miss_rate_l2": [
+        1.0,
+        [
+          1.0,
+          1.0
+        ]
+      ],
+      "threshold_05_outcome_counts_l2": {
+        "miss": 10000,
+        "correct": 0,
+        "mislocated": 0
+      },
+      "threshold_05_conditional_correct_error_l2": {
+        "n": 0,
+        "mean": null,
+        "ci": null
+      },
+      "threshold_20_dr_l2": [
+        18.38829381999832,
+        [
+          18.38809381999832,
+          18.38849381999832
+        ]
+      ],
+      "threshold_20_psep_l2": [
+        0.0,
+        [
+          0.0,
+          0.0
+        ]
+      ],
+      "threshold_20_miss_rate_l2": [
+        1.0,
+        [
+          1.0,
+          1.0
+        ]
+      ],
+      "threshold_20_outcome_counts_l2": {
+        "miss": 10000,
+        "correct": 0,
+        "mislocated": 0
+      },
+      "threshold_20_conditional_correct_error_l2": {
+        "n": 0,
+        "mean": null,
+        "ci": null
+      },
+      "miss_rate_gibf": [
+        0.0094,
+        [
+          0.0076,
+          0.011302499999999986
+        ]
+      ],
+      "n_nonmiss_gibf": 9906,
+      "matched_err_nonmiss_mean_gibf": 0.031142741772663032,
+      "outcome_counts_gibf": {
+        "miss": 94,
+        "correct": 9906,
+        "mislocated": 0
+      },
+      "conditional_correct_error_gibf": {
+        "n": 9906,
+        "mean": 0.031142741772663032,
+        "ci": [
+          0.028871391076115485,
+          0.03361599030890369
+        ]
+      },
+      "supplementary_8peak_psep_gibf": [
+        0.9906,
+        [
+          0.9886975,
+          0.9924
+        ]
+      ],
+      "supplementary_8peak_dr_gibf": [
+        0.19910231190798416,
+        [
+          0.16722734469488706,
+          0.23369429516598095
+        ]
+      ],
+      "miss_penalty_reconstruction_gibf": {
+        "formula": "(matched_error_sum + (n_true - n_matched) * penalty) / n_true",
+        "stored_arrays": [
+          "matched_err_sum_gibf",
+          "matched_n_gibf"
+        ]
+      },
+      "threshold_05_dr_gibf": [
+        0.19736345752598436,
+        [
+          0.16519821167243726,
+          0.23195419078398116
+        ]
+      ],
+      "threshold_05_psep_gibf": [
+        0.9907,
+        [
+          0.9888,
+          0.9925
+        ]
+      ],
+      "threshold_05_miss_rate_gibf": [
+        0.0093,
+        [
+          0.0075,
+          0.0112
+        ]
+      ],
+      "threshold_05_outcome_counts_gibf": {
+        "miss": 93,
+        "correct": 9907,
+        "mislocated": 0
+      },
+      "threshold_05_conditional_correct_error_gibf": {
+        "n": 9907,
+        "mean": 0.031190067628949228,
+        "ci": [
+          0.028818007469466035,
+          0.03361259715352781
+        ]
+      },
+      "threshold_20_dr_gibf": [
+        0.5582897514539501,
+        [
+          0.49904755684795565,
+          0.6190536834643942
+        ]
+      ],
+      "threshold_20_psep_gibf": [
+        0.9703,
+        [
+          0.9669,
+          0.9736
+        ]
+      ],
+      "threshold_20_miss_rate_gibf": [
+        0.0297,
+        [
+          0.0264,
+          0.0331
+        ]
+      ],
+      "threshold_20_outcome_counts_gibf": {
+        "miss": 297,
+        "correct": 9703,
+        "mislocated": 0
+      },
+      "threshold_20_conditional_correct_error_gibf": {
+        "n": 9703,
+        "mean": 0.027723384520251467,
+        "ci": [
+          0.025454756260950225,
+          0.030042254972688857
+        ]
+      },
+      "miss_rate_mmv": [
+        0.0647,
+        [
+          0.0602,
+          0.0695
+        ]
+      ],
+      "n_nonmiss_mmv": 9353,
+      "matched_err_nonmiss_mean_mmv": 0.07537688442211055,
+      "outcome_counts_mmv": {
+        "miss": 647,
+        "correct": 9353,
+        "mislocated": 0
+      },
+      "conditional_correct_error_mmv": {
+        "n": 9353,
+        "mean": 0.07537688442211055,
+        "ci": [
+          0.07158131080936597,
+          0.07901341815460279
+        ]
+      },
+      "supplementary_8peak_psep_mmv": [
+        0.9353,
+        [
+          0.9305,
+          0.9398
+        ]
+      ],
+      "supplementary_8peak_dr_mmv": [
+        1.2279387851538912,
+        [
+          1.1490318666043489,
+          1.3131671624674335
+        ]
+      ],
+      "miss_penalty_reconstruction_mmv": {
+        "formula": "(matched_error_sum + (n_true - n_matched) * penalty) / n_true",
+        "stored_arrays": [
+          "matched_err_sum_mmv",
+          "matched_n_mmv"
+        ]
+      },
+      "threshold_05_dr_mmv": [
+        1.2279387851538912,
+        [
+          1.1490318666043489,
+          1.3131671624674335
+        ]
+      ],
+      "threshold_05_psep_mmv": [
+        0.9353,
+        [
+          0.9305,
+          0.9398
+        ]
+      ],
+      "threshold_05_miss_rate_mmv": [
+        0.0647,
+        [
+          0.0602,
+          0.0695
+        ]
+      ],
+      "threshold_05_outcome_counts_mmv": {
+        "miss": 647,
+        "correct": 9353,
+        "mislocated": 0
+      },
+      "threshold_05_conditional_correct_error_mmv": {
+        "n": 9353,
+        "mean": 0.07537688442211055,
+        "ci": [
+          0.07174168715920026,
+          0.07901208168502084
+        ]
+      },
+      "threshold_20_dr_mmv": [
+        1.9451525186278231,
+        [
+          1.8445815688538323,
+          2.0481772184018134
+        ]
+      ],
+      "threshold_20_psep_mmv": [
+        0.8946,
+        [
+          0.8888,
+          0.9003
+        ]
+      ],
+      "threshold_20_miss_rate_mmv": [
+        0.1054,
+        [
+          0.0997,
+          0.1112
+        ]
+      ],
+      "threshold_20_outcome_counts_mmv": {
+        "miss": 1054,
+        "correct": 8946,
+        "mislocated": 0
+      },
+      "threshold_20_conditional_correct_error_mmv": {
+        "n": 8946,
+        "mean": 0.06667784484685893,
+        "ci": [
+          0.0632684998882182,
+          0.07014308070646098
+        ]
+      },
+      "niter_gibf_mean": 9.810166666666667,
+      "niter_mmv_mean": 23.6567,
+      "niter_gibf_max": 50,
+      "niter_mmv_max": 50,
+      "stop_reason_gibf": {
+        "cost_increase": {
+          "count": 43866,
+          "rate": 0.7311
+        },
+        "relative_tolerance": {
+          "count": 16078,
+          "rate": 0.2679666666666667
+        },
+        "active_set_floor": {
+          "count": 0,
+          "rate": 0.0
+        },
+        "max_iter": {
+          "count": 56,
+          "rate": 0.0009333333333333333
+        }
+      },
+      "stop_reason_mmv": {
+        "cost_increase": {
+          "count": 240,
+          "rate": 0.024
+        },
+        "relative_tolerance": {
+          "count": 9746,
+          "rate": 0.9746
+        },
+        "active_set_floor": {
+          "count": 0,
+          "rate": 0.0
+        },
+        "max_iter": {
+          "count": 14,
+          "rate": 0.0014
+        }
+      },
+      "any_max_iter": true,
+      "n_trials": 10000,
+      "use": "descriptive_reduction_off",
+      "descriptive": true
+    },
+    "oracle_off_x1": {
+      "dr_l2": [
+        18.38839381999832,
+        [
+          18.38819381999832,
+          18.388543819998322
+        ]
+      ],
+      "psep_l2": [
+        0.0,
+        [
+          0.0,
+          0.0
+        ]
+      ],
+      "dr_gibf": [
+        0.19895231190798418,
+        [
+          0.1671723446948871,
+          0.23358342818843084
+        ]
+      ],
+      "psep_gibf": [
+        0.9906,
+        [
+          0.9886975,
+          0.9924
+        ]
+      ],
+      "dr_mmv": [
+        0.11467615595399211,
+        [
+          0.09205865336999412,
+          0.13967108866153974
+        ]
+      ],
+      "psep_mmv": [
+        0.9953,
+        [
+          0.9939,
+          0.9966
+        ]
+      ],
+      "gap_gibf_minus_mmv": [
+        0.0842761559539921,
+        [
+          0.048986951336445296,
+          0.11900699359398872
+        ]
+      ],
+      "miss_rate_l2": [
+        1.0,
+        [
+          1.0,
+          1.0
+        ]
+      ],
+      "n_nonmiss_l2": 0,
+      "matched_err_nonmiss_mean_l2": null,
+      "outcome_counts_l2": {
+        "miss": 10000,
+        "correct": 0,
+        "mislocated": 0
+      },
+      "conditional_correct_error_l2": {
+        "n": 0,
+        "mean": null,
+        "ci": null
+      },
+      "supplementary_8peak_psep_l2": [
+        0.0,
+        [
+          0.0,
+          0.0
+        ]
+      ],
+      "supplementary_8peak_dr_l2": [
+        18.38839381999832,
+        [
+          18.38819381999832,
+          18.388543819998322
+        ]
+      ],
+      "miss_penalty_reconstruction_l2": {
+        "formula": "(matched_error_sum + (n_true - n_matched) * penalty) / n_true",
+        "stored_arrays": [
+          "matched_err_sum_l2",
+          "matched_n_l2"
+        ]
+      },
+      "threshold_05_dr_l2": [
+        18.38839381999832,
+        [
+          18.38819381999832,
+          18.388543819998322
+        ]
+      ],
+      "threshold_05_psep_l2": [
+        0.0,
+        [
+          0.0,
+          0.0
+        ]
+      ],
+      "threshold_05_miss_rate_l2": [
+        1.0,
+        [
+          1.0,
+          1.0
+        ]
+      ],
+      "threshold_05_outcome_counts_l2": {
+        "miss": 10000,
+        "correct": 0,
+        "mislocated": 0
+      },
+      "threshold_05_conditional_correct_error_l2": {
+        "n": 0,
+        "mean": null,
+        "ci": null
+      },
+      "threshold_20_dr_l2": [
+        18.38839381999832,
+        [
+          18.38819381999832,
+          18.388543819998322
+        ]
+      ],
+      "threshold_20_psep_l2": [
+        0.0,
+        [
+          0.0,
+          0.0
+        ]
+      ],
+      "threshold_20_miss_rate_l2": [
+        1.0,
+        [
+          1.0,
+          1.0
+        ]
+      ],
+      "threshold_20_outcome_counts_l2": {
+        "miss": 10000,
+        "correct": 0,
+        "mislocated": 0
+      },
+      "threshold_20_conditional_correct_error_l2": {
+        "n": 0,
+        "mean": null,
+        "ci": null
+      },
+      "miss_rate_gibf": [
+        0.0094,
+        [
+          0.0076,
+          0.011302499999999986
+        ]
+      ],
+      "n_nonmiss_gibf": 9906,
+      "matched_err_nonmiss_mean_gibf": 0.030991318392893197,
+      "outcome_counts_gibf": {
+        "miss": 94,
+        "correct": 9906,
+        "mislocated": 0
+      },
+      "conditional_correct_error_gibf": {
+        "n": 9906,
+        "mean": 0.030991318392893197,
+        "ci": [
+          0.02871996769634565,
+          0.03346456692913386
+        ]
+      },
+      "supplementary_8peak_psep_gibf": [
+        0.9906,
+        [
+          0.9886975,
+          0.9924
+        ]
+      ],
+      "supplementary_8peak_dr_gibf": [
+        0.19895231190798418,
+        [
+          0.1671723446948871,
+          0.23358342818843084
+        ]
+      ],
+      "miss_penalty_reconstruction_gibf": {
+        "formula": "(matched_error_sum + (n_true - n_matched) * penalty) / n_true",
+        "stored_arrays": [
+          "matched_err_sum_gibf",
+          "matched_n_gibf"
+        ]
+      },
+      "threshold_05_dr_gibf": [
+        0.19721345752598435,
+        [
+          0.16504821167243725,
+          0.23175794078398113
+        ]
+      ],
+      "threshold_05_psep_gibf": [
+        0.9907,
+        [
+          0.9888,
+          0.9925
+        ]
+      ],
+      "threshold_05_miss_rate_gibf": [
+        0.0093,
+        [
+          0.0075,
+          0.0112
+        ]
+      ],
+      "threshold_05_outcome_counts_gibf": {
+        "miss": 93,
+        "correct": 9907,
+        "mislocated": 0
+      },
+      "threshold_05_conditional_correct_error_gibf": {
+        "n": 9907,
+        "mean": 0.031038659533663065,
+        "ci": [
+          0.028715807005147878,
+          0.03346118905824165
+        ]
+      },
+      "threshold_20_dr_gibf": [
+        0.5617174602179497,
+        [
+          0.5017292942524053,
+          0.6229486135879437
+        ]
+      ],
+      "threshold_20_psep_gibf": [
+        0.9701,
+        [
+          0.9666,
+          0.9734025000000001
+        ]
+      ],
+      "threshold_20_miss_rate_gibf": [
+        0.0299,
+        [
+          0.026597500000000003,
+          0.0334
+        ]
+      ],
+      "threshold_20_outcome_counts_gibf": {
+        "miss": 299,
+        "correct": 9701,
+        "mislocated": 0
+      },
+      "threshold_20_conditional_correct_error_gibf": {
+        "n": 9701,
+        "mean": 0.02757447685805587,
+        "ci": [
+          0.025255128337284816,
+          0.029687661065869498
+        ]
+      },
+      "miss_rate_mmv": [
+        0.0047,
+        [
+          0.0034,
+          0.0061
+        ]
+      ],
+      "n_nonmiss_mmv": 9953,
+      "matched_err_nonmiss_mean_mmv": 0.030694263036270472,
+      "outcome_counts_mmv": {
+        "miss": 47,
+        "correct": 9953,
+        "mislocated": 0
+      },
+      "conditional_correct_error_mmv": {
+        "n": 9953,
+        "mean": 0.030694263036270472,
+        "ci": [
+          0.028333165879634283,
+          0.033155832412337986
+        ]
+      },
+      "supplementary_8peak_psep_mmv": [
+        0.9953,
+        [
+          0.9939,
+          0.9966
+        ]
+      ],
+      "supplementary_8peak_dr_mmv": [
+        0.11467615595399211,
+        [
+          0.09205865336999412,
+          0.13967108866153974
+        ]
+      ],
+      "miss_penalty_reconstruction_mmv": {
+        "formula": "(matched_error_sum + (n_true - n_matched) * penalty) / n_true",
+        "stored_arrays": [
+          "matched_err_sum_mmv",
+          "matched_n_mmv"
+        ]
+      },
+      "threshold_05_dr_mmv": [
+        0.11467615595399211,
+        [
+          0.09205865336999412,
+          0.13967108866153974
+        ]
+      ],
+      "threshold_05_psep_mmv": [
+        0.9953,
+        [
+          0.9939,
+          0.9966
+        ]
+      ],
+      "threshold_05_miss_rate_mmv": [
+        0.0047,
+        [
+          0.0034,
+          0.0061
+        ]
+      ],
+      "threshold_05_outcome_counts_mmv": {
+        "miss": 47,
+        "correct": 9953,
+        "mislocated": 0
+      },
+      "threshold_05_conditional_correct_error_mmv": {
+        "n": 9953,
+        "mean": 0.030694263036270472,
+        "ci": [
+          0.028482618306038383,
+          0.03310685220536521
+        ]
+      },
+      "threshold_20_dr_mmv": [
+        0.49915755684795565,
+        [
+          0.4434005710059608,
+          0.5545791596675004
+        ]
+      ],
+      "threshold_20_psep_mmv": [
+        0.9736,
+        [
+          0.9705,
+          0.9767
+        ]
+      ],
+      "threshold_20_miss_rate_mmv": [
+        0.0264,
+        [
+          0.0233,
+          0.0295
+        ]
+      ],
+      "threshold_20_outcome_counts_mmv": {
+        "miss": 264,
+        "correct": 9736,
+        "mislocated": 0
+      },
+      "threshold_20_conditional_correct_error_mmv": {
+        "n": 9736,
+        "mean": 0.027578060805258833,
+        "ci": [
+          0.025317122021364012,
+          0.029940427280197208
+        ]
+      },
+      "niter_gibf_mean": 24.9053,
+      "niter_mmv_mean": 31.3224,
+      "niter_gibf_max": 50,
+      "niter_mmv_max": 50,
+      "stop_reason_gibf": {
+        "cost_increase": {
+          "count": 4334,
+          "rate": 0.2167
+        },
+        "relative_tolerance": {
+          "count": 15612,
+          "rate": 0.7806
+        },
+        "active_set_floor": {
+          "count": 0,
+          "rate": 0.0
+        },
+        "max_iter": {
+          "count": 54,
+          "rate": 0.0027
+        }
+      },
+      "stop_reason_mmv": {
+        "cost_increase": {
+          "count": 0,
+          "rate": 0.0
+        },
+        "relative_tolerance": {
+          "count": 9998,
+          "rate": 0.9998
+        },
+        "active_set_floor": {
+          "count": 0,
+          "rate": 0.0
+        },
+        "max_iter": {
+          "count": 2,
+          "rate": 0.0002
+        }
+      },
+      "any_max_iter": true,
+      "n_trials": 10000,
+      "use": "descriptive_reduction_off",
+      "descriptive": true
+    },
+    "k1_on_x1": {
+      "dr_l2": [
+        18.38849381999832,
+        [
+          18.38839381999832,
+          18.388543819998322
+        ]
+      ],
+      "psep_l2": [
+        0.0,
+        [
+          0.0,
+          0.0
+        ]
+      ],
+      "dr_gibf": [
+        8.266624429109225,
+        [
+          8.097968541459691,
+          8.44730219305076
+        ]
+      ],
+      "psep_gibf": [
+        0.5395,
+        [
+          0.5294,
+          0.549
+        ]
+      ],
+      "dr_mmv": [
+        8.266624429109225,
+        [
+          8.097968541459691,
+          8.44730219305076
+        ]
+      ],
+      "psep_mmv": [
+        0.5395,
+        [
+          0.5294,
+          0.549
+        ]
+      ],
+      "gap_gibf_minus_mmv": [
+        0.0,
+        [
+          0.0,
+          0.0
+        ]
+      ],
+      "miss_rate_l2": [
+        1.0,
+        [
+          1.0,
+          1.0
+        ]
+      ],
+      "n_nonmiss_l2": 0,
+      "matched_err_nonmiss_mean_l2": null,
+      "outcome_counts_l2": {
+        "miss": 10000,
+        "correct": 0,
+        "mislocated": 0
+      },
+      "conditional_correct_error_l2": {
+        "n": 0,
+        "mean": null,
+        "ci": null
+      },
+      "supplementary_8peak_psep_l2": [
+        0.0,
+        [
+          0.0,
+          0.0
+        ]
+      ],
+      "supplementary_8peak_dr_l2": [
+        18.38849381999832,
+        [
+          18.38839381999832,
+          18.388543819998322
+        ]
+      ],
+      "miss_penalty_reconstruction_l2": {
+        "formula": "(matched_error_sum + (n_true - n_matched) * penalty) / n_true",
+        "stored_arrays": [
+          "matched_err_sum_l2",
+          "matched_n_l2"
+        ]
+      },
+      "threshold_05_dr_l2": [
+        18.38849381999832,
+        [
+          18.38839381999832,
+          18.388543819998322
+        ]
+      ],
+      "threshold_05_psep_l2": [
+        0.0,
+        [
+          0.0,
+          0.0
+        ]
+      ],
+      "threshold_05_miss_rate_l2": [
+        1.0,
+        [
+          1.0,
+          1.0
+        ]
+      ],
+      "threshold_05_outcome_counts_l2": {
+        "miss": 10000,
+        "correct": 0,
+        "mislocated": 0
+      },
+      "threshold_05_conditional_correct_error_l2": {
+        "n": 0,
+        "mean": null,
+        "ci": null
+      },
+      "threshold_20_dr_l2": [
+        18.38849381999832,
+        [
+          18.38839381999832,
+          18.388543819998322
+        ]
+      ],
+      "threshold_20_psep_l2": [
+        0.0,
+        [
+          0.0,
+          0.0
+        ]
+      ],
+      "threshold_20_miss_rate_l2": [
+        1.0,
+        [
+          1.0,
+          1.0
+        ]
+      ],
+      "threshold_20_outcome_counts_l2": {
+        "miss": 10000,
+        "correct": 0,
+        "mislocated": 0
+      },
+      "threshold_20_conditional_correct_error_l2": {
+        "n": 0,
+        "mean": null,
+        "ci": null
+      },
+      "miss_rate_gibf": [
+        0.4605,
+        [
+          0.451,
+          0.4706
+        ]
+      ],
+      "n_nonmiss_gibf": 5395,
+      "matched_err_nonmiss_mean_gibf": 0.04986098239110287,
+      "outcome_counts_gibf": {
+        "miss": 4605,
+        "correct": 5395,
+        "mislocated": 0
+      },
+      "conditional_correct_error_gibf": {
+        "n": 5395,
+        "mean": 0.04986098239110287,
+        "ci": [
+          0.0458758109360519,
+          0.05384615384615385
+        ]
+      },
+      "supplementary_8peak_psep_gibf": [
+        0.5395,
+        [
+          0.5294,
+          0.549
+        ]
+      ],
+      "supplementary_8peak_dr_gibf": [
+        8.266624429109225,
+        [
+          8.097968541459691,
+          8.44730219305076
+        ]
+      ],
+      "miss_penalty_reconstruction_gibf": {
+        "formula": "(matched_error_sum + (n_true - n_matched) * penalty) / n_true",
+        "stored_arrays": [
+          "matched_err_sum_gibf",
+          "matched_n_gibf"
+        ]
+      },
+      "threshold_05_dr_gibf": [
+        8.263146720345226,
+        [
+          8.095040658437242,
+          8.442252262927207
+        ]
+      ],
+      "threshold_05_psep_gibf": [
+        0.5397,
+        [
+          0.5296,
+          0.5491
+        ]
+      ],
+      "threshold_05_miss_rate_gibf": [
+        0.4603,
+        [
+          0.4509,
+          0.4704
+        ]
+      ],
+      "threshold_05_outcome_counts_gibf": {
+        "miss": 4603,
+        "correct": 5397,
+        "mislocated": 0
+      },
+      "threshold_05_conditional_correct_error_gibf": {
+        "n": 5397,
+        "mean": 0.0500277932184547,
+        "ci": [
+          0.046044098573281456,
+          0.0541041319251436
+        ]
+      },
+      "threshold_20_dr_gibf": [
+        8.637861558093189,
+        [
+          8.468647891803206,
+          8.824103663821175
+        ]
+      ],
+      "threshold_20_psep_gibf": [
+        0.5183,
+        [
+          0.5079,
+          0.5278
+        ]
+      ],
+      "threshold_20_miss_rate_gibf": [
+        0.4817,
+        [
+          0.4722,
+          0.4921
+        ]
+      ],
+      "threshold_20_outcome_counts_gibf": {
+        "miss": 4817,
+        "correct": 5183,
+        "mislocated": 0
+      },
+      "threshold_20_conditional_correct_error_gibf": {
+        "n": 5183,
+        "mean": 0.036465367547752266,
+        "ci": [
+          0.03289600617403048,
+          0.04003714065213196
+        ]
+      },
+      "miss_rate_mmv": [
+        0.4605,
+        [
+          0.451,
+          0.4706
+        ]
+      ],
+      "n_nonmiss_mmv": 5395,
+      "matched_err_nonmiss_mean_mmv": 0.04986098239110287,
+      "outcome_counts_mmv": {
+        "miss": 4605,
+        "correct": 5395,
+        "mislocated": 0
+      },
+      "conditional_correct_error_mmv": {
+        "n": 5395,
+        "mean": 0.04986098239110287,
+        "ci": [
+          0.04578313253012048,
+          0.05384615384615385
+        ]
+      },
+      "supplementary_8peak_psep_mmv": [
+        0.5395,
+        [
+          0.5294,
+          0.549
+        ]
+      ],
+      "supplementary_8peak_dr_mmv": [
+        8.266624429109225,
+        [
+          8.097968541459691,
+          8.44730219305076
+        ]
+      ],
+      "miss_penalty_reconstruction_mmv": {
+        "formula": "(matched_error_sum + (n_true - n_matched) * penalty) / n_true",
+        "stored_arrays": [
+          "matched_err_sum_mmv",
+          "matched_n_mmv"
+        ]
+      },
+      "threshold_05_dr_mmv": [
+        8.263146720345226,
+        [
+          8.095040658437242,
+          8.442252262927207
+        ]
+      ],
+      "threshold_05_psep_mmv": [
+        0.5397,
+        [
+          0.5296,
+          0.5491
+        ]
+      ],
+      "threshold_05_miss_rate_mmv": [
+        0.4603,
+        [
+          0.4509,
+          0.4704
+        ]
+      ],
+      "threshold_05_outcome_counts_mmv": {
+        "miss": 4603,
+        "correct": 5397,
+        "mislocated": 0
+      },
+      "threshold_05_conditional_correct_error_mmv": {
+        "n": 5397,
+        "mean": 0.0500277932184547,
+        "ci": [
+          0.0459514545117658,
+          0.05419677598665926
+        ]
+      },
+      "threshold_20_dr_mmv": [
+        8.637861558093189,
+        [
+          8.468647891803206,
+          8.824103663821175
+        ]
+      ],
+      "threshold_20_psep_mmv": [
+        0.5183,
+        [
+          0.5079,
+          0.5278
+        ]
+      ],
+      "threshold_20_miss_rate_mmv": [
+        0.4817,
+        [
+          0.4722,
+          0.4921
+        ]
+      ],
+      "threshold_20_outcome_counts_mmv": {
+        "miss": 4817,
+        "correct": 5183,
+        "mislocated": 0
+      },
+      "threshold_20_conditional_correct_error_mmv": {
+        "n": 5183,
+        "mean": 0.036465367547752266,
+        "ci": [
+          0.0331854138529809,
+          0.03993825969515725
+        ]
+      },
+      "niter_gibf_mean": 13.0,
+      "niter_mmv_mean": 13.0,
+      "niter_gibf_max": 13,
+      "niter_mmv_max": 13,
+      "stop_reason_gibf": {
+        "cost_increase": {
+          "count": 0,
+          "rate": 0.0
+        },
+        "relative_tolerance": {
+          "count": 0,
+          "rate": 0.0
+        },
+        "active_set_floor": {
+          "count": 10000,
+          "rate": 1.0
+        },
+        "max_iter": {
+          "count": 0,
+          "rate": 0.0
+        }
+      },
+      "stop_reason_mmv": {
+        "cost_increase": {
+          "count": 0,
+          "rate": 0.0
+        },
+        "relative_tolerance": {
+          "count": 0,
+          "rate": 0.0
+        },
+        "active_set_floor": {
+          "count": 10000,
+          "rate": 1.0
+        },
+        "max_iter": {
+          "count": 0,
+          "rate": 0.0
+        }
+      },
+      "any_max_iter": false,
+      "n_trials": 10000,
+      "use": "descriptive_forced_k",
+      "descriptive": true
+    },
+    "k2_on_x1": {
+      "dr_l2": [
+        18.38839381999832,
+        [
+          18.38819381999832,
+          18.388543819998322
+        ]
+      ],
+      "psep_l2": [
+        0.0,
+        [
+          0.0,
+          0.0
+        ]
+      ],
+      "dr_gibf": [
+        6.543970047109394,
+        [
+          6.3780929439654095,
+          6.709622842972478
+        ]
+      ],
+      "psep_gibf": [
+        0.6395,
+        [
+          0.6301975,
+          0.6489
+        ]
+      ],
+      "dr_mmv": [
+        3.307904140183695,
+        [
+          3.174324399870808,
+          3.4440083232156824
+        ]
+      ],
+      "psep_mmv": [
+        0.8188,
+        [
+          0.8111975,
+          0.8263
+        ]
+      ],
+      "gap_gibf_minus_mmv": [
+        3.2360659069256985,
+        [
+          3.0775556455681636,
+          3.3907797095192334
+        ]
+      ],
+      "miss_rate_l2": [
+        1.0,
+        [
+          1.0,
+          1.0
+        ]
+      ],
+      "n_nonmiss_l2": 0,
+      "matched_err_nonmiss_mean_l2": null,
+      "outcome_counts_l2": {
+        "miss": 10000,
+        "correct": 0,
+        "mislocated": 0
+      },
+      "conditional_correct_error_l2": {
+        "n": 0,
+        "mean": null,
+        "ci": null
+      },
+      "supplementary_8peak_psep_l2": [
+        0.0,
+        [
+          0.0,
+          0.0
+        ]
+      ],
+      "supplementary_8peak_dr_l2": [
+        18.38839381999832,
+        [
+          18.38819381999832,
+          18.388543819998322
+        ]
+      ],
+      "miss_penalty_reconstruction_l2": {
+        "formula": "(matched_error_sum + (n_true - n_matched) * penalty) / n_true",
+        "stored_arrays": [
+          "matched_err_sum_l2",
+          "matched_n_l2"
+        ]
+      },
+      "threshold_05_dr_l2": [
+        18.38839381999832,
+        [
+          18.38819381999832,
+          18.388543819998322
+        ]
+      ],
+      "threshold_05_psep_l2": [
+        0.0,
+        [
+          0.0,
+          0.0
+        ]
+      ],
+      "threshold_05_miss_rate_l2": [
+        1.0,
+        [
+          1.0,
+          1.0
+        ]
+      ],
+      "threshold_05_outcome_counts_l2": {
+        "miss": 10000,
+        "correct": 0,
+        "mislocated": 0
+      },
+      "threshold_05_conditional_correct_error_l2": {
+        "n": 0,
+        "mean": null,
+        "ci": null
+      },
+      "threshold_20_dr_l2": [
+        18.38839381999832,
+        [
+          18.38819381999832,
+          18.388543819998322
+        ]
+      ],
+      "threshold_20_psep_l2": [
+        0.0,
+        [
+          0.0,
+          0.0
+        ]
+      ],
+      "threshold_20_miss_rate_l2": [
+        1.0,
+        [
+          1.0,
+          1.0
+        ]
+      ],
+      "threshold_20_outcome_counts_l2": {
+        "miss": 10000,
+        "correct": 0,
+        "mislocated": 0
+      },
+      "threshold_20_conditional_correct_error_l2": {
+        "n": 0,
+        "mean": null,
+        "ci": null
+      },
+      "miss_rate_gibf": [
+        0.3605,
+        [
+          0.3511,
+          0.3698025
+        ]
+      ],
+      "n_nonmiss_gibf": 6395,
+      "matched_err_nonmiss_mean_gibf": 0.1458952306489445,
+      "outcome_counts_gibf": {
+        "miss": 3605,
+        "correct": 6395,
+        "mislocated": 0
+      },
+      "conditional_correct_error_gibf": {
+        "n": 6395,
+        "mean": 0.1458952306489445,
+        "ci": [
+          0.14042025019546522,
+          0.1512920250195465
+        ]
+      },
+      "supplementary_8peak_psep_gibf": [
+        0.6395,
+        [
+          0.6301975,
+          0.6489
+        ]
+      ],
+      "supplementary_8peak_dr_gibf": [
+        6.543970047109394,
+        [
+          6.3780929439654095,
+          6.709622842972478
+        ]
+      ],
+      "miss_penalty_reconstruction_gibf": {
+        "formula": "(matched_error_sum + (n_true - n_matched) * penalty) / n_true",
+        "stored_arrays": [
+          "matched_err_sum_gibf",
+          "matched_n_gibf"
+        ]
+      },
+      "threshold_05_dr_gibf": [
+        6.5406423383453935,
+        [
+          6.376243396864309,
+          6.706546384208479
+        ]
+      ],
+      "threshold_05_psep_gibf": [
+        0.6396,
+        [
+          0.6302,
+          0.649
+        ]
+      ],
+      "threshold_05_miss_rate_gibf": [
+        0.3603,
+        [
+          0.351,
+          0.3697
+        ]
+      ],
+      "threshold_05_outcome_counts_gibf": {
+        "miss": 3603,
+        "correct": 6396,
+        "mislocated": 1
+      },
+      "threshold_05_conditional_correct_error_gibf": {
+        "n": 6396,
+        "mean": 0.14595059412132583,
+        "ci": [
+          0.14055659787367106,
+          0.15158106629143211
+        ]
+      },
+      "threshold_20_dr_gibf": [
+        6.860252690251364,
+        [
+          6.698553017230929,
+          7.033211948327796
+        ]
+      ],
+      "threshold_20_psep_gibf": [
+        0.6214,
+        [
+          0.6116975,
+          0.6304025
+        ]
+      ],
+      "threshold_20_miss_rate_gibf": [
+        0.3786,
+        [
+          0.36959749999999997,
+          0.38830249999999994
+        ]
+      ],
+      "threshold_20_outcome_counts_gibf": {
+        "miss": 3786,
+        "correct": 6214,
+        "mislocated": 0
+      },
+      "threshold_20_conditional_correct_error_gibf": {
+        "n": 6214,
+        "mean": 0.13807531380753138,
+        "ci": [
+          0.13244085934985517,
+          0.14338590280012875
+        ]
+      },
+      "miss_rate_mmv": [
+        0.1812,
+        [
+          0.1737,
+          0.18880249999999998
+        ]
+      ],
+      "n_nonmiss_mmv": 8188,
+      "matched_err_nonmiss_mean_mmv": 0.08048363458720079,
+      "outcome_counts_mmv": {
+        "miss": 1812,
+        "correct": 8188,
+        "mislocated": 0
+      },
+      "conditional_correct_error_mmv": {
+        "n": 8188,
+        "mean": 0.08048363458720079,
+        "ci": [
+          0.07657394968246214,
+          0.08439179286761114
+        ]
+      },
+      "supplementary_8peak_psep_mmv": [
+        0.8188,
+        [
+          0.8111975,
+          0.8263
+        ]
+      ],
+      "supplementary_8peak_dr_mmv": [
+        3.307904140183695,
+        [
+          3.174324399870808,
+          3.4440083232156824
+        ]
+      ],
+      "miss_penalty_reconstruction_mmv": {
+        "formula": "(matched_error_sum + (n_true - n_matched) * penalty) / n_true",
+        "stored_arrays": [
+          "matched_err_sum_mmv",
+          "matched_n_mmv"
+        ]
+      },
+      "threshold_05_dr_mmv": [
+        3.307904140183695,
+        [
+          3.174324399870808,
+          3.4440083232156824
+        ]
+      ],
+      "threshold_05_psep_mmv": [
+        0.8188,
+        [
+          0.8111975,
+          0.8263
+        ]
+      ],
+      "threshold_05_miss_rate_mmv": [
+        0.1812,
+        [
+          0.1737,
+          0.18880249999999998
+        ]
+      ],
+      "threshold_05_outcome_counts_mmv": {
+        "miss": 1812,
+        "correct": 8188,
+        "mislocated": 0
+      },
+      "threshold_05_conditional_correct_error_mmv": {
+        "n": 8188,
+        "mean": 0.08048363458720079,
+        "ci": [
+          0.0764533463605276,
+          0.08475970933072788
+        ]
+      },
+      "threshold_20_dr_mmv": [
+        3.847682435457644,
+        [
+          3.7073618635381065,
+          3.99313974478163
+        ]
+      ],
+      "threshold_20_psep_mmv": [
+        0.7881,
+        [
+          0.7799,
+          0.7960025000000001
+        ]
+      ],
+      "threshold_20_miss_rate_mmv": [
+        0.2119,
+        [
+          0.2039975,
+          0.2201
+        ]
+      ],
+      "threshold_20_outcome_counts_mmv": {
+        "miss": 2119,
+        "correct": 7881,
+        "mislocated": 0
+      },
+      "threshold_20_conditional_correct_error_mmv": {
+        "n": 7881,
+        "mean": 0.07169140971957873,
+        "ci": [
+          0.06788478619464534,
+          0.07549803324451211
+        ]
+      },
+      "niter_gibf_mean": 12.3667,
+      "niter_mmv_mean": 13.0,
+      "niter_gibf_max": 13,
+      "niter_mmv_max": 13,
+      "stop_reason_gibf": {
+        "cost_increase": {
+          "count": 2513,
+          "rate": 0.12565
+        },
+        "relative_tolerance": {
+          "count": 639,
+          "rate": 0.03195
+        },
+        "active_set_floor": {
+          "count": 16848,
+          "rate": 0.8424
+        },
+        "max_iter": {
+          "count": 0,
+          "rate": 0.0
+        }
+      },
+      "stop_reason_mmv": {
+        "cost_increase": {
+          "count": 0,
+          "rate": 0.0
+        },
+        "relative_tolerance": {
+          "count": 0,
+          "rate": 0.0
+        },
+        "active_set_floor": {
+          "count": 10000,
+          "rate": 1.0
+        },
+        "max_iter": {
+          "count": 0,
+          "rate": 0.0
+        }
+      },
+      "any_max_iter": false,
+      "n_trials": 10000,
+      "use": "descriptive_forced_k",
+      "descriptive": true
+    },
+    "k3_on_x1": {
+      "dr_l2": [
+        18.388343819998322,
+        [
+          18.38814381999832,
+          18.38849381999832
+        ]
+      ],
+      "psep_l2": [
+        0.0,
+        [
+          0.0,
+          0.0
+        ]
+      ],
+      "dr_gibf": [
+        6.536964629581394,
+        [
+          6.37213797933631,
+          6.7030174987702775
+        ]
+      ],
+      "psep_gibf": [
+        0.6399,
+        [
+          0.6305,
+          0.6492
+        ]
+      ],
+      "dr_mmv": [
+        3.777895133885652,
+        [
+          3.637514109067215,
+          3.9238942815467377
+        ]
+      ],
+      "psep_mmv": [
+        0.7927,
+        [
+          0.7845975,
+          0.8006
+        ]
+      ],
+      "gap_gibf_minus_mmv": [
+        2.7590694956957433,
+        [
+          2.6091460062482073,
+          2.9217456274801776
+        ]
+      ],
+      "miss_rate_l2": [
+        1.0,
+        [
+          1.0,
+          1.0
+        ]
+      ],
+      "n_nonmiss_l2": 0,
+      "matched_err_nonmiss_mean_l2": null,
+      "outcome_counts_l2": {
+        "miss": 10000,
+        "correct": 0,
+        "mislocated": 0
+      },
+      "conditional_correct_error_l2": {
+        "n": 0,
+        "mean": null,
+        "ci": null
+      },
+      "supplementary_8peak_psep_l2": [
+        0.0,
+        [
+          0.0,
+          0.0
+        ]
+      ],
+      "supplementary_8peak_dr_l2": [
+        18.388343819998322,
+        [
+          18.38814381999832,
+          18.38849381999832
+        ]
+      ],
+      "miss_penalty_reconstruction_l2": {
+        "formula": "(matched_error_sum + (n_true - n_matched) * penalty) / n_true",
+        "stored_arrays": [
+          "matched_err_sum_l2",
+          "matched_n_l2"
+        ]
+      },
+      "threshold_05_dr_l2": [
+        18.388343819998322,
+        [
+          18.38814381999832,
+          18.38849381999832
+        ]
+      ],
+      "threshold_05_psep_l2": [
+        0.0,
+        [
+          0.0,
+          0.0
+        ]
+      ],
+      "threshold_05_miss_rate_l2": [
+        1.0,
+        [
+          1.0,
+          1.0
+        ]
+      ],
+      "threshold_05_outcome_counts_l2": {
+        "miss": 10000,
+        "correct": 0,
+        "mislocated": 0
+      },
+      "threshold_05_conditional_correct_error_l2": {
+        "n": 0,
+        "mean": null,
+        "ci": null
+      },
+      "threshold_20_dr_l2": [
+        18.388343819998322,
+        [
+          18.38814381999832,
+          18.38849381999832
+        ]
+      ],
+      "threshold_20_psep_l2": [
+        0.0,
+        [
+          0.0,
+          0.0
+        ]
+      ],
+      "threshold_20_miss_rate_l2": [
+        1.0,
+        [
+          1.0,
+          1.0
+        ]
+      ],
+      "threshold_20_outcome_counts_l2": {
+        "miss": 10000,
+        "correct": 0,
+        "mislocated": 0
+      },
+      "threshold_20_conditional_correct_error_l2": {
+        "n": 0,
+        "mean": null,
+        "ci": null
+      },
+      "miss_rate_gibf": [
+        0.3601,
+        [
+          0.3508,
+          0.3695
+        ]
+      ],
+      "n_nonmiss_gibf": 6399,
+      "matched_err_nonmiss_mean_gibf": 0.14603844350679793,
+      "outcome_counts_gibf": {
+        "miss": 3601,
+        "correct": 6399,
+        "mislocated": 0
+      },
+      "conditional_correct_error_gibf": {
+        "n": 6399,
+        "mean": 0.14603844350679793,
+        "ci": [
+          0.1407231598687295,
+          0.15174441318956086
+        ]
+      },
+      "supplementary_8peak_psep_gibf": [
+        0.6399,
+        [
+          0.6305,
+          0.6492
+        ]
+      ],
+      "supplementary_8peak_dr_gibf": [
+        6.536964629581394,
+        [
+          6.37213797933631,
+          6.7030174987702775
+        ]
+      ],
+      "miss_penalty_reconstruction_gibf": {
+        "formula": "(matched_error_sum + (n_true - n_matched) * penalty) / n_true",
+        "stored_arrays": [
+          "matched_err_sum_gibf",
+          "matched_n_gibf"
+        ]
+      },
+      "threshold_05_dr_gibf": [
+        6.533636920817394,
+        [
+          6.36851988754986,
+          6.7007942327253796
+        ]
+      ],
+      "threshold_05_psep_gibf": [
+        0.64,
+        [
+          0.6306975,
+          0.6493025
+        ]
+      ],
+      "threshold_05_miss_rate_gibf": [
+        0.3599,
+        [
+          0.3505,
+          0.3693
+        ]
+      ],
+      "threshold_05_outcome_counts_gibf": {
+        "miss": 3599,
+        "correct": 6400,
+        "mislocated": 1
+      },
+      "threshold_05_conditional_correct_error_gibf": {
+        "n": 6400,
+        "mean": 0.14609375,
+        "ci": [
+          0.140546875,
+          0.15148828125
+        ]
+      },
+      "threshold_20_dr_gibf": [
+        6.851508418341364,
+        [
+          6.690130831242279,
+          7.024040072035797
+        ]
+      ],
+      "threshold_20_psep_gibf": [
+        0.6219,
+        [
+          0.6122,
+          0.6310025
+        ]
+      ],
+      "threshold_20_miss_rate_gibf": [
+        0.3781,
+        [
+          0.3689975,
+          0.3878
+        ]
+      ],
+      "threshold_20_outcome_counts_gibf": {
+        "miss": 3781,
+        "correct": 6219,
+        "mislocated": 0
+      },
+      "threshold_20_conditional_correct_error_gibf": {
+        "n": 6219,
+        "mean": 0.13828589805434957,
+        "ci": [
+          0.1326579835986493,
+          0.14383341373211128
+        ]
+      },
+      "miss_rate_mmv": [
+        0.2073,
+        [
+          0.1994,
+          0.2154025
+        ]
+      ],
+      "n_nonmiss_mmv": 7927,
+      "matched_err_nonmiss_mean_mmv": 0.08723350573987637,
+      "outcome_counts_mmv": {
+        "miss": 2073,
+        "correct": 7927,
+        "mislocated": 0
+      },
+      "conditional_correct_error_mmv": {
+        "n": 7927,
+        "mean": 0.08723350573987637,
+        "ci": [
+          0.0830074429166141,
+          0.09145956856313864
+        ]
+      },
+      "supplementary_8peak_psep_mmv": [
+        0.7927,
+        [
+          0.7845975,
+          0.8006
+        ]
+      ],
+      "supplementary_8peak_dr_mmv": [
+        3.777895133885652,
+        [
+          3.637514109067215,
+          3.9238942815467377
+        ]
+      ],
+      "miss_penalty_reconstruction_mmv": {
+        "formula": "(matched_error_sum + (n_true - n_matched) * penalty) / n_true",
+        "stored_arrays": [
+          "matched_err_sum_mmv",
+          "matched_n_mmv"
+        ]
+      },
+      "threshold_05_dr_mmv": [
+        3.777895133885652,
+        [
+          3.637514109067215,
+          3.9238942815467377
+        ]
+      ],
+      "threshold_05_psep_mmv": [
+        0.7927,
+        [
+          0.7845975,
+          0.8006
+        ]
+      ],
+      "threshold_05_miss_rate_mmv": [
+        0.2073,
+        [
+          0.1994,
+          0.2154025
+        ]
+      ],
+      "threshold_05_outcome_counts_mmv": {
+        "miss": 2073,
+        "correct": 7927,
+        "mislocated": 0
+      },
+      "threshold_05_conditional_correct_error_mmv": {
+        "n": 7927,
+        "mean": 0.08723350573987637,
+        "ci": [
+          0.08313201715655355,
+          0.09164879525671754
+        ]
+      },
+      "threshold_20_dr_mmv": [
+        4.3031125941036015,
+        [
+          4.159840667802065,
+          4.454802333551137
+        ]
+      ],
+      "threshold_20_psep_mmv": [
+        0.7628,
+        [
+          0.7543,
+          0.7709025
+        ]
+      ],
+      "threshold_20_miss_rate_mmv": [
+        0.2372,
+        [
+          0.2290975,
+          0.2457
+        ]
+      ],
+      "threshold_20_outcome_counts_mmv": {
+        "miss": 2372,
+        "correct": 7628,
+        "mislocated": 0
+      },
+      "threshold_20_conditional_correct_error_mmv": {
+        "n": 7628,
+        "mean": 0.07800209753539591,
+        "ci": [
+          0.07387257472469848,
+          0.08200052438384897
+        ]
+      },
+      "niter_gibf_mean": 9.024366666666667,
+      "niter_mmv_mean": 13.0,
+      "niter_gibf_max": 13,
+      "niter_mmv_max": 13,
+      "stop_reason_gibf": {
+        "cost_increase": {
+          "count": 12323,
+          "rate": 0.41076666666666667
+        },
+        "relative_tolerance": {
+          "count": 692,
+          "rate": 0.023066666666666666
+        },
+        "active_set_floor": {
+          "count": 16985,
+          "rate": 0.5661666666666667
+        },
+        "max_iter": {
+          "count": 0,
+          "rate": 0.0
+        }
+      },
+      "stop_reason_mmv": {
+        "cost_increase": {
+          "count": 0,
+          "rate": 0.0
+        },
+        "relative_tolerance": {
+          "count": 0,
+          "rate": 0.0
+        },
+        "active_set_floor": {
+          "count": 10000,
+          "rate": 1.0
+        },
+        "max_iter": {
+          "count": 0,
+          "rate": 0.0
+        }
+      },
+      "any_max_iter": false,
+      "n_trials": 10000,
+      "use": "descriptive_forced_k",
+      "descriptive": true
+    },
+    "k4_on_x1": {
+      "dr_l2": [
+        18.38829381999832,
+        [
+          18.38809381999832,
+          18.38849381999832
+        ]
+      ],
+      "psep_l2": [
+        0.0,
+        [
+          0.0,
+          0.0
+        ]
+      ],
+      "dr_gibf": [
+        6.535275775199395,
+        [
+          6.368756346313861,
+          6.7031452040849295
+        ]
+      ],
+      "psep_gibf": [
+        0.64,
+        [
+          0.6306,
+          0.6494
+        ]
+      ],
+      "dr_mmv": [
+        4.338917701069599,
+        [
+          4.190774037363613,
+          4.489316852180035
+        ]
+      ],
+      "psep_mmv": [
+        0.7615,
+        [
+          0.7530975,
+          0.7698025000000001
+        ]
+      ],
+      "gap_gibf_minus_mmv": [
+        2.1963580741297957,
+        [
+          2.04435045165981,
+          2.3640872243748796
+        ]
+      ],
+      "miss_rate_l2": [
+        1.0,
+        [
+          1.0,
+          1.0
+        ]
+      ],
+      "n_nonmiss_l2": 0,
+      "matched_err_nonmiss_mean_l2": null,
+      "outcome_counts_l2": {
+        "miss": 10000,
+        "correct": 0,
+        "mislocated": 0
+      },
+      "conditional_correct_error_l2": {
+        "n": 0,
+        "mean": null,
+        "ci": null
+      },
+      "supplementary_8peak_psep_l2": [
+        0.0,
+        [
+          0.0,
+          0.0
+        ]
+      ],
+      "supplementary_8peak_dr_l2": [
+        18.38829381999832,
+        [
+          18.38809381999832,
+          18.38849381999832
+        ]
+      ],
+      "miss_penalty_reconstruction_l2": {
+        "formula": "(matched_error_sum + (n_true - n_matched) * penalty) / n_true",
+        "stored_arrays": [
+          "matched_err_sum_l2",
+          "matched_n_l2"
+        ]
+      },
+      "threshold_05_dr_l2": [
+        18.38829381999832,
+        [
+          18.38809381999832,
+          18.38849381999832
+        ]
+      ],
+      "threshold_05_psep_l2": [
+        0.0,
+        [
+          0.0,
+          0.0
+        ]
+      ],
+      "threshold_05_miss_rate_l2": [
+        1.0,
+        [
+          1.0,
+          1.0
+        ]
+      ],
+      "threshold_05_outcome_counts_l2": {
+        "miss": 10000,
+        "correct": 0,
+        "mislocated": 0
+      },
+      "threshold_05_conditional_correct_error_l2": {
+        "n": 0,
+        "mean": null,
+        "ci": null
+      },
+      "threshold_20_dr_l2": [
+        18.38829381999832,
+        [
+          18.38809381999832,
+          18.38849381999832
+        ]
+      ],
+      "threshold_20_psep_l2": [
+        0.0,
+        [
+          0.0,
+          0.0
+        ]
+      ],
+      "threshold_20_miss_rate_l2": [
+        1.0,
+        [
+          1.0,
+          1.0
+        ]
+      ],
+      "threshold_20_outcome_counts_l2": {
+        "miss": 10000,
+        "correct": 0,
+        "mislocated": 0
+      },
+      "threshold_20_conditional_correct_error_l2": {
+        "n": 0,
+        "mean": null,
+        "ci": null
+      },
+      "miss_rate_gibf": [
+        0.36,
+        [
+          0.3506,
+          0.3694
+        ]
+      ],
+      "n_nonmiss_gibf": 6400,
+      "matched_err_nonmiss_mean_gibf": 0.146171875,
+      "outcome_counts_gibf": {
+        "miss": 3600,
+        "correct": 6400,
+        "mislocated": 0
+      },
+      "conditional_correct_error_gibf": {
+        "n": 6400,
+        "mean": 0.146171875,
+        "ci": [
+          0.14046875,
+          0.151876953125
+        ]
+      },
+      "supplementary_8peak_psep_gibf": [
+        0.64,
+        [
+          0.6306,
+          0.6494
+        ]
+      ],
+      "supplementary_8peak_dr_gibf": [
+        6.535275775199395,
+        [
+          6.368756346313861,
+          6.7031452040849295
+        ]
+      ],
+      "miss_penalty_reconstruction_gibf": {
+        "formula": "(matched_error_sum + (n_true - n_matched) * penalty) / n_true",
+        "stored_arrays": [
+          "matched_err_sum_gibf",
+          "matched_n_gibf"
+        ]
+      },
+      "threshold_05_dr_gibf": [
+        6.531948066435395,
+        [
+          6.3670676661903105,
+          6.69883586229848
+        ]
+      ],
+      "threshold_05_psep_gibf": [
+        0.6401,
+        [
+          0.6307975,
+          0.6494
+        ]
+      ],
+      "threshold_05_miss_rate_gibf": [
+        0.3598,
+        [
+          0.3505,
+          0.36920249999999993
+        ]
+      ],
+      "threshold_05_outcome_counts_gibf": {
+        "miss": 3598,
+        "correct": 6401,
+        "mislocated": 1
+      },
+      "threshold_05_conditional_correct_error_gibf": {
+        "n": 6401,
+        "mean": 0.14622715200749883,
+        "ci": [
+          0.14068114357131697,
+          0.1518512732385565
+        ]
+      },
+      "threshold_20_dr_gibf": [
+        6.846241855195365,
+        [
+          6.683398223410929,
+          7.017396701608899
+        ]
+      ],
+      "threshold_20_psep_gibf": [
+        0.6222,
+        [
+          0.6125,
+          0.6314
+        ]
+      ],
+      "threshold_20_miss_rate_gibf": [
+        0.3778,
+        [
+          0.3686,
+          0.3875
+        ]
+      ],
+      "threshold_20_outcome_counts_gibf": {
+        "miss": 3778,
+        "correct": 6222,
+        "mislocated": 0
+      },
+      "threshold_20_conditional_correct_error_gibf": {
+        "n": 6222,
+        "mean": 0.13837994214079075,
+        "ci": [
+          0.1327547412407586,
+          0.1438444230151077
+        ]
+      },
+      "miss_rate_mmv": [
+        0.2385,
+        [
+          0.2301975,
+          0.2469025
+        ]
+      ],
+      "n_nonmiss_mmv": 7615,
+      "matched_err_nonmiss_mean_mmv": 0.09448456992777413,
+      "outcome_counts_mmv": {
+        "miss": 2385,
+        "correct": 7615,
+        "mislocated": 0
+      },
+      "conditional_correct_error_mmv": {
+        "n": 7615,
+        "mean": 0.09448456992777413,
+        "ci": [
+          0.09028233749179251,
+          0.09868680236375575
+        ]
+      },
+      "supplementary_8peak_psep_mmv": [
+        0.7615,
+        [
+          0.7530975,
+          0.7698025000000001
+        ]
+      ],
+      "supplementary_8peak_dr_mmv": [
+        4.338917701069599,
+        [
+          4.190774037363613,
+          4.489316852180035
+        ]
+      ],
+      "miss_penalty_reconstruction_mmv": {
+        "formula": "(matched_error_sum + (n_true - n_matched) * penalty) / n_true",
+        "stored_arrays": [
+          "matched_err_sum_mmv",
+          "matched_n_mmv"
+        ]
+      },
+      "threshold_05_dr_mmv": [
+        4.338917701069599,
+        [
+          4.190774037363613,
+          4.489316852180035
+        ]
+      ],
+      "threshold_05_psep_mmv": [
+        0.7615,
+        [
+          0.7530975,
+          0.7698025000000001
+        ]
+      ],
+      "threshold_05_miss_rate_mmv": [
+        0.2385,
+        [
+          0.2301975,
+          0.2469025
+        ]
+      ],
+      "threshold_05_outcome_counts_mmv": {
+        "miss": 2385,
+        "correct": 7615,
+        "mislocated": 0
+      },
+      "threshold_05_conditional_correct_error_mmv": {
+        "n": 7615,
+        "mean": 0.09448456992777413,
+        "ci": [
+          0.09014937623112279,
+          0.0989494418910046
+        ]
+      },
+      "threshold_20_dr_mmv": [
+        4.856929743759549,
+        [
+          4.704963649930014,
+          5.015391533757535
+        ]
+      ],
+      "threshold_20_psep_mmv": [
+        0.732,
+        [
+          0.7231,
+          0.7405
+        ]
+      ],
+      "threshold_20_miss_rate_mmv": [
+        0.268,
+        [
+          0.2595,
+          0.2769
+        ]
+      ],
+      "threshold_20_outcome_counts_mmv": {
+        "miss": 2680,
+        "correct": 7320,
+        "mislocated": 0
+      },
+      "threshold_20_conditional_correct_error_mmv": {
+        "n": 7320,
+        "mean": 0.08504098360655737,
+        "ci": [
+          0.08094091530054645,
+          0.08913934426229508
+        ]
+      },
+      "niter_gibf_mean": 7.3174,
+      "niter_mmv_mean": 13.0,
+      "niter_gibf_max": 13,
+      "niter_mmv_max": 13,
+      "stop_reason_gibf": {
+        "cost_increase": {
+          "count": 22198,
+          "rate": 0.55495
+        },
+        "relative_tolerance": {
+          "count": 728,
+          "rate": 0.0182
+        },
+        "active_set_floor": {
+          "count": 17074,
+          "rate": 0.42685
+        },
+        "max_iter": {
+          "count": 0,
+          "rate": 0.0
+        }
+      },
+      "stop_reason_mmv": {
+        "cost_increase": {
+          "count": 0,
+          "rate": 0.0
+        },
+        "relative_tolerance": {
+          "count": 0,
+          "rate": 0.0
+        },
+        "active_set_floor": {
+          "count": 10000,
+          "rate": 1.0
+        },
+        "max_iter": {
+          "count": 0,
+          "rate": 0.0
+        }
+      },
+      "any_max_iter": false,
+      "n_trials": 10000,
+      "use": "descriptive_forced_k",
+      "descriptive": true
+    },
+    "k5_on_x1": {
+      "dr_l2": [
+        18.38829381999832,
+        [
+          18.38809381999832,
+          18.38849381999832
+        ]
+      ],
+      "psep_l2": [
+        0.0,
+        [
+          0.0,
+          0.0
+        ]
+      ],
+      "dr_gibf": [
+        6.5335869208173945,
+        [
+          6.367524608909411,
+          6.699642290006279
+        ]
+      ],
+      "psep_gibf": [
+        0.6401,
+        [
+          0.6308,
+          0.6495
+        ]
+      ],
+      "dr_mmv": [
+        4.9173788120735455,
+        [
+          4.764237923558659,
+          5.070308377262631
+        ]
+      ],
+      "psep_mmv": [
+        0.7293,
+        [
+          0.720795,
+          0.7379025
+        ]
+      ],
+      "gap_gibf_minus_mmv": [
+        1.6162081087438502,
+        [
+          1.4635332649143145,
+          1.7792536832473842
+        ]
+      ],
+      "miss_rate_l2": [
+        1.0,
+        [
+          1.0,
+          1.0
+        ]
+      ],
+      "n_nonmiss_l2": 0,
+      "matched_err_nonmiss_mean_l2": null,
+      "outcome_counts_l2": {
+        "miss": 10000,
+        "correct": 0,
+        "mislocated": 0
+      },
+      "conditional_correct_error_l2": {
+        "n": 0,
+        "mean": null,
+        "ci": null
+      },
+      "supplementary_8peak_psep_l2": [
+        0.0,
+        [
+          0.0,
+          0.0
+        ]
+      ],
+      "supplementary_8peak_dr_l2": [
+        18.38829381999832,
+        [
+          18.38809381999832,
+          18.38849381999832
+        ]
+      ],
+      "miss_penalty_reconstruction_l2": {
+        "formula": "(matched_error_sum + (n_true - n_matched) * penalty) / n_true",
+        "stored_arrays": [
+          "matched_err_sum_l2",
+          "matched_n_l2"
+        ]
+      },
+      "threshold_05_dr_l2": [
+        18.38829381999832,
+        [
+          18.38809381999832,
+          18.38849381999832
+        ]
+      ],
+      "threshold_05_psep_l2": [
+        0.0,
+        [
+          0.0,
+          0.0
+        ]
+      ],
+      "threshold_05_miss_rate_l2": [
+        1.0,
+        [
+          1.0,
+          1.0
+        ]
+      ],
+      "threshold_05_outcome_counts_l2": {
+        "miss": 10000,
+        "correct": 0,
+        "mislocated": 0
+      },
+      "threshold_05_conditional_correct_error_l2": {
+        "n": 0,
+        "mean": null,
+        "ci": null
+      },
+      "threshold_20_dr_l2": [
+        18.38829381999832,
+        [
+          18.38809381999832,
+          18.38849381999832
+        ]
+      ],
+      "threshold_20_psep_l2": [
+        0.0,
+        [
+          0.0,
+          0.0
+        ]
+      ],
+      "threshold_20_miss_rate_l2": [
+        1.0,
+        [
+          1.0,
+          1.0
+        ]
+      ],
+      "threshold_20_outcome_counts_l2": {
+        "miss": 10000,
+        "correct": 0,
+        "mislocated": 0
+      },
+      "threshold_20_conditional_correct_error_l2": {
+        "n": 0,
+        "mean": null,
+        "ci": null
+      },
+      "miss_rate_gibf": [
+        0.3599,
+        [
+          0.3505,
+          0.3692
+        ]
+      ],
+      "n_nonmiss_gibf": 6401,
+      "matched_err_nonmiss_mean_gibf": 0.14622715200749883,
+      "outcome_counts_gibf": {
+        "miss": 3599,
+        "correct": 6401,
+        "mislocated": 0
+      },
+      "conditional_correct_error_gibf": {
+        "n": 6401,
+        "mean": 0.14622715200749883,
+        "ci": [
+          0.14036673957194187,
+          0.15192938603343228
+        ]
+      },
+      "supplementary_8peak_psep_gibf": [
+        0.6401,
+        [
+          0.6308,
+          0.6495
+        ]
+      ],
+      "supplementary_8peak_dr_gibf": [
+        6.5335869208173945,
+        [
+          6.367524608909411,
+          6.699642290006279
+        ]
+      ],
+      "miss_penalty_reconstruction_gibf": {
+        "formula": "(matched_error_sum + (n_true - n_matched) * penalty) / n_true",
+        "stored_arrays": [
+          "matched_err_sum_gibf",
+          "matched_n_gibf"
+        ]
+      },
+      "threshold_05_dr_gibf": [
+        6.52887347055881,
+        [
+          6.36496269163542,
+          6.6965400985882235
+        ]
+      ],
+      "threshold_05_psep_gibf": [
+        0.6402,
+        [
+          0.6309,
+          0.6495
+        ]
+      ],
+      "threshold_05_miss_rate_gibf": [
+        0.3596,
+        [
+          0.3503975,
+          0.3689
+        ]
+      ],
+      "threshold_05_outcome_counts_gibf": {
+        "miss": 3596,
+        "correct": 6402,
+        "mislocated": 2
+      },
+      "threshold_05_conditional_correct_error_gibf": {
+        "n": 6402,
+        "mean": 0.14628241174632928,
+        "ci": [
+          0.14065721649484536,
+          0.15175140581068416
+        ]
+      },
+      "threshold_20_dr_gibf": [
+        6.844553000813365,
+        [
+          6.681713397669379,
+          7.015898609822449
+        ]
+      ],
+      "threshold_20_psep_gibf": [
+        0.6223,
+        [
+          0.6126,
+          0.6315
+        ]
+      ],
+      "threshold_20_miss_rate_gibf": [
+        0.3777,
+        [
+          0.3685,
+          0.3874
+        ]
+      ],
+      "threshold_20_outcome_counts_gibf": {
+        "miss": 3777,
+        "correct": 6223,
+        "mislocated": 0
+      },
+      "threshold_20_conditional_correct_error_gibf": {
+        "n": 6223,
+        "mean": 0.13843805238630885,
+        "ci": [
+          0.13289410252289893,
+          0.1441426964486582
+        ]
+      },
+      "miss_rate_mmv": [
+        0.2707,
+        [
+          0.2620975,
+          0.279205
+        ]
+      ],
+      "n_nonmiss_mmv": 7293,
+      "matched_err_nonmiss_mean_mmv": 0.10194707253530783,
+      "outcome_counts_mmv": {
+        "miss": 2707,
+        "correct": 7293,
+        "mislocated": 0
+      },
+      "conditional_correct_error_mmv": {
+        "n": 7293,
+        "mean": 0.10194707253530783,
+        "ci": [
+          0.09735362676539147,
+          0.10702043054984231
+        ]
+      },
+      "supplementary_8peak_psep_mmv": [
+        0.7293,
+        [
+          0.720795,
+          0.7379025
+        ]
+      ],
+      "supplementary_8peak_dr_mmv": [
+        4.9173788120735455,
+        [
+          4.764237923558659,
+          5.070308377262631
+        ]
+      ],
+      "miss_penalty_reconstruction_mmv": {
+        "formula": "(matched_error_sum + (n_true - n_matched) * penalty) / n_true",
+        "stored_arrays": [
+          "matched_err_sum_mmv",
+          "matched_n_mmv"
+        ]
+      },
+      "threshold_05_dr_mmv": [
+        4.9173788120735455,
+        [
+          4.764237923558659,
+          5.070308377262631
+        ]
+      ],
+      "threshold_05_psep_mmv": [
+        0.7293,
+        [
+          0.720795,
+          0.7379025
+        ]
+      ],
+      "threshold_05_miss_rate_mmv": [
+        0.2707,
+        [
+          0.2620975,
+          0.279205
+        ]
+      ],
+      "threshold_05_outcome_counts_mmv": {
+        "miss": 2707,
+        "correct": 7293,
+        "mislocated": 0
+      },
+      "threshold_05_conditional_correct_error_mmv": {
+        "n": 7293,
+        "mean": 0.10194707253530783,
+        "ci": [
+          0.09762786233374468,
+          0.10626628273687097
+        ]
+      },
+      "threshold_20_dr_mmv": [
+        5.430763145999496,
+        [
+          5.27771264050706,
+          5.585059065570581
+        ]
+      ],
+      "threshold_20_psep_mmv": [
+        0.7,
+        [
+          0.6913,
+          0.7086
+        ]
+      ],
+      "threshold_20_miss_rate_mmv": [
+        0.3,
+        [
+          0.2914,
+          0.3087
+        ]
+      ],
+      "threshold_20_outcome_counts_mmv": {
+        "miss": 3000,
+        "correct": 7000,
+        "mislocated": 0
+      },
+      "threshold_20_conditional_correct_error_mmv": {
+        "n": 7000,
+        "mean": 0.09085714285714286,
+        "ci": [
+          0.08642857142857142,
+          0.0955
+        ]
+      },
+      "niter_gibf_mean": 6.28822,
+      "niter_mmv_mean": 13.0,
+      "niter_gibf_max": 13,
+      "niter_mmv_max": 13,
+      "stop_reason_gibf": {
+        "cost_increase": {
+          "count": 32088,
+          "rate": 0.64176
+        },
+        "relative_tolerance": {
+          "count": 758,
+          "rate": 0.01516
+        },
+        "active_set_floor": {
+          "count": 17154,
+          "rate": 0.34308
+        },
+        "max_iter": {
+          "count": 0,
+          "rate": 0.0
+        }
+      },
+      "stop_reason_mmv": {
+        "cost_increase": {
+          "count": 0,
+          "rate": 0.0
+        },
+        "relative_tolerance": {
+          "count": 0,
+          "rate": 0.0
+        },
+        "active_set_floor": {
+          "count": 10000,
+          "rate": 1.0
+        },
+        "max_iter": {
+          "count": 0,
+          "rate": 0.0
+        }
+      },
+      "any_max_iter": false,
+      "n_trials": 10000,
+      "use": "descriptive_forced_k",
+      "descriptive": true
+    },
+    "k6_on_x1": {
+      "dr_l2": [
+        18.38829381999832,
+        [
+          18.38809381999832,
+          18.38849381999832
+        ]
+      ],
+      "psep_l2": [
+        0.0,
+        [
+          0.0,
+          0.0
+        ]
+      ],
+      "dr_gibf": [
+        6.531848066435395,
+        [
+          6.36703085890941,
+          6.698215273961379
+        ]
+      ],
+      "psep_gibf": [
+        0.6402,
+        [
+          0.6308975,
+          0.6495
+        ]
+      ],
+      "dr_mmv": [
+        5.456546272291495,
+        [
+          5.29977639395641,
+          5.6202303181545785
+        ]
+      ],
+      "psep_mmv": [
+        0.6994,
+        [
+          0.6902,
+          0.7082025000000001
+        ]
+      ],
+      "gap_gibf_minus_mmv": [
+        1.0753017941439005,
+        [
+          0.9177156658088155,
+          1.2399856346923346
+        ]
+      ],
+      "miss_rate_l2": [
+        1.0,
+        [
+          1.0,
+          1.0
+        ]
+      ],
+      "n_nonmiss_l2": 0,
+      "matched_err_nonmiss_mean_l2": null,
+      "outcome_counts_l2": {
+        "miss": 10000,
+        "correct": 0,
+        "mislocated": 0
+      },
+      "conditional_correct_error_l2": {
+        "n": 0,
+        "mean": null,
+        "ci": null
+      },
+      "supplementary_8peak_psep_l2": [
+        0.0,
+        [
+          0.0,
+          0.0
+        ]
+      ],
+      "supplementary_8peak_dr_l2": [
+        18.38829381999832,
+        [
+          18.38809381999832,
+          18.38849381999832
+        ]
+      ],
+      "miss_penalty_reconstruction_l2": {
+        "formula": "(matched_error_sum + (n_true - n_matched) * penalty) / n_true",
+        "stored_arrays": [
+          "matched_err_sum_l2",
+          "matched_n_l2"
+        ]
+      },
+      "threshold_05_dr_l2": [
+        18.38829381999832,
+        [
+          18.38809381999832,
+          18.38849381999832
+        ]
+      ],
+      "threshold_05_psep_l2": [
+        0.0,
+        [
+          0.0,
+          0.0
+        ]
+      ],
+      "threshold_05_miss_rate_l2": [
+        1.0,
+        [
+          1.0,
+          1.0
+        ]
+      ],
+      "threshold_05_outcome_counts_l2": {
+        "miss": 10000,
+        "correct": 0,
+        "mislocated": 0
+      },
+      "threshold_05_conditional_correct_error_l2": {
+        "n": 0,
+        "mean": null,
+        "ci": null
+      },
+      "threshold_20_dr_l2": [
+        18.38829381999832,
+        [
+          18.38809381999832,
+          18.38849381999832
+        ]
+      ],
+      "threshold_20_psep_l2": [
+        0.0,
+        [
+          0.0,
+          0.0
+        ]
+      ],
+      "threshold_20_miss_rate_l2": [
+        1.0,
+        [
+          1.0,
+          1.0
+        ]
+      ],
+      "threshold_20_outcome_counts_l2": {
+        "miss": 10000,
+        "correct": 0,
+        "mislocated": 0
+      },
+      "threshold_20_conditional_correct_error_l2": {
+        "n": 0,
+        "mean": null,
+        "ci": null
+      },
+      "miss_rate_gibf": [
+        0.3598,
+        [
+          0.3505,
+          0.36910249999999994
+        ]
+      ],
+      "n_nonmiss_gibf": 6402,
+      "matched_err_nonmiss_mean_gibf": 0.14628241174632928,
+      "outcome_counts_gibf": {
+        "miss": 3598,
+        "correct": 6402,
+        "mislocated": 0
+      },
+      "conditional_correct_error_gibf": {
+        "n": 6402,
+        "mean": 0.14628241174632928,
+        "ci": [
+          0.14065916900968448,
+          0.15198375507653858
+        ]
+      },
+      "supplementary_8peak_psep_gibf": [
+        0.6402,
+        [
+          0.6308975,
+          0.6495
+        ]
+      ],
+      "supplementary_8peak_dr_gibf": [
+        6.531848066435395,
+        [
+          6.36703085890941,
+          6.698215273961379
+        ]
+      ],
+      "miss_penalty_reconstruction_gibf": {
+        "formula": "(matched_error_sum + (n_true - n_matched) * penalty) / n_true",
+        "stored_arrays": [
+          "matched_err_sum_gibf",
+          "matched_n_gibf"
+        ]
+      },
+      "threshold_05_dr_gibf": [
+        6.52713461617681,
+        [
+          6.363227459760955,
+          6.69443445464461
+        ]
+      ],
+      "threshold_05_psep_gibf": [
+        0.6403,
+        [
+          0.6309,
+          0.6496025
+        ]
+      ],
+      "threshold_05_miss_rate_gibf": [
+        0.3595,
+        [
+          0.3502975,
+          0.3688025
+        ]
+      ],
+      "threshold_05_outcome_counts_gibf": {
+        "miss": 3595,
+        "correct": 6403,
+        "mislocated": 2
+      },
+      "threshold_05_conditional_correct_error_gibf": {
+        "n": 6403,
+        "mean": 0.14633765422458223,
+        "ci": [
+          0.1408714665000781,
+          0.15180774636888955
+        ]
+      },
+      "threshold_20_dr_gibf": [
+        6.842814146431365,
+        [
+          6.68018829328738,
+          7.015872433148249
+        ]
+      ],
+      "threshold_20_psep_gibf": [
+        0.6224,
+        [
+          0.612795,
+          0.6316
+        ]
+      ],
+      "threshold_20_miss_rate_gibf": [
+        0.3776,
+        [
+          0.3684,
+          0.38720499999999997
+        ]
+      ],
+      "threshold_20_outcome_counts_gibf": {
+        "miss": 3776,
+        "correct": 6224,
+        "mislocated": 0
+      },
+      "threshold_20_conditional_correct_error_gibf": {
+        "n": 6224,
+        "mean": 0.1384961439588689,
+        "ci": [
+          0.1328727506426735,
+          0.1440392030848329
+        ]
+      },
+      "miss_rate_mmv": [
+        0.3006,
+        [
+          0.2917975,
+          0.3098
+        ]
+      ],
+      "n_nonmiss_mmv": 6994,
+      "matched_err_nonmiss_mean_mmv": 0.11238204175007149,
+      "outcome_counts_mmv": {
+        "miss": 3006,
+        "correct": 6994,
+        "mislocated": 0
+      },
+      "conditional_correct_error_mmv": {
+        "n": 6994,
+        "mean": 0.11238204175007149,
+        "ci": [
+          0.10744924220760652,
+          0.11738633114097798
+        ]
+      },
+      "supplementary_8peak_psep_mmv": [
+        0.6994,
+        [
+          0.6902,
+          0.7082025000000001
+        ]
+      ],
+      "supplementary_8peak_dr_mmv": [
+        5.456546272291495,
+        [
+          5.29977639395641,
+          5.6202303181545785
+        ]
+      ],
+      "miss_penalty_reconstruction_mmv": {
+        "formula": "(matched_error_sum + (n_true - n_matched) * penalty) / n_true",
+        "stored_arrays": [
+          "matched_err_sum_mmv",
+          "matched_n_mmv"
+        ]
+      },
+      "threshold_05_dr_mmv": [
+        5.456546272291495,
+        [
+          5.29977639395641,
+          5.6202303181545785
+        ]
+      ],
+      "threshold_05_psep_mmv": [
+        0.6994,
+        [
+          0.6902,
+          0.7082025000000001
+        ]
+      ],
+      "threshold_05_miss_rate_mmv": [
+        0.3006,
+        [
+          0.2917975,
+          0.3098
+        ]
+      ],
+      "threshold_05_outcome_counts_mmv": {
+        "miss": 3006,
+        "correct": 6994,
+        "mislocated": 0
+      },
+      "threshold_05_conditional_correct_error_mmv": {
+        "n": 6994,
+        "mean": 0.11238204175007149,
+        "ci": [
+          0.10730626251072348,
+          0.11745782098941951
+        ]
+      },
+      "threshold_20_dr_mmv": [
+        5.9886580044194435,
+        [
+          5.825212429915909,
+          6.1521088575634275
+        ]
+      ],
+      "threshold_20_psep_mmv": [
+        0.669,
+        [
+          0.6598,
+          0.6782025
+        ]
+      ],
+      "threshold_20_miss_rate_mmv": [
+        0.331,
+        [
+          0.32179749999999996,
+          0.3402
+        ]
+      ],
+      "threshold_20_outcome_counts_mmv": {
+        "miss": 3310,
+        "correct": 6690,
+        "mislocated": 0
+      },
+      "threshold_20_conditional_correct_error_mmv": {
+        "n": 6690,
+        "mean": 0.1,
+        "ci": [
+          0.09544095665171898,
+          0.10463378176382661
+        ]
+      },
+      "niter_gibf_mean": 5.5925666666666665,
+      "niter_mmv_mean": 12.9996,
+      "niter_gibf_max": 13,
+      "niter_mmv_max": 13,
+      "stop_reason_gibf": {
+        "cost_increase": {
+          "count": 42014,
+          "rate": 0.7002333333333334
+        },
+        "relative_tolerance": {
+          "count": 782,
+          "rate": 0.013033333333333333
+        },
+        "active_set_floor": {
+          "count": 17204,
+          "rate": 0.28673333333333334
+        },
+        "max_iter": {
+          "count": 0,
+          "rate": 0.0
+        }
+      },
+      "stop_reason_mmv": {
+        "cost_increase": {
+          "count": 0,
+          "rate": 0.0
+        },
+        "relative_tolerance": {
+          "count": 4,
+          "rate": 0.0004
+        },
+        "active_set_floor": {
+          "count": 9996,
+          "rate": 0.9996
+        },
+        "max_iter": {
+          "count": 0,
+          "rate": 0.0
+        }
+      },
+      "any_max_iter": false,
+      "n_trials": 10000,
+      "use": "descriptive_forced_k",
+      "descriptive": true
+    }
+  },
+  "khat_mdl": {
+    "counts": {
+      "lt2": 0,
+      "eq2": 0,
+      "gt2": 10000
+    },
+    "hist": {
+      "6": 10000
+    }
+  },
+  "khat_mdl_clip_events": 10000,
+  "sensitivity_panel": {
+    "points": [
+      {
+        "band_index": 0,
+        "eps_mult": 0.1,
+        "eps_frac": 0.001,
+        "gap_mean": -0.8904371764468615,
+        "gap_ci": [
+          -0.9671046931316801,
+          -0.8150195080733015
+        ]
+      },
+      {
+        "band_index": 1,
+        "eps_mult": 0.3,
+        "eps_frac": 0.003,
+        "gap_mean": -0.5607448584199479,
+        "gap_ci": [
+          -0.6349304924639407,
+          -0.4894856831399545
+        ]
+      },
+      {
+        "band_index": 2,
+        "eps_mult": 1.0,
+        "eps_frac": 0.01,
+        "gap_mean": 1.0753017941439005,
+        "gap_ci": [
+          0.9120613240223657,
+          1.227294799636336
+        ]
+      },
+      {
+        "band_index": 3,
+        "eps_mult": 3.0,
+        "eps_frac": 0.03,
+        "gap_mean": 0.5932290330272298,
+        "gap_ci": [
+          0.4553669430466089,
+          0.7278787450992324
+        ]
+      },
+      {
+        "band_index": 4,
+        "eps_mult": 10.0,
+        "eps_frac": 0.1,
+        "gap_mean": 0.006616873708001009,
+        "gap_ci": [
+          -0.0026283695615481445,
+          0.014173541236000328
+        ]
+      }
+    ],
+    "fragile": true,
+    "significant_reversal_at": [
+      0.1,
+      0.3
+    ],
+    "attenuated_at": [
+      10.0
+    ],
+    "headline_sign_undefined": false,
+    "x1_interval_class": "positive",
+    "x1_ci_agrees_with_per_cell": true,
+    "x1_borderline_disagreement": false,
+    "descriptive": false
+  },
+  "khat_breakdown_on": {
+    "counts": {
+      "lt2": 0,
+      "eq2": 0,
+      "gt2": 10000
+    },
+    "hist": {
+      "6": 10000
+    },
+    "per_bin": {
+      "lt2": null,
+      "eq2": null,
+      "gt2": {
+        "dr_l2_mean": 18.38829381999832,
+        "dr_gibf_mean": 6.531848066435395,
+        "dr_mmv_mean": 5.456546272291495
+      }
+    }
+  },
+  "b6a_paired_diff_on": {
+    "paired_diff_dr_l2": [
+      -0.0001,
+      [
+        -0.00025,
+        0.0
+      ]
+    ],
+    "paired_diff_psep_l2": [
+      0.0,
+      [
+        0.0,
+        0.0
+      ]
+    ],
+    "paired_diff_dr_gibf": [
+      -0.012121980673998823,
+      [
+        -0.02275635696599781,
+        -0.0016888543819998318
+      ]
+    ],
+    "paired_diff_psep_gibf": [
+      0.0007,
+      [
+        0.0001,
+        0.0013
+      ]
+    ],
+    "paired_diff_dr_mmv": [
+      2.148642132107799,
+      [
+        2.009118050008462,
+        2.2798273563757867
+      ]
+    ],
+    "paired_diff_psep_mmv": [
+      -0.1194,
+      [
+        -0.1268,
+        -0.1115
+      ]
+    ]
+  },
+  "mdl_lookup": {
+    "dr": {
+      "l2": [
+        18.38829381999832,
+        [
+          18.38809381999832,
+          18.38849381999832
+        ]
+      ],
+      "gibf": [
+        6.531848066435395,
+        [
+          6.36703085890941,
+          6.698215273961379
+        ]
+      ],
+      "mmv": [
+        5.456546272291495,
+        [
+          5.29977639395641,
+          5.6202303181545785
+        ]
+      ]
+    },
+    "psep": {
+      "l2": [
+        0.0,
+        [
+          0.0,
+          0.0
+        ]
+      ],
+      "gibf": [
+        0.6402,
+        [
+          0.6308975,
+          0.6495
+        ]
+      ],
+      "mmv": [
+        0.6994,
+        [
+          0.6902,
+          0.7082025000000001
+        ]
+      ]
+    },
+    "gap_gibf_minus_mmv": [
+      1.0753017941439005,
+      [
+        0.9177156658088155,
+        1.2399856346923346
+      ]
+    ]
+  },
+  "aic_lookup": {
+    "dr": {
+      "l2": [
+        18.38829381999832,
+        [
+          18.38809381999832,
+          18.38849381999832
+        ]
+      ],
+      "gibf": [
+        6.531848066435395,
+        [
+          6.36703085890941,
+          6.698215273961379
+        ]
+      ],
+      "mmv": [
+        5.456546272291495,
+        [
+          5.29977639395641,
+          5.6202303181545785
+        ]
+      ]
+    },
+    "psep": {
+      "l2": [
+        0.0,
+        [
+          0.0,
+          0.0
+        ]
+      ],
+      "gibf": [
+        0.6402,
+        [
+          0.6308975,
+          0.6495
+        ]
+      ],
+      "mmv": [
+        0.6994,
+        [
+          0.6902,
+          0.7082025000000001
+        ]
+      ]
+    },
+    "gap_gibf_minus_mmv": [
+      1.0753017941439005,
+      [
+        0.9177156658088155,
+        1.2399856346923346
+      ]
+    ]
+  },
+  "direct_mdl_matches_forced_k_lookup": {
+    "dr_l2": true,
+    "psep_l2": true,
+    "dr_gibf": true,
+    "psep_gibf": true,
+    "dr_mmv": true,
+    "psep_mmv": true
+  },
+  "forced_k_sweep": {
+    "1": {
+      "l2": {
+        "dr_mean": 18.38849381999832,
+        "psep_rate": 0.0
+      },
+      "gibf": {
+        "dr_mean": 8.266624429109225,
+        "psep_rate": 0.5395
+      },
+      "mmv": {
+        "dr_mean": 8.266624429109225,
+        "psep_rate": 0.5395
+      }
+    },
+    "2": {
+      "l2": {
+        "dr_mean": 18.38839381999832,
+        "psep_rate": 0.0
+      },
+      "gibf": {
+        "dr_mean": 6.543970047109394,
+        "psep_rate": 0.6395
+      },
+      "mmv": {
+        "dr_mean": 3.307904140183695,
+        "psep_rate": 0.8188
+      }
+    },
+    "3": {
+      "l2": {
+        "dr_mean": 18.388343819998322,
+        "psep_rate": 0.0
+      },
+      "gibf": {
+        "dr_mean": 6.536964629581394,
+        "psep_rate": 0.6399
+      },
+      "mmv": {
+        "dr_mean": 3.777895133885652,
+        "psep_rate": 0.7927
+      }
+    },
+    "4": {
+      "l2": {
+        "dr_mean": 18.38829381999832,
+        "psep_rate": 0.0
+      },
+      "gibf": {
+        "dr_mean": 6.535275775199395,
+        "psep_rate": 0.64
+      },
+      "mmv": {
+        "dr_mean": 4.338917701069599,
+        "psep_rate": 0.7615
+      }
+    },
+    "5": {
+      "l2": {
+        "dr_mean": 18.38829381999832,
+        "psep_rate": 0.0
+      },
+      "gibf": {
+        "dr_mean": 6.5335869208173945,
+        "psep_rate": 0.6401
+      },
+      "mmv": {
+        "dr_mean": 4.9173788120735455,
+        "psep_rate": 0.7293
+      }
+    },
+    "6": {
+      "l2": {
+        "dr_mean": 18.38829381999832,
+        "psep_rate": 0.0
+      },
+      "gibf": {
+        "dr_mean": 6.531848066435395,
+        "psep_rate": 0.6402
+      },
+      "mmv": {
+        "dr_mean": 5.456546272291495,
+        "psep_rate": 0.6994
+      }
+    }
+  }
+}

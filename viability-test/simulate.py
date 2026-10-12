@@ -285,6 +285,45 @@ def simulate_snapshots(tm, active_indices, powers, rng, n_snap, snr_db,
     return X, X_clean
 
 
+def simulate_snapshots_general(A, col_idx, powers, rng, n_snap, snr_db,
+                               coherence=None):
+    """Complex phasor snapshots from ANY kernel and a per-snapshot column schedule.
+
+    A: (n_channels, n_columns) kernel, real or complex.
+    col_idx: int array (n_src, n_snap); column used by each source at each
+      snapshot. Constant rows reproduce `simulate_snapshots`; a row that varies
+      with the snapshot is the B6b support jitter (SPEC S.15).
+
+    Random draws are consumed in exactly the order `simulate_snapshots` uses
+    (source draws, then noise), so a run that only changes the kernel or the
+    column schedule is paired draw-for-draw with a run that does not.
+    Returns (X, X_clean)."""
+    col_idx = np.asarray(col_idx, dtype=int)
+    n_src = col_idx.shape[0]
+    if col_idx.shape != (n_src, n_snap):
+        raise ValueError(f"col_idx has shape {col_idx.shape}; expected "
+                         f"({n_src}, {n_snap})")
+    if len(powers) != n_src:
+        raise ValueError("one power per source")
+    if coherence is None:
+        s = np.stack([cn(rng, (n_snap,), p) for p in powers], axis=0)
+    else:
+        if n_src != 2:
+            raise ValueError("coherent pair model requires exactly 2 sources")
+        rho = coherence
+        s1 = cn(rng, (n_snap,), powers[0])
+        s2 = rho * s1 + np.sqrt(max(0.0, 1.0 - abs(rho) ** 2)) * cn(rng, (n_snap,), powers[1])
+        s = np.stack([s1, s2], axis=0)
+
+    X_clean = np.einsum("csn,sn->cn", A[:, col_idx], s)
+    if snr_db is None:
+        return X_clean.copy(), X_clean
+    sig_power = float(np.mean(np.abs(X_clean) ** 2))
+    noise_power = sig_power / (10.0 ** (snr_db / 10.0))
+    noise = cn(rng, X_clean.shape, noise_power)
+    return X_clean + noise, X_clean
+
+
 def build_csm(X):
     """S = (1/N) X X^H — complex Hermitian PSD (archived brief §6.4)."""
     n_snap = X.shape[1]

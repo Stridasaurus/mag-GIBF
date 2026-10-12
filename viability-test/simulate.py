@@ -211,6 +211,26 @@ def row_center_cols(d, grid_shape=GRID_SHAPE):
     return idx_a, idx_b
 
 
+def offgrid_columns(tm, grid_indices, u, v):
+    """DF-only kernel columns for sources translated off their grid nodes.
+
+    Each source sits at the pole `grid_indices[k]` moved `u` rows north and
+    `v` columns east, in units of one pole step (POLE_LAT_STEP_DEG degrees of
+    latitude, POLE_LON_STEP_DEG degrees of longitude). The columns come from
+    the same adapter, stations and shell as `tm.A` (SPEC S.14, off-grid row
+    specification), evaluated at the exact positions; the coincidence and
+    finiteness guards of `build_transfer_matrix` apply. Returns a real
+    (n_channels, len(grid_indices)) array in the same row units as `tm.A`."""
+    idx = np.asarray(grid_indices, dtype=int)
+    lat = tm.pole_lat[idx] + u * POLE_LAT_STEP_DEG
+    lon = tm.pole_lon[idx] + v * POLE_LON_STEP_DEG
+    sub = build_transfer_matrix(
+        tm.station_lat, tm.station_lon, lat, lon,
+        current_types=("divfree",), row_normalisation="none",
+        r=tm.r, RI=tm.RI)
+    return sub.A * tm.row_scale[:, None]
+
+
 def cn(rng, shape, power):
     """Circularly-symmetric complex normal CN(0, power): real & imag each
     N(0, power/2), so E[|z|^2] = power (archived brief §6.3)."""
@@ -219,7 +239,7 @@ def cn(rng, shape, power):
 
 
 def simulate_snapshots(tm, active_indices, powers, rng, n_snap, snr_db,
-                        coherence=None, current_type="divfree"):
+                        coherence=None, current_type="divfree", A_active=None):
     """Complex frequency-bin phasor snapshots (§0.2 rule 2 / repo CLAUDE.md).
 
     active_indices: grid indices (into tm's pole grid) of the active sources.
@@ -234,8 +254,13 @@ def simulate_snapshots(tm, active_indices, powers, rng, n_snap, snr_db,
     §6.3 convention). snr_db=None -> noise-free deterministic (no draw at
     all; used by the single-source gate's tier (i))."""
     n_src = len(active_indices)
-    col0 = tm.col_slice(current_type).start
-    cols = np.array([col0 + i for i in active_indices])
+    if A_active is None:
+        col0 = tm.col_slice(current_type).start
+        cols = np.array([col0 + i for i in active_indices])
+        A_active = tm.A[:, cols]
+    elif A_active.shape != (tm.A.shape[0], n_src):
+        raise ValueError(f"A_active has shape {A_active.shape}; expected "
+                         f"{(tm.A.shape[0], n_src)}")
 
     if coherence is None:
         s = np.stack([cn(rng, (n_snap,), p) for p in powers], axis=0)
@@ -247,7 +272,6 @@ def simulate_snapshots(tm, active_indices, powers, rng, n_snap, snr_db,
         s2 = rho * s1 + np.sqrt(max(0.0, 1.0 - abs(rho) ** 2)) * cn(rng, (n_snap,), powers[1])
         s = np.stack([s1, s2], axis=0)
 
-    A_active = tm.A[:, cols]
     X_clean = A_active @ s
 
     if snr_db is None:

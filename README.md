@@ -35,7 +35,7 @@ names. `ROADMAP.md` §0 has the full rename map; the short version:
 
 ## Where the project stands right now
 
-*(Refreshed 2026-10-03. `ROADMAP.md` §9 is the current frontier; `ROADMAP.md` §8 and
+*(Refreshed 2026-10-05. `ROADMAP.md` §9 is the current frontier; `ROADMAP.md` §8 and
 `viability-test/SPEC_experiment_B.md` §S.14 preserve the decision record.)*
 
 - **Validation Gate V, Card A Tier 1 and Tier 2, `transfer.py`, and the Experiment-B
@@ -47,14 +47,14 @@ names. `ROADMAP.md` §0 has the full rename map; the short version:
   lookup, and miss/error decomposition. The 64-snapshot B6a row is intentionally
   overspecified; the 128-snapshot row is descriptive and under-specified.
 - **Current implementation state:** the powered runner and its SPEC/status repairs are
-  on the `b2b6-powered-runner-d2` candidate branch. The confirmatory/master-seed run
-  has **not** been executed and is blocked by two unresolved design details in SPEC
-  §S.14: the exact off-grid offset/cells and whether the descriptive `d=1` regularization
-  panel binds a d-min verdict. Do not infer either choice.
-- **Next valid action:** finish review and land the candidate, then resolve those two
-  pre-run details. Only after the design is complete and the runner is committed clean
-  may the master-seed experiment run. The old Shane-Gilbertie Card-A assignment in
-  `handoff.md` is historical.
+  merged (PR #6, `37b4e21`). The confirmatory/master-seed run has **not** been executed.
+  Per the 2026-10-05 reconciliation and the 2026-10-11 off-grid specification (SPEC §S.14,
+  ROADMAP §8/§9): the off-grid row is specified and implemented (descriptive, never
+  adjudicated), the `d=1` panel is descriptive, and Strider's two pre-run requirements,
+  an airtightness review and an agent-chosen-values sweep, are recorded (SPEC §S.14).
+- **Next valid action:** Strider's go-ahead, then confirm the runner is committed clean,
+  smoke-test, and run the master seed. The old Shane-Gilbertie Card-A
+  assignment in `handoff.md` is historical.
 
 Full experiment-by-experiment detail: `ROADMAP.md` §8 (append-only log) and §9
 (status). Do not re-derive from this summary — it is intentionally short.

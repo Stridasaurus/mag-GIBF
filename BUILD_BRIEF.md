@@ -61,14 +61,13 @@ Plus, settled since the archived brief was written:
 | Powered d=2 design | settled; pre-run obligations below | SPEC §S.14 ("Pre-run details and obligations"); saved decision sessions cited there |
 | Selected trial count | 10,000 per cell; historical 1,635 superseded | SPEC §S.14; `run_experiment_B2B6_powered_d2.py` |
 | Powered runner | merged to `main` (PR #6, `37b4e21`); confirmatory run not executed | `viability-test/run_experiment_B2B6_powered_d2.py` |
-| Off-grid row (A4) | ruled (descriptive, never adjudicated); not implemented | SPEC §S.14; ROADMAP §8 2026-10-05 |
+| Off-grid row (A4) | specified 2026-10-11 and implemented (descriptive, never adjudicated; family `B2offgrid`) | SPEC §S.14; ROADMAP §8 2026-10-11 |
 | d=1 regularization panel | descriptive (binding never ruled; input to the airtightness review) | SPEC §S.14 P9 |
-| Airtightness review; agent-chosen-values sweep | required by Strider before the run; not done | SPEC §S.14; ROADMAP §9 |
+| Airtightness review; agent-chosen-values sweep | recorded 2026-10-11; no pre-registered value changed | SPEC §S.14 "Pre-run review record"; ROADMAP §8 2026-10-11 |
 
-The master-seed run is blocked until the off-grid row is implemented and the airtightness
-review and agent-chosen-values sweep are done and recorded, after which the runner must be
-committed clean and smoke-tested under the separate smoke seed. No confirmatory result
-exists. The old Shane-Gilbertie Card-A assignment in `handoff.md` is historical.
+The master-seed run is blocked by `PRE_RUN_GATES_COMPLETE` until Strider's go-ahead, after
+which the runner must be committed clean and smoke-tested under the separate smoke seed.
+No confirmatory result exists. The old Shane-Gilbertie Card-A assignment in `handoff.md` is historical.
 
 ---
 
@@ -165,9 +164,9 @@ comparison by lookup over the fixed-K=1…6 runs. It does not add an AIC-fed sol
 
 ## Current run guardrails
 
-- Do not run the powered/master-seed experiment until the SPEC §S.14 pre-run obligations are
-  complete: off-grid row implemented, airtightness review and agent-chosen-values sweep recorded
-  (the descriptive d=1 panel's binding status is an input to that review).
+- Do not run the powered/master-seed experiment before Strider's go-ahead sets
+  `PRE_RUN_GATES_COMPLETE`. The SPEC §S.14 pre-run obligations are recorded (off-grid row
+  implemented; airtightness review and agent-chosen-values sweep in "Pre-run review record").
 - Do not alter original result artifacts when applying the separately recorded peak rescoring.
 - Preserve the two core invariants above: real DF-only `A` outside B4, complex frequency-bin
   phasor snapshots, eigenmodes weighted by `√λ`, and identical GIBF/MMV inputs.
@@ -181,7 +180,7 @@ comparison by lookup over the fixed-K=1…6 runs. It does not add an AIC-fed sol
 - Frozen Experiment-B design: `viability-test/SPEC_experiment_B.md`.
 - Frozen Card A: `EXPERIMENT_CARD_A.md`.
 - Built adapter + tests: `viability-test/transfer.py`, `tests/test_transfer.py`.
-- Gate V artifacts + paper paragraph: `results/V_kernel_validation/` (`PARAGRAPH.md`).
+- Gate V artifacts: `results/V_kernel_validation/`. Paper prose is not kept in this public repository.
 - Card A Tier 1 artifacts: `results/A_flr_coherence/`.
 - Vault: `[[secs-gibf-viability]]` (project note), `[[wax-kailath-1985-notes]]` (the AIC/MDL basis).
 - Archived (history only): `docs/archive/GIBF_viability_BUILD_BRIEF.md`.

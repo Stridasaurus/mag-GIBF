@@ -326,3 +326,16 @@ Also reviewed and already ruled, or inert: peak count and the 10 % threshold (ru
 
 12. **Required tests:** the complex solver equals the standard GIBF solver on a real kernel (indices, iteration counts, stop reasons); the standard solvers still reject a complex `A`; the phantom kernel has unchanged magnitudes and tends to `A` as the wavelength grows; the general snapshot simulator equals `simulate_snapshots` for constant columns and consumes the same random stream; the jitter column schedules are as specified; seeds are distinct from every prior seed; guards (committed-and-clean, no overwrite, smoke never under `results/`).
 13. **Disclosures.** B4 is incoherent sources only (the B1 scenario); the phase ramp is a synthetic isotropic propagation phase, not derived from the SECS physics; the wavelengths are agent-chosen as in item 4; the B6b step direction and the 3 x 3 neighbourhood are as in item 9; neither experiment enters D2.
+
+
+## S.16 Post-hoc work: the boundary (fixed 2026-10-12, after the results in `seal/SEAL.md` were read)
+
+> The pre-registered record is **sealed** (`seal/SEAL.md`, tag `sealed-2026-10-12`): the confirmatory B2/B6a run and its adjudication, the B4/B6b run, the earlier pilots, and the modules that produced them. Everything decided after those results were read is **post hoc**. This section keeps the two apart.
+
+1. **What counts as post hoc.** Any analysis, scoring, bracketing, re-run or extension chosen after the sealed results were read. Examples already on the table: MMV on the phantom kernels, any other B4/B6b extension, further regularization or scoring brackets on the sealed arrays, and the exploratory observations recorded in the 2026-10-12 review (regularization window, reduction OFF, off-grid).
+2. **Where it lives.** Code in `viability-test/post_hoc/`; output in `results/post_hoc/<name>/`. Never inside a sealed directory, and no sealed module is edited: build on it by import.
+3. **How it is labelled.** Every post-hoc `manifest.json` carries `"status": "post_hoc"` and `"sealed_commit"`; `tests/test_seal.py` enforces both.
+4. **New randomness.** A post-hoc run that draws new trials uses its own seed, drawn in an isolated interpreter and recorded, distinct from every seed in `seal/SEAL.md`. It may read sealed arrays; it never writes them.
+5. **Intent before execution.** A short dated note states what is asked and why it was not pre-registered, before the run. That note is a record of intent, not a pre-registration, and its results are exploratory whatever they show.
+6. **Never re-adjudicate.** A post-hoc result cannot alter, re-score or re-open a sealed verdict (D2: WIN not met; LOSS met at phi = 180; B6 not met). Any text that cites a post-hoc result says "post hoc".
+7. **Changing a sealed file.** Not done. A correction is an addendum in `seal/ADDENDA.md`. If sealed code or data must truly change, a new, dated seal is built; this one is not edited.

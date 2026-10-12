@@ -57,7 +57,7 @@ def test_master_seed_pinned_and_distinct_from_smoke():
 def test_plan_structure():
     plan = R.build_plan()
     b2 = [c for c in plan if c.family == "B2"]
-    assert len(b2) == 3 * 2 * 5 and len(plan) == 33
+    assert len(b2) == 3 * 2 * 5 and len(plan) == 33 + 6   # + six off-grid cells
     ids = [c.cell_id for c in plan]
     assert len(set(ids)) == len(ids)              # the d=2 axis point is not duplicated
     conf = [c for c in plan if c.confirmatory]
@@ -502,10 +502,11 @@ def test_nondefault_b6a_nsnap_is_a_descriptive_b6a_only_run():
     assert len(descriptive[0].arms) == 1 and all(a.reduction for a in descriptive[0].arms)
 
 
-def test_default_run_is_the_confirmatory_run():
+def test_default_run_is_blocked_while_the_gates_are_unset(monkeypatch):
     if (R.DEFAULT_OUT / "manifest.json").exists():
         pytest.skip("the confirmatory run already exists")
-    with pytest.raises(SystemExit, match="off-grid specification.*d=1 panel"):
+    monkeypatch.setattr(R, "PRE_RUN_GATES_COMPLETE", False)
+    with pytest.raises(SystemExit, match="airtightness review.*agent-chosen-values sweep"):
         R.resolve_run(R.parse_args([]), clean=True)
 
 
@@ -613,3 +614,261 @@ def test_real_solver_records_miss_fields(tm):
             rec[f"matched_n_{m}"], 1), rec[f"matched_err_{m}"])
         assert np.allclose(rec[f"matched_err_{m}"][~miss], rec[f"dr_{m}"][~miss])
         assert np.all((rec[f"npeaks_{m}"] < 2) == miss)
+
+
+# ------------------------------------------- off-grid row (A4) and d=1 panel --
+# SPEC S.14 "Off-grid row (A4): specification" and P9 item 4.
+
+# sha256 of (X, oracle V, K-hat, true cells) for on-grid trials 0..2 of 13 cells
+# at TEST_SEED, computed from the runner BEFORE the off-grid change. The change
+# must not disturb a single on-grid draw (the master-seed trial stream).
+ONGRID_FINGERPRINTS = {
+    "B2|phi=90|snr=5|d=1|nsnap=64#0":
+        "5ef805171f35246f08e32ca434e5db02f6be952efe947ddd67d2cbba51d3cb82",
+    "B2|phi=90|snr=5|d=1|nsnap=64#1":
+        "dceb071dd7d7059a1cee7c6552e9a562341ba12b6b9d00727be1e2a99dfee8fe",
+    "B2|phi=90|snr=5|d=1|nsnap=64#2":
+        "91fc81d68d8c785e7f3d6c57e6318a38ac7651192ee84d5d117875b21fc79bb2",
+    "B2|phi=90|snr=5|d=2|nsnap=64#0":
+        "d662689ebd5ec396899cd552cc1e6f09644e047f4da21f8a9b9ee5bd5aa54c36",
+    "B2|phi=90|snr=5|d=2|nsnap=64#1":
+        "9975ae5fc7d7f7cb456f2bb30de7b17f3d2fb7f902efef6910180b2b25fbe0e3",
+    "B2|phi=90|snr=5|d=2|nsnap=64#2":
+        "48b6737a03cd7653c11adb26e2be6081aeee0755ae0f8b1bf5bcccf549e78928",
+    "B2|phi=90|snr=5|d=8|nsnap=64#0":
+        "cfa43e842729a98747fb3565680e0eb29107d697f6608aea7e378607a18613d0",
+    "B2|phi=90|snr=5|d=8|nsnap=64#1":
+        "e45416cc18d607cb2c743f8e9f0f12b7807aae1972339237c1e7947620ad73a4",
+    "B2|phi=90|snr=5|d=8|nsnap=64#2":
+        "b16c4b002211e38264b55cecca86ac9233f84816ed0c8aedc419c474d41e937f",
+    "B2|phi=90|snr=10|d=1|nsnap=64#0":
+        "8aa5345813f8ff5b319011cc9dc7e37b4f3bb5187a39f3bf099056a9701ac169",
+    "B2|phi=90|snr=10|d=1|nsnap=64#1":
+        "0d0f4a1c0ed4e03c9d5e0b9c4e7a9896dc93219ad766f6d96c8691fa684ae95d",
+    "B2|phi=90|snr=10|d=1|nsnap=64#2":
+        "3732be1ad545ced934eeabfa2d5a23a458b6d624c6105e05d71bacf4962edd07",
+    "B2|phi=90|snr=10|d=2|nsnap=64#0":
+        "03b9c2a449a2ed16b1389c9bce73b52225fdb67aa5be19539121015a0e7884ab",
+    "B2|phi=90|snr=10|d=2|nsnap=64#1":
+        "9fe359dabf483937e74e91eab8209d1604088d30e4ee79b6c68aa89f3c5e6d9c",
+    "B2|phi=90|snr=10|d=2|nsnap=64#2":
+        "d662da6d8531674abed1eafe8f5c2c8aac92e9949814976ae08c03a6bd7fb989",
+    "B2|phi=90|snr=10|d=8|nsnap=64#0":
+        "249389fc90e8a1a1cb24a7e82594140c0bd90c3c9dfc7b5111744eb985f46fa6",
+    "B2|phi=90|snr=10|d=8|nsnap=64#1":
+        "5aad143cb1b961bd0b752e5bce1fc440c630df357273566fa8be38b4c5074b87",
+    "B2|phi=90|snr=10|d=8|nsnap=64#2":
+        "2b2b8513aa3c60533c7597fb77cfe004698baf289bbb07ad1b04d2d2c05fa715",
+    "B2|phi=0|snr=5|d=1|nsnap=64#0":
+        "b07e1e1dd940af8c5fc7eb4976e3c61ed327a496d6a4dd6d4d1c7a5f4d950d94",
+    "B2|phi=0|snr=5|d=1|nsnap=64#1":
+        "fa7816c5e02f219a8a75337581d2fd6f08fc7c47bf7ec4482e0a23c56e90274d",
+    "B2|phi=0|snr=5|d=1|nsnap=64#2":
+        "bf2b2e2a357911f296ee9dea2258ed6791c50f39324f752c5e2696927c866de1",
+    "B2|phi=0|snr=5|d=2|nsnap=64#0":
+        "43c17b0b48a25c7fe0e90e22574bc530ca2ef4877d0d8845c309db2afa9ff790",
+    "B2|phi=0|snr=5|d=2|nsnap=64#1":
+        "5bc76cff5503c19e89b0423bcd9871945e756683e9cdf4a753c14a160b51f39b",
+    "B2|phi=0|snr=5|d=2|nsnap=64#2":
+        "bf55255297af46f219f52a8223caadd6f3199f8e38add2eb98beeb10895d6687",
+    "B2|phi=0|snr=5|d=8|nsnap=64#0":
+        "e4a7a66942f34bc96ddcca9dcb12510bd108bb67cd08b9fdadfeeec21b8c5bab",
+    "B2|phi=0|snr=5|d=8|nsnap=64#1":
+        "236360634a29e336d137860308734a0f6d506645e2ac6902af7104040c1c8eb1",
+    "B2|phi=0|snr=5|d=8|nsnap=64#2":
+        "252c0f7038aec5308890194728fa6c5ed572dfe81e82bdb4ccf73014804d4148",
+    "B2|phi=0|snr=10|d=1|nsnap=64#0":
+        "c200b62cf68275b2695fcdf05c2e9e112ea26a952437ae07555807b150ebe823",
+    "B2|phi=0|snr=10|d=1|nsnap=64#1":
+        "c656f36ac51c60f5678ae28cd73d751266e1f03d8c1ff12420af738b45a6a69f",
+    "B2|phi=0|snr=10|d=1|nsnap=64#2":
+        "6e13de163d9c9e5b0f6a244be87eaa9c523b72ad05cd48d00bc08364af99d14d",
+    "B2|phi=0|snr=10|d=2|nsnap=64#0":
+        "3daec706c270d18e0de3d68ade8c113097aa89074e3ecaa610ce87ae3e29582b",
+    "B2|phi=0|snr=10|d=2|nsnap=64#1":
+        "7d16daf66e5891ba036581899bbb0d4187439a9398653563f8ccdc2afe86225f",
+    "B2|phi=0|snr=10|d=2|nsnap=64#2":
+        "7e8664772fc9e4106c499bf0c93ce10346bcd87246f020e381d53f3b352bcf88",
+    "B2|phi=0|snr=10|d=8|nsnap=64#0":
+        "5557dab7fca3d96140e37851d32a3149d80443e7eaba67b6d66247db4d5a29d8",
+    "B2|phi=0|snr=10|d=8|nsnap=64#1":
+        "2ed8caf2a430f1479779cd605bbf299812f46a838a5d04aba65327aa50bee17e",
+    "B2|phi=0|snr=10|d=8|nsnap=64#2":
+        "90933cd6ca281666bff166e09fde4423e04581ca4bed92c92ece2c70a333f96a",
+    "B6a|phi=90|snr=5|d=2|nsnap=64#0":
+        "be17683627cda765025605dbf35d76918a588b48fa85b7043cc360064e193a9d",
+    "B6a|phi=90|snr=5|d=2|nsnap=64#1":
+        "09669a0d623ae80e8de54c81dad63293a2ff8308a0cf190b3376070e24f11882",
+    "B6a|phi=90|snr=5|d=2|nsnap=64#2":
+        "511731da785f22dd40fc41aa8953296071e2acf5ea80aeb2e94c78d77c73989c",
+}
+
+
+def _fingerprint(tr):
+    h = hashlib.sha256()
+    h.update(np.ascontiguousarray(tr["X"]).tobytes())
+    h.update(np.ascontiguousarray(tr["V"]["oracle"]).tobytes())
+    h.update(str(tr["khat_mdl"]).encode())
+    h.update(str([tuple(int(x) for x in tc) for tc in tr["true_cells"]]).encode())
+    return h.hexdigest()
+
+
+def _offgrid_cells():
+    return [c for c in R.build_plan() if c.family == R.OFFGRID_FAMILY]
+
+
+def test_on_grid_trials_are_byte_identical_to_before_the_offgrid_change(tm):
+    plan = {c.cell_id: c for c in R.build_plan()}
+    for key, want in ONGRID_FINGERPRINTS.items():
+        cell_id, t = key.rsplit("#", 1)
+        tr = R.generate_trial(tm, plan[cell_id], TEST_SEED, int(t))
+        assert _fingerprint(tr) == want, key
+
+
+def test_offgrid_plan_cells():
+    plan = R.build_plan()
+    off = _offgrid_cells()
+    assert len(off) == 6
+    assert {(c.phi_deg, c.snr_db) for c in off} == {
+        (p, s) for p in (R.PHI_WIN_DEG,) + R.PHI_NULL_DEGS for s in R.SNR_PAIR}
+    for c in off:
+        assert c.d == R.D_CONFIRM and c.n_snap == R.N_SNAP
+        assert c.role == "descriptive_offgrid" and not c.confirmatory
+        assert c.panel_arms == () and c.arms == (R.Arm("oracle", True, 1.0),)
+        assert R.arm_use(c, c.arms[0]) == "descriptive_offgrid"
+        sib = [s for s in plan if s.cell_id == c.data_cell_id]
+        assert len(sib) == 1 and sib[0].family == "B2" and sib[0].d == R.D_CONFIRM
+        assert sib[0].role in ("win", "null") and c.cell_id != c.data_cell_id
+    # adjudication selects its d axis by family == "B2": off-grid cells never join it
+    for phi in (R.PHI_WIN_DEG,) + R.PHI_NULL_DEGS:
+        for snr in R.SNR_PAIR:
+            axis = [c for c in plan if c.family == "B2" and c.phi_deg == phi
+                    and c.snr_db == snr and c.d == R.D_CONFIRM]
+            assert len(axis) == 1
+    assert R.OFFGRID_ROLE in R.ALL_ROLES
+    # a descriptive B6a-only plan carries no off-grid cell
+    assert not [c for c in R.build_plan(128) if c.family == R.OFFGRID_FAMILY]
+
+
+def test_offgrid_zero_offset_reproduces_its_sibling_exactly(tm):
+    plan = R.build_plan()
+    off = _offgrid_cells()[0]
+    sib = next(c for c in plan if c.cell_id == off.data_cell_id)
+    a = R.generate_trial(tm, sib, TEST_SEED, 5)
+    z = R.generate_trial(tm, off, TEST_SEED, 5, offset=(0.0, 0.0))
+    assert np.array_equal(a["X"], z["X"])
+    assert np.array_equal(a["V"]["oracle"], z["V"]["oracle"])
+    assert [(float(r), float(c)) for r, c in a["true_cells"]] == list(z["true_cells"])
+
+
+def test_offgrid_offsets_are_in_range_recorded_and_off_the_data_stream(tm):
+    off = _offgrid_cells()[0]
+    sib = next(c for c in R.build_plan() if c.cell_id == off.data_cell_id)
+    before = R.generate_trial(tm, sib, TEST_SEED, 2)
+    offs = []
+    for t in range(30):
+        tr = R.generate_trial(tm, off, TEST_SEED, t)
+        u, v = tr["offset"]
+        assert -0.5 <= u < 0.5 and -0.5 <= v < 0.5
+        row, col_a = divmod(R.row_center_cols(R.D_CONFIRM)[0], R.GRID_SHAPE[1])
+        assert tr["true_cells"][0] == (row + u, col_a + v)
+        assert (tr["true_cells"][1][1] - tr["true_cells"][0][1]
+                == pytest.approx(R.D_CONFIRM))                 # rigid pair
+        offs.append((u, v))
+    assert len(set(offs)) == 30                       # varies by trial
+    again = R.generate_trial(tm, off, TEST_SEED, 7)
+    assert again["offset"] == R.generate_trial(tm, off, TEST_SEED, 7)["offset"]
+    after = R.generate_trial(tm, sib, TEST_SEED, 2)   # sibling untouched by the draws above
+    assert np.array_equal(before["X"], after["X"])
+    # the offset stream is not the data stream
+    assert R.offgrid_rng(TEST_SEED, "k", 0).uniform() != R.trial_rng(TEST_SEED, "k", 0).uniform()
+
+
+def test_offgrid_cell_runs_end_to_end_and_records_offsets(tm):
+    off = _offgrid_cells()[0]
+    arrays, _ = R.run_data_cell(tm, off, 3, TEST_SEED, solve_fn=solve_all)
+    d = arrays["_data"]
+    assert d["offset_u"].shape == (3,) and np.all(np.abs(d["offset_u"]) <= 0.5)
+    rec = arrays["oracle_on_x1"]
+    for m in R.METHODS:
+        assert np.all(np.isfinite(rec[f"dr_{m}"]))
+    summ = R.summarize_cell(off, arrays)
+    assert all(a["descriptive"] and a["use"] == "descriptive_offgrid"
+               for a in summ["arms"].values())
+    assert "sensitivity_panel" not in summ
+
+
+def test_offgrid_summary_bins_contrast_and_transitions():
+    off = _offgrid_cells()[0]
+    n = 400
+    rng = np.random.default_rng(3)
+    u, v = rng.uniform(-0.5, 0.5, n), rng.uniform(-0.5, 0.5, n)
+    outcomes = np.array(["correct", "miss", "mislocated"])
+
+    def rec(shift):
+        out = {}
+        for m in R.METHODS:
+            out[f"dr_{m}"] = rng.normal(2.0, 1.0, n) + shift
+            out[f"psep_{m}"] = rng.random(n) < 0.7
+            out[f"miss_{m}"] = rng.random(n) < 0.2
+            out[f"outcome_{m}"] = outcomes[rng.integers(0, 3, n)]
+        return out
+
+    on = rec(0.0)
+    offr = {k: (np.asarray(x).copy()) for k, x in on.items()}
+    offr["dr_gibf"] = on["dr_gibf"] + 1.0              # known paired shift
+    arrays = {"_data": {"offset_u": u, "offset_v": v}, "oracle_on_x1": offr}
+    s = R.offgrid_summary(off, arrays, on)
+    assert sum(b["n"] for b in s["by_offset_magnitude"].values()) == n
+    assert sum(b["n"] for b in s["by_axis_north"].values()) == n
+    assert sum(b["n"] for b in s["by_axis_east"].values()) == n
+    assert s["contrast_off_minus_on"]["dr_gibf"][0] == pytest.approx(1.0)
+    assert s["contrast_off_minus_on"]["dr_mmv"][0] == pytest.approx(0.0)
+    assert s["contrast_gap_gibf_minus_mmv"][0] == pytest.approx(1.0)
+    for m in R.METHODS:
+        assert sum(s["transitions_on_to_off"][m].values()) == n
+        assert s["transitions_on_to_off"][m]["correct->correct"] == int(
+            np.sum(on[f"outcome_{m}"] == "correct"))
+    assert s["descriptive"] is True
+
+
+def test_d1_cells_carry_the_descriptive_panel(tm):
+    d1 = [c for c in R.build_plan() if c.family == "B2" and c.d == 1]
+    assert len(d1) == 6
+    for c in d1:
+        assert not c.confirmatory
+        assert len(c.panel_arms) == 5
+        assert c.panel_arms[R.HEADLINE_BAND_INDEX] == R.headline_arm(c)
+    arrays, _ = R.run_data_cell(tm, d1[0], 3, TEST_SEED, solve_fn=_fake_solver([]))
+    summ = R.summarize_cell(d1[0], arrays)
+    assert "sensitivity_panel" in summ
+    panel = summ["sensitivity_panel"]
+    assert panel["descriptive"] is True and len(panel["points"]) == 5
+    assert "never ruled" in summ["d1_panel_role"]
+    assert set(summ["d1_psep_by_eps"]) == {f"x{m:g}" for m in R.EPS_BAND}
+    assert all(set(v) == set(R.SPARSE) for v in summ["d1_psep_by_eps"].values())
+    assert all(isinstance(b, bool) for v in summ["d1_psep_meets_threshold_by_eps"].values()
+               for b in v.values())
+    # the descriptive panel arms are labelled descriptive; the headline arm is not
+    flags = {k: a["descriptive"] for k, a in summ["arms"].items()}
+    assert flags[R.headline_arm(d1[0]).key] is False
+    assert flags[R.Arm("oracle", True, 0.1).key] is True
+
+
+def test_master_seed_run_is_allowed_with_the_recorded_go_ahead():
+    if (R.DEFAULT_OUT / "manifest.json").exists():
+        pytest.skip("the confirmatory run already exists")
+    assert R.PRE_RUN_GATES_COMPLETE is True           # recorded 2026-10-11
+    run = R.resolve_run(R.parse_args([]), clean=True)
+    assert run["confirmatory"] is True and run["seed"] == R.MASTER_SEED
+    assert R.OFFGRID_ROLE in run["roles"]
+    # an unclean runner still blocks it
+    with pytest.raises(SystemExit):
+        R.resolve_run(R.parse_args([]), clean=False)
+
+
+def test_smoke_may_run_the_offgrid_role_alone(tmp_path):
+    run = R.resolve_run(R.parse_args(["--smoke", "--n-trials", "2", "--only",
+                                      "descriptive_offgrid",
+                                      "--out-dir", str(tmp_path / "s")]))
+    assert run["roles"] == ("descriptive_offgrid",) and run["confirmatory"] is False

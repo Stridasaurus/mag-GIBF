@@ -1,0 +1,504 @@
+{
+  "cell_id": "B4|snr=10|d=1|nsnap=64",
+  "family": "B4",
+  "role": "descriptive_b4",
+  "separation_km": 63.46,
+  "arms": {
+    "real_on": {
+      "dr": [
+        17.888543819998322,
+        [
+          17.888543819998322,
+          17.888543819998322
+        ]
+      ],
+      "psep": [
+        0.0,
+        [
+          0.0,
+          0.0
+        ]
+      ],
+      "miss_rate": [
+        1.0,
+        [
+          1.0,
+          1.0
+        ]
+      ],
+      "niter_mean": 10.8072,
+      "stop_reason_counts": {
+        "cost_increase": 7275,
+        "relative_tolerance": 1303,
+        "active_set_floor": 11422,
+        "max_iter": 0
+      },
+      "n_trials": 10000
+    },
+    "real_off": {
+      "dr": [
+        17.888543819998322,
+        [
+          17.888543819998322,
+          17.888543819998322
+        ]
+      ],
+      "psep": [
+        0.0,
+        [
+          0.0,
+          0.0
+        ]
+      ],
+      "miss_rate": [
+        1.0,
+        [
+          1.0,
+          1.0
+        ]
+      ],
+      "niter_mean": 21.3783,
+      "stop_reason_counts": {
+        "cost_increase": 7350,
+        "relative_tolerance": 12639,
+        "active_set_floor": 0,
+        "max_iter": 11
+      },
+      "n_trials": 10000
+    },
+    "lit_on": {
+      "dr": [
+        17.888543819998322,
+        [
+          17.888543819998322,
+          17.888543819998322
+        ]
+      ],
+      "psep": [
+        0.0,
+        [
+          0.0,
+          0.0
+        ]
+      ],
+      "miss_rate": [
+        1.0,
+        [
+          1.0,
+          1.0
+        ]
+      ],
+      "niter_mean": 10.80715,
+      "stop_reason_counts": {
+        "cost_increase": 7276,
+        "relative_tolerance": 1302,
+        "active_set_floor": 11422,
+        "max_iter": 0
+      },
+      "n_trials": 10000
+    },
+    "lit_off": {
+      "dr": [
+        17.888543819998322,
+        [
+          17.888543819998322,
+          17.888543819998322
+        ]
+      ],
+      "psep": [
+        0.0,
+        [
+          0.0,
+          0.0
+        ]
+      ],
+      "miss_rate": [
+        1.0,
+        [
+          1.0,
+          1.0
+        ]
+      ],
+      "niter_mean": 21.37825,
+      "stop_reason_counts": {
+        "cost_increase": 7350,
+        "relative_tolerance": 12639,
+        "active_set_floor": 0,
+        "max_iter": 11
+      },
+      "n_trials": 10000
+    },
+    "w1_on": {
+      "dr": [
+        17.888543819998322,
+        [
+          17.888543819998322,
+          17.888543819998322
+        ]
+      ],
+      "psep": [
+        0.0,
+        [
+          0.0,
+          0.0
+        ]
+      ],
+      "miss_rate": [
+        1.0,
+        [
+          1.0,
+          1.0
+        ]
+      ],
+      "niter_mean": 13.0,
+      "stop_reason_counts": {
+        "cost_increase": 0,
+        "relative_tolerance": 0,
+        "active_set_floor": 20000,
+        "max_iter": 0
+      },
+      "n_trials": 10000
+    },
+    "w1_off": {
+      "dr": [
+        17.888543819998322,
+        [
+          17.888543819998322,
+          17.888543819998322
+        ]
+      ],
+      "psep": [
+        0.0,
+        [
+          0.0,
+          0.0
+        ]
+      ],
+      "miss_rate": [
+        1.0,
+        [
+          1.0,
+          1.0
+        ]
+      ],
+      "niter_mean": 35.52105,
+      "stop_reason_counts": {
+        "cost_increase": 3,
+        "relative_tolerance": 19383,
+        "active_set_floor": 0,
+        "max_iter": 614
+      },
+      "n_trials": 10000
+    },
+    "w2_on": {
+      "dr": [
+        17.888543819998322,
+        [
+          17.888543819998322,
+          17.888543819998322
+        ]
+      ],
+      "psep": [
+        0.0,
+        [
+          0.0,
+          0.0
+        ]
+      ],
+      "miss_rate": [
+        1.0,
+        [
+          1.0,
+          1.0
+        ]
+      ],
+      "niter_mean": 13.0,
+      "stop_reason_counts": {
+        "cost_increase": 0,
+        "relative_tolerance": 0,
+        "active_set_floor": 20000,
+        "max_iter": 0
+      },
+      "n_trials": 10000
+    },
+    "w2_off": {
+      "dr": [
+        17.888543819998322,
+        [
+          17.888543819998322,
+          17.888543819998322
+        ]
+      ],
+      "psep": [
+        0.0,
+        [
+          0.0,
+          0.0
+        ]
+      ],
+      "miss_rate": [
+        1.0,
+        [
+          1.0,
+          1.0
+        ]
+      ],
+      "niter_mean": 34.0799,
+      "stop_reason_counts": {
+        "cost_increase": 0,
+        "relative_tolerance": 16557,
+        "active_set_floor": 0,
+        "max_iter": 3443
+      },
+      "n_trials": 10000
+    },
+    "w5_on": {
+      "dr": [
+        17.888543819998322,
+        [
+          17.888543819998322,
+          17.888543819998322
+        ]
+      ],
+      "psep": [
+        0.0,
+        [
+          0.0,
+          0.0
+        ]
+      ],
+      "miss_rate": [
+        1.0,
+        [
+          1.0,
+          1.0
+        ]
+      ],
+      "niter_mean": 12.9997,
+      "stop_reason_counts": {
+        "cost_increase": 1,
+        "relative_tolerance": 5,
+        "active_set_floor": 19994,
+        "max_iter": 0
+      },
+      "n_trials": 10000
+    },
+    "w5_off": {
+      "dr": [
+        17.888543819998322,
+        [
+          17.888543819998322,
+          17.888543819998322
+        ]
+      ],
+      "psep": [
+        0.0,
+        [
+          0.0,
+          0.0
+        ]
+      ],
+      "miss_rate": [
+        1.0,
+        [
+          1.0,
+          1.0
+        ]
+      ],
+      "niter_mean": 18.87805,
+      "stop_reason_counts": {
+        "cost_increase": 81,
+        "relative_tolerance": 19919,
+        "active_set_floor": 0,
+        "max_iter": 0
+      },
+      "n_trials": 10000
+    }
+  },
+  "paired_contrast": {
+    "lit_minus_real_on": {
+      "psep": [
+        0.0,
+        [
+          0.0,
+          0.0
+        ]
+      ],
+      "dr": [
+        0.0,
+        [
+          0.0,
+          0.0
+        ]
+      ],
+      "miss": [
+        0.0,
+        [
+          0.0,
+          0.0
+        ]
+      ]
+    },
+    "w1_minus_real_on": {
+      "psep": [
+        0.0,
+        [
+          0.0,
+          0.0
+        ]
+      ],
+      "dr": [
+        0.0,
+        [
+          0.0,
+          0.0
+        ]
+      ],
+      "miss": [
+        0.0,
+        [
+          0.0,
+          0.0
+        ]
+      ]
+    },
+    "w2_minus_real_on": {
+      "psep": [
+        0.0,
+        [
+          0.0,
+          0.0
+        ]
+      ],
+      "dr": [
+        0.0,
+        [
+          0.0,
+          0.0
+        ]
+      ],
+      "miss": [
+        0.0,
+        [
+          0.0,
+          0.0
+        ]
+      ]
+    },
+    "w5_minus_real_on": {
+      "psep": [
+        0.0,
+        [
+          0.0,
+          0.0
+        ]
+      ],
+      "dr": [
+        0.0,
+        [
+          0.0,
+          0.0
+        ]
+      ],
+      "miss": [
+        0.0,
+        [
+          0.0,
+          0.0
+        ]
+      ]
+    },
+    "lit_minus_real_off": {
+      "psep": [
+        0.0,
+        [
+          0.0,
+          0.0
+        ]
+      ],
+      "dr": [
+        0.0,
+        [
+          0.0,
+          0.0
+        ]
+      ],
+      "miss": [
+        0.0,
+        [
+          0.0,
+          0.0
+        ]
+      ]
+    },
+    "w1_minus_real_off": {
+      "psep": [
+        0.0,
+        [
+          0.0,
+          0.0
+        ]
+      ],
+      "dr": [
+        0.0,
+        [
+          0.0,
+          0.0
+        ]
+      ],
+      "miss": [
+        0.0,
+        [
+          0.0,
+          0.0
+        ]
+      ]
+    },
+    "w2_minus_real_off": {
+      "psep": [
+        0.0,
+        [
+          0.0,
+          0.0
+        ]
+      ],
+      "dr": [
+        0.0,
+        [
+          0.0,
+          0.0
+        ]
+      ],
+      "miss": [
+        0.0,
+        [
+          0.0,
+          0.0
+        ]
+      ]
+    },
+    "w5_minus_real_off": {
+      "psep": [
+        0.0,
+        [
+          0.0,
+          0.0
+        ]
+      ],
+      "dr": [
+        0.0,
+        [
+          0.0,
+          0.0
+        ]
+      ],
+      "miss": [
+        0.0,
+        [
+          0.0,
+          0.0
+        ]
+      ]
+    }
+  }
+}

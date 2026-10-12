@@ -1,0 +1,504 @@
+{
+  "cell_id": "B4|snr=20|d=8|nsnap=64",
+  "family": "B4",
+  "role": "descriptive_b4",
+  "separation_km": 507.65,
+  "arms": {
+    "real_on": {
+      "dr": [
+        0.0,
+        [
+          0.0,
+          0.0
+        ]
+      ],
+      "psep": [
+        1.0,
+        [
+          1.0,
+          1.0
+        ]
+      ],
+      "miss_rate": [
+        0.0,
+        [
+          0.0,
+          0.0
+        ]
+      ],
+      "niter_mean": 13.0,
+      "stop_reason_counts": {
+        "cost_increase": 0,
+        "relative_tolerance": 0,
+        "active_set_floor": 20000,
+        "max_iter": 0
+      },
+      "n_trials": 10000
+    },
+    "real_off": {
+      "dr": [
+        0.0,
+        [
+          0.0,
+          0.0
+        ]
+      ],
+      "psep": [
+        1.0,
+        [
+          1.0,
+          1.0
+        ]
+      ],
+      "miss_rate": [
+        0.0,
+        [
+          0.0,
+          0.0
+        ]
+      ],
+      "niter_mean": 42.58535,
+      "stop_reason_counts": {
+        "cost_increase": 0,
+        "relative_tolerance": 19922,
+        "active_set_floor": 0,
+        "max_iter": 78
+      },
+      "n_trials": 10000
+    },
+    "lit_on": {
+      "dr": [
+        0.0,
+        [
+          0.0,
+          0.0
+        ]
+      ],
+      "psep": [
+        1.0,
+        [
+          1.0,
+          1.0
+        ]
+      ],
+      "miss_rate": [
+        0.0,
+        [
+          0.0,
+          0.0
+        ]
+      ],
+      "niter_mean": 13.0,
+      "stop_reason_counts": {
+        "cost_increase": 0,
+        "relative_tolerance": 0,
+        "active_set_floor": 20000,
+        "max_iter": 0
+      },
+      "n_trials": 10000
+    },
+    "lit_off": {
+      "dr": [
+        0.0,
+        [
+          0.0,
+          0.0
+        ]
+      ],
+      "psep": [
+        1.0,
+        [
+          1.0,
+          1.0
+        ]
+      ],
+      "miss_rate": [
+        0.0,
+        [
+          0.0,
+          0.0
+        ]
+      ],
+      "niter_mean": 42.58535,
+      "stop_reason_counts": {
+        "cost_increase": 0,
+        "relative_tolerance": 19922,
+        "active_set_floor": 0,
+        "max_iter": 78
+      },
+      "n_trials": 10000
+    },
+    "w1_on": {
+      "dr": [
+        0.0,
+        [
+          0.0,
+          0.0
+        ]
+      ],
+      "psep": [
+        1.0,
+        [
+          1.0,
+          1.0
+        ]
+      ],
+      "miss_rate": [
+        0.0,
+        [
+          0.0,
+          0.0
+        ]
+      ],
+      "niter_mean": 13.0,
+      "stop_reason_counts": {
+        "cost_increase": 0,
+        "relative_tolerance": 0,
+        "active_set_floor": 20000,
+        "max_iter": 0
+      },
+      "n_trials": 10000
+    },
+    "w1_off": {
+      "dr": [
+        0.0,
+        [
+          0.0,
+          0.0
+        ]
+      ],
+      "psep": [
+        1.0,
+        [
+          1.0,
+          1.0
+        ]
+      ],
+      "miss_rate": [
+        0.0,
+        [
+          0.0,
+          0.0
+        ]
+      ],
+      "niter_mean": 42.62415,
+      "stop_reason_counts": {
+        "cost_increase": 0,
+        "relative_tolerance": 19996,
+        "active_set_floor": 0,
+        "max_iter": 4
+      },
+      "n_trials": 10000
+    },
+    "w2_on": {
+      "dr": [
+        0.0,
+        [
+          0.0,
+          0.0
+        ]
+      ],
+      "psep": [
+        1.0,
+        [
+          1.0,
+          1.0
+        ]
+      ],
+      "miss_rate": [
+        0.0,
+        [
+          0.0,
+          0.0
+        ]
+      ],
+      "niter_mean": 13.0,
+      "stop_reason_counts": {
+        "cost_increase": 0,
+        "relative_tolerance": 0,
+        "active_set_floor": 20000,
+        "max_iter": 0
+      },
+      "n_trials": 10000
+    },
+    "w2_off": {
+      "dr": [
+        0.0,
+        [
+          0.0,
+          0.0
+        ]
+      ],
+      "psep": [
+        1.0,
+        [
+          1.0,
+          1.0
+        ]
+      ],
+      "miss_rate": [
+        0.0,
+        [
+          0.0,
+          0.0
+        ]
+      ],
+      "niter_mean": 27.37655,
+      "stop_reason_counts": {
+        "cost_increase": 0,
+        "relative_tolerance": 20000,
+        "active_set_floor": 0,
+        "max_iter": 0
+      },
+      "n_trials": 10000
+    },
+    "w5_on": {
+      "dr": [
+        0.0,
+        [
+          0.0,
+          0.0
+        ]
+      ],
+      "psep": [
+        1.0,
+        [
+          1.0,
+          1.0
+        ]
+      ],
+      "miss_rate": [
+        0.0,
+        [
+          0.0,
+          0.0
+        ]
+      ],
+      "niter_mean": 12.83535,
+      "stop_reason_counts": {
+        "cost_increase": 2,
+        "relative_tolerance": 3250,
+        "active_set_floor": 16748,
+        "max_iter": 0
+      },
+      "n_trials": 10000
+    },
+    "w5_off": {
+      "dr": [
+        0.0,
+        [
+          0.0,
+          0.0
+        ]
+      ],
+      "psep": [
+        1.0,
+        [
+          1.0,
+          1.0
+        ]
+      ],
+      "miss_rate": [
+        0.0,
+        [
+          0.0,
+          0.0
+        ]
+      ],
+      "niter_mean": 13.2605,
+      "stop_reason_counts": {
+        "cost_increase": 2,
+        "relative_tolerance": 19998,
+        "active_set_floor": 0,
+        "max_iter": 0
+      },
+      "n_trials": 10000
+    }
+  },
+  "paired_contrast": {
+    "lit_minus_real_on": {
+      "psep": [
+        0.0,
+        [
+          0.0,
+          0.0
+        ]
+      ],
+      "dr": [
+        0.0,
+        [
+          0.0,
+          0.0
+        ]
+      ],
+      "miss": [
+        0.0,
+        [
+          0.0,
+          0.0
+        ]
+      ]
+    },
+    "w1_minus_real_on": {
+      "psep": [
+        0.0,
+        [
+          0.0,
+          0.0
+        ]
+      ],
+      "dr": [
+        0.0,
+        [
+          0.0,
+          0.0
+        ]
+      ],
+      "miss": [
+        0.0,
+        [
+          0.0,
+          0.0
+        ]
+      ]
+    },
+    "w2_minus_real_on": {
+      "psep": [
+        0.0,
+        [
+          0.0,
+          0.0
+        ]
+      ],
+      "dr": [
+        0.0,
+        [
+          0.0,
+          0.0
+        ]
+      ],
+      "miss": [
+        0.0,
+        [
+          0.0,
+          0.0
+        ]
+      ]
+    },
+    "w5_minus_real_on": {
+      "psep": [
+        0.0,
+        [
+          0.0,
+          0.0
+        ]
+      ],
+      "dr": [
+        0.0,
+        [
+          0.0,
+          0.0
+        ]
+      ],
+      "miss": [
+        0.0,
+        [
+          0.0,
+          0.0
+        ]
+      ]
+    },
+    "lit_minus_real_off": {
+      "psep": [
+        0.0,
+        [
+          0.0,
+          0.0
+        ]
+      ],
+      "dr": [
+        0.0,
+        [
+          0.0,
+          0.0
+        ]
+      ],
+      "miss": [
+        0.0,
+        [
+          0.0,
+          0.0
+        ]
+      ]
+    },
+    "w1_minus_real_off": {
+      "psep": [
+        0.0,
+        [
+          0.0,
+          0.0
+        ]
+      ],
+      "dr": [
+        0.0,
+        [
+          0.0,
+          0.0
+        ]
+      ],
+      "miss": [
+        0.0,
+        [
+          0.0,
+          0.0
+        ]
+      ]
+    },
+    "w2_minus_real_off": {
+      "psep": [
+        0.0,
+        [
+          0.0,
+          0.0
+        ]
+      ],
+      "dr": [
+        0.0,
+        [
+          0.0,
+          0.0
+        ]
+      ],
+      "miss": [
+        0.0,
+        [
+          0.0,
+          0.0
+        ]
+      ]
+    },
+    "w5_minus_real_off": {
+      "psep": [
+        0.0,
+        [
+          0.0,
+          0.0
+        ]
+      ],
+      "dr": [
+        0.0,
+        [
+          0.0,
+          0.0
+        ]
+      ],
+      "miss": [
+        0.0,
+        [
+          0.0,
+          0.0
+        ]
+      ]
+    }
+  }
+}

@@ -54,6 +54,9 @@ names. `ROADMAP.md` §0 has the full rename map; the short version:
   (both SNRs, both arms), not at phi = 0; B6 not met. See ROADMAP §8 2026-10-12. The
   off-grid row, the `d=1` panel and the pre-run review are specified and recorded in
   SPEC §S.14.
+- **B4 and B6b** (descriptive, SPEC §S.15) were specified before any code, then executed
+  2026-10-12 as pre-registered; results and a scorecard against the stated expectations are
+  in `results/B_viability/b4_b6b/` and ROADMAP §8 2026-10-12. Neither enters D2.
 - **Next valid action:** Strider's results conversation, the decision memo and the paper
   (§4 of the roadmap). No rerun, and no change to any pinned rule, is indicated. The old
   Shane-Gilbertie Card-A assignment in `handoff.md` is historical.

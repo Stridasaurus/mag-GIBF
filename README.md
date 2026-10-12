@@ -35,7 +35,7 @@ names. `ROADMAP.md` §0 has the full rename map; the short version:
 
 ## Where the project stands right now
 
-*(Refreshed 2026-10-05. `ROADMAP.md` §9 is the current frontier; `ROADMAP.md` §8 and
+*(Refreshed 2026-10-12. `ROADMAP.md` §9 is the current frontier; `ROADMAP.md` §8 and
 `viability-test/SPEC_experiment_B.md` §S.14 preserve the decision record.)*
 
 - **Validation Gate V, Card A Tier 1 and Tier 2, `transfer.py`, and the Experiment-B
@@ -46,15 +46,17 @@ names. `ROADMAP.md` §0 has the full rename map; the short version:
   no-early-exit comparisons, B6a `n_snap=64` plus descriptive `n_snap=128`, fixed-K/AIC
   lookup, and miss/error decomposition. The 64-snapshot B6a row is intentionally
   overspecified; the 128-snapshot row is descriptive and under-specified.
-- **Current implementation state:** the powered runner and its SPEC/status repairs are
-  merged (PR #6, `37b4e21`). The confirmatory/master-seed run has **not** been executed.
-  Per the 2026-10-05 reconciliation and the 2026-10-11 off-grid specification (SPEC §S.14,
-  ROADMAP §8/§9): the off-grid row is specified and implemented (descriptive, never
-  adjudicated), the `d=1` panel is descriptive, and Strider's two pre-run requirements,
-  an airtightness review and an agent-chosen-values sweep, are recorded (SPEC §S.14).
-- **Next valid action:** Strider's go-ahead, then confirm the runner is committed clean,
-  smoke-test, and run the master seed. The old Shane-Gilbertie Card-A
-  assignment in `handoff.md` is historical.
+- **Current state:** the powered confirmatory run was **executed** (master seed, 10,000
+  trials per cell, 39 cells) on 2026-10-11/12 from commit `b235a16`, and the
+  pre-registered adjudication was applied to it as a separate step. Raw cells, manifest,
+  summaries and `adjudication.json` are in `results/B_viability/powered_d2/`. The
+  mechanical outcome under the pinned rules: WIN not met; LOSS met at phi = 180 degrees
+  (both SNRs, both arms), not at phi = 0; B6 not met. See ROADMAP §8 2026-10-12. The
+  off-grid row, the `d=1` panel and the pre-run review are specified and recorded in
+  SPEC §S.14.
+- **Next valid action:** Strider's results conversation, the decision memo and the paper
+  (§4 of the roadmap). No rerun, and no change to any pinned rule, is indicated. The old
+  Shane-Gilbertie Card-A assignment in `handoff.md` is historical.
 
 Full experiment-by-experiment detail: `ROADMAP.md` §8 (append-only log) and §9
 (status). Do not re-derive from this summary — it is intentionally short.

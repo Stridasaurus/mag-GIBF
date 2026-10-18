@@ -74,3 +74,37 @@ def test_post_hoc_output_is_labelled():
         m = json.loads(manifest.read_text())
         assert m.get("status") == "post_hoc", f"{manifest} is not labelled post_hoc"
         assert m.get("sealed_commit"), f"{manifest} does not name the sealed commit"
+
+
+# ------------------------------------------------ second seal (SPEC S.17) ---
+
+SEAL2 = ROOT / "seal" / "SEALED_FILES_2.sha256"
+
+
+def _sealed2():
+    if not SEAL2.exists():
+        return {}
+    out = {}
+    for line in SEAL2.read_text().splitlines():
+        if line.strip():
+            digest, path = line.split("  ", 1)
+            out[path] = digest
+    return out
+
+
+def test_second_seal_files_are_unchanged_at_head():
+    sealed = _sealed2()
+    assert len(sealed) >= 400
+    bad = []
+    for path, want in sealed.items():
+        r = _git("show", f"HEAD:{path}")
+        if r.returncode != 0 or hashlib.sha256(r.stdout).hexdigest() != want:
+            bad.append(path)
+    assert not bad, f"second-seal files changed or missing: {bad[:5]}"
+
+
+def test_no_unsealed_file_in_the_second_seal_directories():
+    sealed = set(_sealed2())
+    tracked = _git("ls-files", "--", "results/prereg_completion", "results/reports").stdout.decode().splitlines()
+    extra = [p for p in tracked if p not in sealed]
+    assert not extra, f"files added to second-seal directories: {extra[:5]}"

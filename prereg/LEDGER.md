@@ -18,10 +18,10 @@ the promised table or figure does not); **PARTIAL** (run smaller than specified)
 | L01 | ROADMAP §6; SPEC §S.7 | Gate V kernel validation | DONE | `results/V_kernel_validation/` |
 | L02 | EXPERIMENT_CARD_A | Card A Tier 1, Tier 2, floors, IMAGE chain; both promised figures | DONE | `results/A_flr_coherence/`; `fig_tier2_kappa_surface.png` carries the kappa_source overlay and the 0.30/0.10 bands (an earlier evidence packet's "no such figure" was wrong) |
 | L03 | SPEC §S.6(4) | Single-source exact-recovery gate | DONE | `results/B_viability/gate_result.json` |
-| L04 | brief §9-B1; SPEC §S.2-B1 | B1 incoherent grid, both reductions, "mean +/- 95% CI per method per cell", floor panel | **PARTIAL** | run at **50 trials per cell** (a documented pilot choice in `run_experiment_B.py`); powered re-run specified in SPEC §S.17 item 4 |
-| L05 | SPEC §S.2-B3 | B3 mode selection, "large n_trials", AIC and MDL | **PARTIAL** | **50 trials per cell**; powered re-run in SPEC §S.17 item 5 |
-| L06 | SPEC §S.2-B2; ROADMAP §5-D2 "report the SIGNED gap at each phi" | B2 coherent grid: phi in {0,30,...,180} x d x SNR | **PARTIAL** | 30 of 175 cells sealed (phi in {0,90,180}, SNR in {5,10}, d axis). **145 not run.** No ruling dropped them; the SPEC §S.14 plan, assembled 2026-09-29, omitted them. SPEC §S.17 item 2 |
-| L07 | SPEC §S.7 SLOT-1 | |rho| endpoints {0.70, 0.95} as descriptive rows | **NOT-RUN** | SPEC §S.17 item 3 |
+| L04 | brief §9-B1; SPEC §S.2-B1 | B1 incoherent grid, both reductions, "mean +/- 95% CI per method per cell", floor panel | **DONE** | DONE 2026-10-18: `results/prereg_completion/B1full_*` (10,000 trials, both reductions, seed 2985373835); sealed in seal 2 |
+| L05 | SPEC §S.2-B3 | B3 mode selection, "large n_trials", AIC and MDL | **DONE** | DONE 2026-10-18: `results/prereg_completion/B3full_*` (10,000 trials, seed 2985373835); sealed in seal 2 |
+| L06 | SPEC §S.2-B2; ROADMAP §5-D2 "report the SIGNED gap at each phi" | B2 coherent grid: phi in {0,30,...,180} x d x SNR | **DONE** | DONE 2026-10-18: 145 cells in `results/prereg_completion/B2_*` (master seed, headline arm, descriptive, not adjudicated); sealed in seal 2 |
+| L07 | SPEC §S.7 SLOT-1 | rho-magnitude endpoints {0.70, 0.95} as descriptive rows | **DONE** | DONE 2026-10-18: 12 cells `results/prereg_completion/rho*_B2_*` (paired with the sealed 0.85 cells); sealed in seal 2 |
 | L08 | SPEC §S.14 | Confirmatory powered B2/B6a at d=2 and its adjudication | DONE | `results/B_viability/powered_d2/`, sealed |
 | L09 | SPEC §S.6(5) | Regularization-sensitivity panel | DONE | six d=2 cells, B6a, and the d=1 descriptive panel |
 | L10 | SPEC §S.14 | Off-grid row (A4) | DONE | `B2offgrid_*` in `powered_d2/` |
@@ -34,16 +34,16 @@ the promised table or figure does not); **PARTIAL** (run smaller than specified)
 
 | ID | Source | Item | Status | Evidence / action |
 |---|---|---|---|---|
-| L20 | SPEC §S.14 item 6 | Signed gap and CI against the 20% line; range of thresholds over which each verdict holds | DONE-UNRENDERED | numbers computed ad hoc 2026-10-12, no table; SPEC §S.17 item 6 |
-| L21 | SPEC §S.14 P15 | Delta r-bar under other miss penalties; conditional correct-trial error with CIs; miss / correct / mislocated partition | DONE-UNRENDERED | arrays stored; SPEC §S.17 item 6 |
-| L22 | SPEC §S.2-B6; P13 | K-hat breakdown, AIC lookup, forced-K sweeps | DONE-UNRENDERED | in the manifest; no figure |
+| L20 | SPEC §S.14 item 6 | Signed gap and CI against the 20% line; range of thresholds over which each verdict holds | **DONE** | DONE 2026-10-18: `results/reports/table_bracket.csv` (three stored thresholds, 5/10/20%, not a continuum) |
+| L21 | SPEC §S.14 P15 | Delta r-bar under other miss penalties; conditional correct-trial error with CIs; miss / correct / mislocated partition | **DONE** | DONE 2026-10-18: `results/reports/table_penalties_partition.csv` (pinned-penalty identity exact) |
+| L22 | SPEC §S.2-B6; P13 | K-hat breakdown, AIC lookup, forced-K sweeps | **DONE** | DONE 2026-10-18: `results/reports/table_khat_b6a.csv`, `fig_iii_b6_panel.png` |
 | L23 | SPEC §S.14 P3 | d_min at 0.7 and 0.9, monotonicity flag, uneven d spacing | DONE | `adjudication.json` |
 | L24 | SPEC §S.14 P4 | Arm that fires at each SNR; mixed-arm flag | DONE | `adjudication.json` |
 | L25 | SPEC §S.14 stop behaviour | Stop-reason counts and non-convergence rates | DONE | manifest |
-| L26 | SPEC §S.14 item 6 | The rule's operating characteristic at n = 10,000 (the "about 23%" smallest reliably detectable effect) | NOT RENDERED | SPEC §S.17 item 6 |
-| L27 | SPEC §S.5 (i)-(v) | Five Experiment-B figures: phi-resolved decision figure with B1 floor panel; B4; B6 panel; regularization panel; B3 surfaces | **NOT PRODUCED** | only Card A figures exist; SPEC §S.17 item 7 |
-| L28 | SPEC §S.5 | "Every figure's underlying arrays saved" | NOT DONE | SPEC §S.17 item 7 |
-| L29 | ROADMAP §5-D2 kill clause | Evidence table for the four-part kill condition (facts only) | NOT RENDERED | SPEC §S.17 item 8 |
+| L26 | SPEC §S.14 item 6 | The rule's operating characteristic at n = 10,000 (the "about 23%" smallest reliably detectable effect) | **DONE** | DONE 2026-10-18: `results/reports/table_rule_power.csv` (about 0.21-0.22 at power 0.8; about 0.50 power at exactly 20%) |
+| L27 | SPEC §S.5 (i)-(v) | Five Experiment-B figures: phi-resolved decision figure with B1 floor panel; B4; B6 panel; regularization panel; B3 surfaces | **DONE** | DONE 2026-10-18: `results/reports/fig_i_*`, `fig_ii_*`, `fig_iii_*`, `fig_iv_*`, `fig_v_*` |
+| L28 | SPEC §S.5 | "Every figure's underlying arrays saved" | **DONE** | DONE 2026-10-18: a CSV beside every figure |
+| L29 | ROADMAP §5-D2 kill clause | Evidence table for the four-part kill condition (facts only) | **DONE** | DONE 2026-10-18: `results/reports/kill_clause_evidence.md` (facts only; the reading is Strider's, L40) |
 
 ## 3. Decisions and writing that are Strider's
 
@@ -72,9 +72,9 @@ the promised table or figure does not); **PARTIAL** (run smaller than specified)
 | ID | Item | Status |
 |---|---|---|
 | L60 | Recheck reproduced all four D2 verdicts and every mean; CI endpoints only statistically (worst 0.07 of a half-width on a verdict-feeding endpoint) | recorded; the check's scripts are not in this repo's record yet (L63) |
-| L61 | The bootstrap seeding convention (generator, draw order) is not reproducible from the SPEC's wording ("crc32(cell_id)") | **open**: document the exact convention in `seal/ADDENDA.md` (an addendum, not an edit of the sealed record); candidate for the deviations table |
+| L61 | The bootstrap seeding convention (generator, draw order) is not reproducible from the SPEC's wording ("crc32(cell_id)") | DONE 2026-10-18: `seal/ADDENDA.md` (documentation only) |
 | L62 | Saved files hold no raw source maps, so the peak-finding and scoring step is not checkable from saved data | **post hoc** (regenerate trials from the seed, rescore with an independently written scorer); goes to the next-phase pre-registration |
-| L63 | The recheck's scripts and outputs live in a temporary scratchpad | **open**: copy to the vault GIBF project as a durable record |
+| L63 | The recheck's scripts and outputs live in a temporary scratchpad | copied to the vault (`live/projects/gibf/paper-prep/20261018-independent-recheck-scripts/`), not yet committed there |
 | L64 | Solver, simulator, kernel and mode-count estimator were not independently checked | disclosed; rests on the single-source gate, tests and code read; next-phase item |
 | L65 | The mirrored MMV-favoured standard is also met at phi = 90 at both SNRs (unregistered) | descriptive only; to be reported as such and never adjudicated |
 

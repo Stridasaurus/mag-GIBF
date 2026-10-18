@@ -1,5 +1,13 @@
 # PHFW-1: pre-registration of the post-hoc and future-work phase
 
+> **STATUS (amended 2026-10-18, same day, by Strider's ruling in chat): PARKED DRAFT.** Strider ruled that
+> future work is not to be pre-registered yet: the paper's pre-registered base is the frozen SPEC plus the S.17
+> completion, and future directions are a separate decision that will be specified later, when the paper's writing
+> clarifies what is wanted. **Nothing in this file is authorized to run.** It stays as a record of what was
+> considered, with its seeds drawn and unused. Its expectations are not binding; if any item is revived it is
+> re-read, re-justified and re-tagged first. The headline standard (frozen matched-by-rule regularization, SPEC S.6,
+> pinned 2026-07-19) is not reopened by anything here.
+
 Fixed 2026-10-18, **before any PHFW-1 code is written and before any result of the
 completion run (SPEC §S.17) has been read**. Everything here is exploratory with
 respect to the sealed record (SPEC §S.16): it cannot change a sealed verdict, and

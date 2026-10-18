@@ -84,18 +84,18 @@ None of these may run before its spec is tagged; each is done only per PHFW1 §2
 
 | ID | Item | Status |
 |---|---|---|
-| L70 | A1 why phi=0 fails / phi=180 works (lambda2/lambda1) | SPECIFIED, not started |
-| L71 | A2 are GIBF and MMV failures the same trials | SPECIFIED, not started |
-| L72 | A3 off-grid dose-response | SPECIFIED, not started |
-| L73 | A4 stop reason against outcome | SPECIFIED, not started |
-| L74 | A5 reduction OFF vs ON transitions | SPECIFIED, not started |
-| L75 | A6 Monte-Carlo uncertainty | SPECIFIED, not started |
-| L76 | B1 dense epsilon sweep (seed 3602037586) | SPECIFIED, not started |
-| L77 | B2 off-grid at d=1 and 20 dB (seed 3449719975) | SPECIFIED, not started |
-| L78 | B3 altitude mismatch (seed 2883321744) | SPECIFIED, not started |
-| L79 | B4 unequal powers (seed 758546561) | SPECIFIED, not started |
-| L80 | B5 snapshot-count sweep (seed 3922815376) | SPECIFIED, not started |
-| L81 | B6 kernel coherence, no trials | SPECIFIED, not started |
-| L82 | C1 complex MMV on phantom kernels (seed 1513848041) | SPECIFIED, not started |
-| L83 | C2 tuned best-versus-best (seed 2896748822) | SPECIFIED, not started |
+| L70 | A1 why phi=0 fails / phi=180 works (lambda2/lambda1) | PARKED (Strider, 2026-10-18: no future-work pre-registration yet) |
+| L71 | A2 are GIBF and MMV failures the same trials | PARKED (Strider, 2026-10-18: no future-work pre-registration yet) |
+| L72 | A3 off-grid dose-response | PARKED (Strider, 2026-10-18: no future-work pre-registration yet) |
+| L73 | A4 stop reason against outcome | PARKED (Strider, 2026-10-18: no future-work pre-registration yet) |
+| L74 | A5 reduction OFF vs ON transitions | PARKED (Strider, 2026-10-18: no future-work pre-registration yet) |
+| L75 | A6 Monte-Carlo uncertainty | PARKED (Strider, 2026-10-18: no future-work pre-registration yet) |
+| L76 | B1 dense epsilon sweep (seed 3602037586) | PARKED (Strider, 2026-10-18: no future-work pre-registration yet) |
+| L77 | B2 off-grid at d=1 and 20 dB (seed 3449719975) | PARKED (Strider, 2026-10-18: no future-work pre-registration yet) |
+| L78 | B3 altitude mismatch (seed 2883321744) | PARKED (Strider, 2026-10-18: no future-work pre-registration yet) |
+| L79 | B4 unequal powers (seed 758546561) | PARKED (Strider, 2026-10-18: no future-work pre-registration yet) |
+| L80 | B5 snapshot-count sweep (seed 3922815376) | PARKED (Strider, 2026-10-18: no future-work pre-registration yet) |
+| L81 | B6 kernel coherence, no trials | PARKED (Strider, 2026-10-18: no future-work pre-registration yet) |
+| L82 | C1 complex MMV on phantom kernels (seed 1513848041) | PARKED (Strider, 2026-10-18: no future-work pre-registration yet) |
+| L83 | C2 tuned best-versus-best (seed 2896748822) | PARKED (Strider, 2026-10-18: no future-work pre-registration yet) |
 | L90 | Parked items P1-P15 (PHFW1 §4) | PARKED: need an addendum with their own seed and expectations before any run |

@@ -1,0 +1,29 @@
+{
+  "cell_id": "B3full|snr=0|nsnap=128",
+  "snr_db": 0.0,
+  "n_snap": 128,
+  "n_trials": 10000,
+  "mdl_error_rate": [
+    0.0767,
+    [
+      0.0713975,
+      0.0819
+    ]
+  ],
+  "mdl_mean": 1.9233,
+  "mdl_khat_hist": {
+    "1": 767,
+    "2": 9233
+  },
+  "aic_error_rate": [
+    0.0,
+    [
+      0.0,
+      0.0
+    ]
+  ],
+  "aic_mean": 2.0,
+  "aic_khat_hist": {
+    "2": 10000
+  }
+}

@@ -77,3 +77,25 @@ the promised table or figure does not); **PARTIAL** (run smaller than specified)
 | L63 | The recheck's scripts and outputs live in a temporary scratchpad | **open**: copy to the vault GIBF project as a durable record |
 | L64 | Solver, simulator, kernel and mode-count estimator were not independently checked | disclosed; rests on the single-source gate, tests and code read; next-phase item |
 | L65 | The mirrored MMV-favoured standard is also met at phi = 90 at both SNRs (unregistered) | descriptive only; to be reported as such and never adjudicated |
+
+## 6. PHFW-1 (post hoc and future work; specified in `prereg/PHFW1.md`, fixed 2026-10-18)
+
+None of these may run before its spec is tagged; each is done only per PHFW1 §2 item 7.
+
+| ID | Item | Status |
+|---|---|---|
+| L70 | A1 why phi=0 fails / phi=180 works (lambda2/lambda1) | SPECIFIED, not started |
+| L71 | A2 are GIBF and MMV failures the same trials | SPECIFIED, not started |
+| L72 | A3 off-grid dose-response | SPECIFIED, not started |
+| L73 | A4 stop reason against outcome | SPECIFIED, not started |
+| L74 | A5 reduction OFF vs ON transitions | SPECIFIED, not started |
+| L75 | A6 Monte-Carlo uncertainty | SPECIFIED, not started |
+| L76 | B1 dense epsilon sweep (seed 3602037586) | SPECIFIED, not started |
+| L77 | B2 off-grid at d=1 and 20 dB (seed 3449719975) | SPECIFIED, not started |
+| L78 | B3 altitude mismatch (seed 2883321744) | SPECIFIED, not started |
+| L79 | B4 unequal powers (seed 758546561) | SPECIFIED, not started |
+| L80 | B5 snapshot-count sweep (seed 3922815376) | SPECIFIED, not started |
+| L81 | B6 kernel coherence, no trials | SPECIFIED, not started |
+| L82 | C1 complex MMV on phantom kernels (seed 1513848041) | SPECIFIED, not started |
+| L83 | C2 tuned best-versus-best (seed 2896748822) | SPECIFIED, not started |
+| L90 | Parked items P1-P15 (PHFW1 §4) | PARKED: need an addendum with their own seed and expectations before any run |

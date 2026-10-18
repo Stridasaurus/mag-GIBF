@@ -66,3 +66,14 @@ the promised table or figure does not); **PARTIAL** (run smaller than specified)
 | L53 | README "how to read this repo" | open |
 | L54 | Stale vault notes (`secs-gibf-viability`, active-projects entries) | open |
 | L55 | The owner's other eleven public repositories not audited for agent-written paper prose | open |
+
+## 5. Added 2026-10-18 from an independent recheck report (pasted by Strider; evidence class: third-party synthesis, secondary)
+
+| ID | Item | Status |
+|---|---|---|
+| L60 | Recheck reproduced all four D2 verdicts and every mean; CI endpoints only statistically (worst 0.07 of a half-width on a verdict-feeding endpoint) | recorded; the check's scripts are not in this repo's record yet (L63) |
+| L61 | The bootstrap seeding convention (generator, draw order) is not reproducible from the SPEC's wording ("crc32(cell_id)") | **open**: document the exact convention in `seal/ADDENDA.md` (an addendum, not an edit of the sealed record); candidate for the deviations table |
+| L62 | Saved files hold no raw source maps, so the peak-finding and scoring step is not checkable from saved data | **post hoc** (regenerate trials from the seed, rescore with an independently written scorer); goes to the next-phase pre-registration |
+| L63 | The recheck's scripts and outputs live in a temporary scratchpad | **open**: copy to the vault GIBF project as a durable record |
+| L64 | Solver, simulator, kernel and mode-count estimator were not independently checked | disclosed; rests on the single-source gate, tests and code read; next-phase item |
+| L65 | The mirrored MMV-favoured standard is also met at phi = 90 at both SNRs (unregistered) | descriptive only; to be reported as such and never adjudicated |
